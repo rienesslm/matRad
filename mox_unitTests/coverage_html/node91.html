@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_sequencing2ApertureInfo.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_sequencing2ApertureInfo.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;apertureInfo&nbsp;=&nbsp;matRad_sequencing2ApertureInfo(Sequencing,stf)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;generate&nbsp;a&nbsp;shape&nbsp;info&nbsp;struct&nbsp;</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;based&nbsp;on&nbsp;the&nbsp;result&nbsp;of&nbsp;multileaf&nbsp;collimator&nbsp;sequencing</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;apertureInfo&nbsp;=&nbsp;matRad_sequencing2ApertureInfo(Sequencing,stf)</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;Sequencing:&nbsp;matRad&nbsp;sequencing&nbsp;result&nbsp;struct</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;steering&nbsp;information&nbsp;struct</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;apertureInfo:&nbsp;matRad&nbsp;aperture&nbsp;weight&nbsp;and&nbsp;shape&nbsp;info&nbsp;struct</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;MLC&nbsp;parameters:</td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">bixelWidth&nbsp;=&nbsp;stf(1).bixelWidth;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>33</td><td bgcolor="#FF0000">numOfMLCLeafPairs&nbsp;=&nbsp;80;</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;define&nbsp;central&nbsp;leaf&nbsp;pair&nbsp;(here&nbsp;we&nbsp;want&nbsp;the&nbsp;0mm&nbsp;position&nbsp;to&nbsp;be&nbsp;in&nbsp;the</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;center&nbsp;of&nbsp;a&nbsp;leaf&nbsp;pair&nbsp;(e.g.&nbsp;leaf&nbsp;41&nbsp;stretches&nbsp;from&nbsp;-2.5mm&nbsp;to&nbsp;2.5mm</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;a&nbsp;bixel/leafWidth&nbsp;of&nbsp;5mm&nbsp;and&nbsp;81&nbsp;leaf&nbsp;pairs)</td></tr>
+<tr><td>37</td><td bgcolor="#FF0000">centralLeafPair&nbsp;=&nbsp;ceil(numOfMLCLeafPairs/2);</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;initializing&nbsp;variables</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">bixelIndOffset&nbsp;=&nbsp;0;&nbsp;%&nbsp;used&nbsp;for&nbsp;creation&nbsp;of&nbsp;bixel&nbsp;index&nbsp;maps</td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">totalNumOfBixels&nbsp;=&nbsp;sum([stf(:).totalNumOfBixels]);</td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">totalNumOfShapes&nbsp;=&nbsp;sum([Sequencing.beam.numOfShapes]);</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">vectorOffset&nbsp;=&nbsp;totalNumOfShapes&nbsp;+&nbsp;1;&nbsp;%&nbsp;used&nbsp;for&nbsp;bookkeeping&nbsp;in&nbsp;the&nbsp;vector&nbsp;for&nbsp;optimization</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;loop&nbsp;over&nbsp;all&nbsp;beams</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">for&nbsp;i=1:size(stf,2)</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%%&nbsp;1.&nbsp;read&nbsp;stf&nbsp;and&nbsp;create&nbsp;maps&nbsp;(Ray&nbsp;&amp;&nbsp;Bixelindex)</td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;x-&nbsp;and&nbsp;z-coordinates&nbsp;of&nbsp;bixels</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rayPos_bev&nbsp;=&nbsp;reshape([stf(i).ray.rayPos_bev],3,[]);</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;=&nbsp;rayPos_bev(1,:)';</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;Z&nbsp;=&nbsp;rayPos_bev(3,:)';</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;ray-map</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maxX&nbsp;=&nbsp;max(X);&nbsp;minX&nbsp;=&nbsp;min(X);&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maxZ&nbsp;=&nbsp;max(Z);&nbsp;minZ&nbsp;=&nbsp;min(Z);</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dimX&nbsp;=&nbsp;(maxX-minX)/stf(i).bixelWidth&nbsp;+&nbsp;1;</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dimZ&nbsp;=&nbsp;(maxZ-minZ)/stf(i).bixelWidth&nbsp;+&nbsp;1;</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rayMap&nbsp;=&nbsp;zeros(dimZ,dimX);</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;indices&nbsp;for&nbsp;x&nbsp;and&nbsp;z&nbsp;positions</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xPos&nbsp;=&nbsp;(X-minX)/stf(i).bixelWidth&nbsp;+&nbsp;1;</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zPos&nbsp;=&nbsp;(Z-minZ)/stf(i).bixelWidth&nbsp;+&nbsp;1;</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;indices&nbsp;in&nbsp;the&nbsp;ray-map</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;indInRay&nbsp;=&nbsp;zPos&nbsp;+&nbsp;(xPos-1)*dimZ;</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;fill&nbsp;ray-map</td></tr>
+<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rayMap(indInRay)&nbsp;=&nbsp;1;</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;map&nbsp;of&nbsp;bixel&nbsp;indices</td></tr>
+<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;bixelIndMap&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(dimZ,dimX);</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;bixelIndMap(indInRay)&nbsp;=&nbsp;[1:stf(i).numOfRays]&nbsp;+&nbsp;bixelIndOffset;</td></tr>
+<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;bixelIndOffset&nbsp;=&nbsp;bixelIndOffset&nbsp;+&nbsp;stf(i).numOfRays;</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;store&nbsp;physical&nbsp;position&nbsp;of&nbsp;first&nbsp;entry&nbsp;in&nbsp;bixelIndMap</td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;posOfCornerBixel&nbsp;=&nbsp;[minX&nbsp;0&nbsp;minZ];</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;leaf&nbsp;limits&nbsp;from&nbsp;the&nbsp;leaf&nbsp;map</td></tr>
+<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;lim_l&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(dimZ,1);</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;lim_r&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(dimZ,1);</td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;looping&nbsp;oder&nbsp;leaf&nbsp;pairs</td></tr>
+<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;l&nbsp;=&nbsp;1:dimZ</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lim_lInd&nbsp;=&nbsp;find(rayMap(l,:),1,'first');</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lim_rInd&nbsp;=&nbsp;find(rayMap(l,:),1,'last');</td></tr>
+<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;the&nbsp;physical&nbsp;position&nbsp;[mm]&nbsp;can&nbsp;be&nbsp;calculated&nbsp;from&nbsp;the&nbsp;indices</td></tr>
+<tr><td>90</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lim_l(l)&nbsp;=&nbsp;(lim_lInd-1)*bixelWidth&nbsp;+&nbsp;minX&nbsp;-&nbsp;1/2*bixelWidth;</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lim_r(l)&nbsp;=&nbsp;(lim_rInd-1)*bixelWidth&nbsp;+&nbsp;minX&nbsp;+&nbsp;1/2*bixelWidth;</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;leaf&nbsp;positions&nbsp;for&nbsp;all&nbsp;shapes</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;leaf&nbsp;positions&nbsp;can&nbsp;be&nbsp;extracted&nbsp;from&nbsp;the&nbsp;shapes&nbsp;created&nbsp;in&nbsp;Sequencing</td></tr>
+<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;m&nbsp;=&nbsp;1:Sequencing.beam(i).numOfShapes</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;loading&nbsp;shape&nbsp;from&nbsp;Sequencing&nbsp;result</td></tr>
+<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shapeMap&nbsp;=&nbsp;Sequencing.beam(i).shapes(:,:,m);</td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;left&nbsp;and&nbsp;right&nbsp;leaf&nbsp;indices&nbsp;from&nbsp;shapemap</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;initializing&nbsp;limits</td></tr>
+<tr><td>102</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;leftLeafPos&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(dimZ,1);</td></tr>
+<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rightLeafPos&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(dimZ,1);</td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;looping&nbsp;over&nbsp;leaf&nbsp;pairs</td></tr>
+<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;l&nbsp;=&nbsp;1:dimZ</td></tr>
+<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;leftLeafPosInd&nbsp;&nbsp;=&nbsp;find(shapeMap(l,:),1,'first');</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rightLeafPosInd&nbsp;=&nbsp;find(shapeMap(l,:),1,'last');</td></tr>
+<tr><td>108</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(leftLeafPosInd)&nbsp;&amp;&amp;&nbsp;isempty(rightLeafPosInd)&nbsp;%&nbsp;if&nbsp;no&nbsp;bixel&nbsp;is&nbsp;open,&nbsp;use&nbsp;limits&nbsp;from&nbsp;Ray&nbsp;positions</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;leftLeafPos(l)&nbsp;=&nbsp;(lim_l(l)+lim_r(l))/2;</td></tr>
+<tr><td>111</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rightLeafPos(l)&nbsp;=&nbsp;leftLeafPos(l);</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;the&nbsp;physical&nbsp;position&nbsp;[mm]&nbsp;can&nbsp;be&nbsp;calculated&nbsp;from&nbsp;the&nbsp;indices</td></tr>
+<tr><td>114</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;leftLeafPos(l)&nbsp;=&nbsp;(leftLeafPosInd-1)*bixelWidth...</td></tr>
+<tr><td>115</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;minX&nbsp;-&nbsp;1/2*bixelWidth;</td></tr>
+<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rightLeafPos(l)&nbsp;=&nbsp;(rightLeafPosInd-1)*bixelWidth...</td></tr>
+<tr><td>117</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;minX&nbsp;+&nbsp;1/2*bixelWidth;</td></tr>
+<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;save&nbsp;data&nbsp;for&nbsp;each&nbsp;shape&nbsp;of&nbsp;this&nbsp;beam</td></tr>
+<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).shape(m).leftLeafPos&nbsp;=&nbsp;leftLeafPos;</td></tr>
+<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).shape(m).rightLeafPos&nbsp;=&nbsp;rightLeafPos;</td></tr>
+<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).shape(m).weight&nbsp;=&nbsp;Sequencing.beam(i).shapesWeight(m);</td></tr>
+<tr><td>126</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).shape(m).shapeMap&nbsp;=&nbsp;shapeMap;</td></tr>
+<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).shape(m).vectorOffset&nbsp;=&nbsp;vectorOffset;</td></tr>
+<tr><td>128</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;update&nbsp;index&nbsp;for&nbsp;bookkeeping</td></tr>
+<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vectorOffset&nbsp;=&nbsp;vectorOffset&nbsp;+&nbsp;dimZ;</td></tr>
+<tr><td>131</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>132</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;z-coordinates&nbsp;of&nbsp;active&nbsp;leaf&nbsp;pairs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;z-coordinates&nbsp;from&nbsp;bixel&nbsp;positions</td></tr>
+<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;leafPairPos&nbsp;=&nbsp;unique(Z);</td></tr>
+<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;upmost&nbsp;and&nbsp;downmost&nbsp;leaf&nbsp;pair</td></tr>
+<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;topLeafPairPos&nbsp;=&nbsp;maxZ;</td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;bottomLeafPairPos&nbsp;=&nbsp;minZ;</td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>142</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;topLeafPair&nbsp;=&nbsp;centralLeafPair&nbsp;-&nbsp;topLeafPairPos/bixelWidth;</td></tr>
+<tr><td>143</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;bottomLeafPair&nbsp;=&nbsp;centralLeafPair&nbsp;-&nbsp;bottomLeafPairPos/bixelWidth;</td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>145</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;bool&nbsp;map&nbsp;of&nbsp;active&nbsp;leaf&nbsp;pairs</td></tr>
+<tr><td>146</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isActiveLeafPair&nbsp;=&nbsp;zeros(numOfMLCLeafPairs,1);</td></tr>
+<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isActiveLeafPair(topLeafPair:bottomLeafPair)&nbsp;=&nbsp;1;</td></tr>
+<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;MLC&nbsp;window</td></tr>
+<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;getting&nbsp;the&nbsp;dimensions&nbsp;of&nbsp;the&nbsp;MLC&nbsp;in&nbsp;order&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;plot&nbsp;the</td></tr>
+<tr><td>151</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;shapes&nbsp;using&nbsp;physical&nbsp;coordinates</td></tr>
+<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;MLCWindow&nbsp;=&nbsp;[minX-bixelWidth/2&nbsp;maxX+bixelWidth/2&nbsp;...</td></tr>
+<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minZ-bixelWidth/2&nbsp;maxZ+bixelWidth/2];</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>155</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;save&nbsp;data&nbsp;for&nbsp;each&nbsp;beam</td></tr>
+<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).numOfShapes&nbsp;=&nbsp;Sequencing.beam(i).numOfShapes;</td></tr>
+<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).numOfActiveLeafPairs&nbsp;=&nbsp;dimZ;</td></tr>
+<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).leafPairPos&nbsp;=&nbsp;leafPairPos;</td></tr>
+<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).isActiveLeafPair&nbsp;=&nbsp;isActiveLeafPair;</td></tr>
+<tr><td>160</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).centralLeafPair&nbsp;=&nbsp;centralLeafPair;</td></tr>
+<tr><td>161</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).lim_l&nbsp;=&nbsp;lim_l;</td></tr>
+<tr><td>162</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).lim_r&nbsp;=&nbsp;lim_r;</td></tr>
+<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).bixelIndMap&nbsp;=&nbsp;bixelIndMap;</td></tr>
+<tr><td>164</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).posOfCornerBixel&nbsp;=&nbsp;posOfCornerBixel;</td></tr>
+<tr><td>165</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo.beam(i).MLCWindow&nbsp;=&nbsp;MLCWindow;</td></tr>
+<tr><td>166</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>167</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>168</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>169</td><td bgcolor="#FFFFFF">%&nbsp;save&nbsp;global&nbsp;data</td></tr>
+<tr><td>170</td><td bgcolor="#FF0000">apertureInfo.bixelWidth&nbsp;=&nbsp;bixelWidth;</td></tr>
+<tr><td>171</td><td bgcolor="#FF0000">apertureInfo.numOfMLCLeafPairs&nbsp;=&nbsp;numOfMLCLeafPairs;</td></tr>
+<tr><td>172</td><td bgcolor="#FF0000">apertureInfo.totalNumOfBixels&nbsp;=&nbsp;totalNumOfBixels;</td></tr>
+<tr><td>173</td><td bgcolor="#FF0000">apertureInfo.totalNumOfShapes&nbsp;=&nbsp;sum([apertureInfo.beam.numOfShapes]);</td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">apertureInfo.totalNumOfLeafPairs&nbsp;=&nbsp;sum([apertureInfo.beam.numOfShapes]*[apertureInfo.beam.numOfActiveLeafPairs]');</td></tr>
+<tr><td>175</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>176</td><td bgcolor="#FFFFFF">%&nbsp;create&nbsp;vectors&nbsp;for&nbsp;optimization</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">[apertureInfo.apertureVector,&nbsp;apertureInfo.mappingMx,&nbsp;apertureInfo.limMx]&nbsp;=&nbsp;matRad_OptimizationProblemDAO.matRad_daoApertureInfo2Vec(apertureInfo);</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>180</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

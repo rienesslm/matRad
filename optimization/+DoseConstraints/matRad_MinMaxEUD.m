@@ -23,6 +23,7 @@ classdef matRad_MinMaxEUD < DoseConstraints.matRad_DoseConstraint
         parameterNames = {'k','EUD^{min}', 'EUD^{max}'};
         %parameterIsDose = logical([0 1 1]);
         parameterTypes = {'numeric','dose','dose'};
+        maxDerivativeError = 0;
     end
     
     properties

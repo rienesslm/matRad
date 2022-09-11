@@ -23,6 +23,7 @@ classdef matRad_MinMaxMeanDose < DoseConstraints.matRad_DoseConstraint
         parameterNames = {'\mu_d^{min}', '\mu_d^{max}'};
         %parameterIsDose = logical([1 1]);
         parameterTypes = {'dose','dose'};
+        maxDerivativeError = 1e-3;
     end
     
     properties

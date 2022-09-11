@@ -22,6 +22,7 @@ classdef matRad_EUD < DoseObjectives.matRad_DoseObjective
         name = 'EUD';
         parameterNames = {'EUD^{ref}', 'k'};
         parameterTypes = {'dose','numeric'};
+        maxDerivativeError = 0;
     end
     
     properties

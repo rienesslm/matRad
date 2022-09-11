@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_writeCube.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_writeCube.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[saved_metadata]&nbsp;=&nbsp;matRad_writeCube(filepath,cube,datatype,metadata)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;wrapper&nbsp;for&nbsp;Cube&nbsp;export</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[saved_metadata]&nbsp;=&nbsp;matRad_writeCube(filepath,cube,meta)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;filepath:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;full&nbsp;output&nbsp;path.&nbsp;needs&nbsp;the&nbsp;right&nbsp;extension</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;choose&nbsp;the&nbsp;appropriate&nbsp;writer</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cube:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;that&nbsp;is&nbsp;to&nbsp;be&nbsp;written</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;datatype:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MATLAB&nbsp;numeric&nbsp;datatype</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;metadata:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;meta-information&nbsp;in&nbsp;struct.&nbsp;</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Necessary&nbsp;fieldnames&nbsp;are:</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;resolution:&nbsp;[x&nbsp;y&nbsp;z]</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Optional:</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;axisPermutation&nbsp;(matRad&nbsp;default&nbsp;[2&nbsp;1&nbsp;3])</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;coordinateSystem&nbsp;(matRad&nbsp;default&nbsp;'LPS')</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;imageOrigin&nbsp;(as&nbsp;used&nbsp;in&nbsp;DICOM)</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;dataUnit&nbsp;(i.e.&nbsp;Gy..)</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;dataName&nbsp;(i.e.&nbsp;dose,&nbsp;ED,&nbsp;...)</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;compress&nbsp;(true/false)</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(default&nbsp;chosen&nbsp;by&nbsp;writer)</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%%&nbsp;Sanity&nbsp;checks</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">[filedir,filename,ext]&nbsp;=&nbsp;fileparts(filepath);</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">if&nbsp;~exist(filedir,'dir')</td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error(['Directory&nbsp;'&nbsp;filedir&nbsp;'&nbsp;does&nbsp;not&nbsp;exist!']);</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF">%No&nbsp;Special&nbsp;characters&nbsp;in&nbsp;filename&nbsp;(allow&nbsp;only&nbsp;_&nbsp;and&nbsp;alphanumeric</td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF">%characters</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">robustFileName&nbsp;=&nbsp;filename(isstrprop(filename,'alphanum')&nbsp;|&nbsp;filename&nbsp;==&nbsp;'_');</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">if&nbsp;~strcmp(robustFileName,filename)</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;warning(['Changing&nbsp;filename&nbsp;from&nbsp;'''&nbsp;filename&nbsp;'''&nbsp;to&nbsp;'''&nbsp;robustFileName&nbsp;'''&nbsp;to&nbsp;get&nbsp;rid&nbsp;of&nbsp;special&nbsp;characters!']);</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;filepath&nbsp;=&nbsp;fullfile(filedir,[robustFileName&nbsp;ext]);</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF">%%&nbsp;Prepare&nbsp;Metadata</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">%if&nbsp;the&nbsp;field&nbsp;is&nbsp;not&nbsp;set,&nbsp;we&nbsp;assume&nbsp;standard&nbsp;matRad&nbsp;x-y&nbsp;swap</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">if&nbsp;~isfield(metadata,'axisPermutation')</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%cube&nbsp;=&nbsp;permute(cube,[2&nbsp;1&nbsp;3]);&nbsp;%This&nbsp;should&nbsp;be&nbsp;done&nbsp;in&nbsp;the&nbsp;writer&nbsp;based</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%on&nbsp;the&nbsp;axis&nbsp;permutation&nbsp;field</td></tr>
+<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.axisPermutation&nbsp;=&nbsp;[2&nbsp;1&nbsp;3];&nbsp;%Default&nbsp;Matlab&nbsp;axis&nbsp;permutation</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">%use&nbsp;the&nbsp;matrad&nbsp;coordinate&nbsp;system</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">if&nbsp;~isfield(metadata,'coordinateSystem')</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.coordinateSystem&nbsp;=&nbsp;'LPS';&nbsp;&nbsp;%Matlab&nbsp;coordinate&nbsp;system</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">%If&nbsp;there&nbsp;is&nbsp;no&nbsp;image&nbsp;origin&nbsp;set,&nbsp;center&nbsp;the&nbsp;image</td></tr>
+<tr><td>64</td><td bgcolor="#FF0000">imageExtent&nbsp;=&nbsp;metadata.resolution&nbsp;.*&nbsp;size(cube);</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">if&nbsp;~isfield(metadata,'imageOrigin')</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.imageOrigin&nbsp;=&nbsp;zeros(1,numel(imageExtent))&nbsp;-&nbsp;(imageExtent/2);</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">%we&nbsp;can&nbsp;also&nbsp;store&nbsp;the&nbsp;center</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">if&nbsp;~isfield(metadata,'imageCenter')</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.imageCenter&nbsp;=&nbsp;metadata.imageOrigin&nbsp;+&nbsp;(imageExtent/2);</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">metadata.datatype&nbsp;=&nbsp;datatype;</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF">%%&nbsp;Choose&nbsp;writer</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF">%So&nbsp;far&nbsp;we&nbsp;only&nbsp;have&nbsp;an&nbsp;nrrd&nbsp;writer</td></tr>
+<tr><td>78</td><td bgcolor="#FF0000">switch&nbsp;ext</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'.nrrd'</td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_writeNRRD(filepath,cube,metadata);</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'.vtk'</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_writeVTK(filepath,cube,metadata);</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'.mha'</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_writeMHA(filepath,cube,metadata);</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;otherwise</td></tr>
+<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;errordlg(['No&nbsp;writer&nbsp;found&nbsp;for&nbsp;extension&nbsp;"'&nbsp;ext&nbsp;'"']);</td></tr>
+<tr><td>87</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>88</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">fprintf('File&nbsp;written&nbsp;to&nbsp;%s...\n',filepath);</td></tr>
+<tr><td>90</td><td bgcolor="#FF0000">saved_metadata&nbsp;=&nbsp;metadata;</td></tr>
+<tr><td>91</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

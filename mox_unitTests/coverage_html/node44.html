@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\examples\matRad_example2_photons.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\examples\matRad_example2_photons.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">%%&nbsp;Example:&nbsp;Photon&nbsp;Treatment&nbsp;Plan</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2017&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;In&nbsp;this&nbsp;example&nbsp;we&nbsp;will&nbsp;show&nbsp;</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;(i)&nbsp;how&nbsp;to&nbsp;load&nbsp;patient&nbsp;data&nbsp;into&nbsp;matRad</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;(ii)&nbsp;how&nbsp;to&nbsp;setup&nbsp;a&nbsp;photon&nbsp;dose&nbsp;calculation&nbsp;and&nbsp;</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;(iii)&nbsp;how&nbsp;to&nbsp;inversely&nbsp;optimize&nbsp;beamlet&nbsp;intensities</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;(iv)&nbsp;how&nbsp;to&nbsp;visually&nbsp;and&nbsp;quantitatively&nbsp;evaluate&nbsp;the&nbsp;result</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%%&nbsp;Patient&nbsp;Data&nbsp;Import</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;begin&nbsp;with&nbsp;a&nbsp;clear&nbsp;Matlab&nbsp;environment.&nbsp;Then,&nbsp;import&nbsp;the&nbsp;TG119</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;phantom&nbsp;into&nbsp;your&nbsp;workspace.&nbsp;The&nbsp;phantom&nbsp;is&nbsp;comprised&nbsp;of&nbsp;a&nbsp;'ct'&nbsp;and&nbsp;'cst'</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;structure&nbsp;defining&nbsp;the&nbsp;CT&nbsp;images&nbsp;and&nbsp;the&nbsp;structure&nbsp;set.&nbsp;Make&nbsp;sure&nbsp;the&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;root&nbsp;directory&nbsp;with&nbsp;all&nbsp;its&nbsp;subdirectories&nbsp;is&nbsp;added&nbsp;to&nbsp;the&nbsp;Matlab&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;search&nbsp;path.</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>30</td><td bgcolor="#FF0000">matRad_rc;&nbsp;%If&nbsp;this&nbsp;throws&nbsp;an&nbsp;error,&nbsp;run&nbsp;it&nbsp;from&nbsp;the&nbsp;parent&nbsp;directory&nbsp;first&nbsp;to&nbsp;set&nbsp;the&nbsp;paths</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">load('TG119.mat');</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;file&nbsp;TG119.mat&nbsp;contains&nbsp;two&nbsp;Matlab&nbsp;variables.&nbsp;Let's&nbsp;check&nbsp;what&nbsp;we&nbsp;</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;have&nbsp;just&nbsp;imported.&nbsp;First,&nbsp;the&nbsp;'ct'&nbsp;variable&nbsp;comprises&nbsp;the&nbsp;ct&nbsp;cube&nbsp;along</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%with&nbsp;some&nbsp;meta&nbsp;information&nbsp;describing&nbsp;properties&nbsp;of&nbsp;the&nbsp;ct&nbsp;cube&nbsp;(cube&nbsp;</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;dimensions,&nbsp;resolution,&nbsp;number&nbsp;of&nbsp;CT&nbsp;scenarios).&nbsp;Please&nbsp;note&nbsp;that&nbsp;</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">%multiple&nbsp;ct&nbsp;cubes&nbsp;(e.g.&nbsp;4D&nbsp;CT)&nbsp;can&nbsp;be&nbsp;stored&nbsp;in&nbsp;the&nbsp;cell&nbsp;array&nbsp;ct.cube{}</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">display(ct);</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;'cst'&nbsp;cell&nbsp;array&nbsp;defines&nbsp;volumes&nbsp;of&nbsp;interests&nbsp;along&nbsp;with&nbsp;information&nbsp;</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF">%&nbsp;required&nbsp;for&nbsp;optimization.&nbsp;Each&nbsp;row&nbsp;belongs&nbsp;to&nbsp;one&nbsp;certain&nbsp;volume&nbsp;of&nbsp;</td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;interest&nbsp;(VOI),&nbsp;whereas&nbsp;each&nbsp;column&nbsp;defines&nbsp;different&nbsp;properties.&nbsp;</td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF">%&nbsp;Specifically,&nbsp;the&nbsp;second&nbsp;and&nbsp;third&nbsp;column&nbsp;&nbsp;show&nbsp;the&nbsp;name&nbsp;and&nbsp;the&nbsp;type&nbsp;of&nbsp;</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;structure.&nbsp;The&nbsp;type&nbsp;can&nbsp;be&nbsp;set&nbsp;to&nbsp;OAR,&nbsp;TARGET&nbsp;or&nbsp;IGNORED.&nbsp;The&nbsp;fourth&nbsp;</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF">%&nbsp;column&nbsp;contains&nbsp;a&nbsp;linear&nbsp;index&nbsp;vector&nbsp;that&nbsp;lists&nbsp;all&nbsp;voxels&nbsp;belonging&nbsp;to&nbsp;</td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">%&nbsp;a&nbsp;certain&nbsp;VOI.</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">display(cst);</td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;fifth&nbsp;column&nbsp;represents&nbsp;meta&nbsp;parameters&nbsp;for&nbsp;optimization.&nbsp;The&nbsp;overlap</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">%&nbsp;priority&nbsp;is&nbsp;used&nbsp;to&nbsp;resolve&nbsp;ambiguities&nbsp;of&nbsp;overlapping&nbsp;structures&nbsp;(voxels&nbsp;</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">%&nbsp;belonging&nbsp;to&nbsp;multiple&nbsp;structures&nbsp;will&nbsp;only&nbsp;be&nbsp;assigned&nbsp;to&nbsp;the&nbsp;VOI(s)&nbsp;with</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;highest&nbsp;overlap&nbsp;priority,&nbsp;i.e..&nbsp;the&nbsp;lowest&nbsp;value).&nbsp;The&nbsp;parameters&nbsp;</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">%&nbsp;alphaX&nbsp;and&nbsp;betaX&nbsp;correspond&nbsp;to&nbsp;the&nbsp;tissue's&nbsp;photon-radiosensitivity&nbsp;</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">%&nbsp;parameter&nbsp;of&nbsp;the&nbsp;linear&nbsp;quadratic&nbsp;model.&nbsp;These&nbsp;parameter&nbsp;are&nbsp;required&nbsp;for</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">%&nbsp;biological&nbsp;treatment&nbsp;planning&nbsp;using&nbsp;a&nbsp;variable&nbsp;RBE.&nbsp;Let's&nbsp;output&nbsp;the&nbsp;meta&nbsp;</td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF">%&nbsp;optimization&nbsp;parameter&nbsp;of&nbsp;the&nbsp;target,&nbsp;which&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;thrid&nbsp;row:</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">ixTarget&nbsp;=&nbsp;3;</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">display(cst{ixTarget,5});</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;sixth&nbsp;column&nbsp;contains&nbsp;optimization&nbsp;information&nbsp;such&nbsp;as&nbsp;objectives&nbsp;and</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF">%&nbsp;constraints&nbsp;which&nbsp;are&nbsp;required&nbsp;to&nbsp;calculate&nbsp;the&nbsp;objective&nbsp;function&nbsp;value.&nbsp;</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">%&nbsp;Please&nbsp;note,&nbsp;that&nbsp;multiple&nbsp;objectives/constraints&nbsp;can&nbsp;be&nbsp;defined&nbsp;for</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">%&nbsp;individual&nbsp;structures.&nbsp;Here,&nbsp;we&nbsp;have&nbsp;defined&nbsp;a&nbsp;squared&nbsp;deviation&nbsp;</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">%&nbsp;objective&nbsp;making&nbsp;it&nbsp;'expensive/costly'&nbsp;for&nbsp;the&nbsp;optimizer&nbsp;to&nbsp;over-&nbsp;and&nbsp;</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">%&nbsp;underdose&nbsp;the&nbsp;target&nbsp;structure&nbsp;(both&nbsp;are&nbsp;equally&nbsp;important).&nbsp;</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">display(cst{ixTarget,6});</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">%%&nbsp;Treatment&nbsp;Plan</td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;next&nbsp;step&nbsp;is&nbsp;to&nbsp;define&nbsp;your&nbsp;treatment&nbsp;plan&nbsp;labeled&nbsp;as&nbsp;'pln'.&nbsp;This&nbsp;</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">%&nbsp;matlab&nbsp;structure&nbsp;requires&nbsp;input&nbsp;from&nbsp;the&nbsp;treatment&nbsp;planner&nbsp;and&nbsp;defines&nbsp;</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;most&nbsp;important&nbsp;cornerstones&nbsp;of&nbsp;your&nbsp;treatment&nbsp;plan.</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF">%&nbsp;First&nbsp;of&nbsp;all,&nbsp;we&nbsp;need&nbsp;to&nbsp;define&nbsp;what&nbsp;kind&nbsp;of&nbsp;radiation&nbsp;modality&nbsp;we&nbsp;would</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF">%&nbsp;like&nbsp;to&nbsp;use.&nbsp;Possible&nbsp;values&nbsp;are&nbsp;photons,&nbsp;protons&nbsp;or&nbsp;carbon.&nbsp;In&nbsp;this&nbsp;case</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">%&nbsp;we&nbsp;want&nbsp;to&nbsp;use&nbsp;photons.&nbsp;Then,&nbsp;we&nbsp;need&nbsp;to&nbsp;define&nbsp;a&nbsp;treatment&nbsp;machine&nbsp;to&nbsp;</td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">%&nbsp;correctly&nbsp;load&nbsp;the&nbsp;corresponding&nbsp;base&nbsp;data.&nbsp;matRad&nbsp;includes&nbsp;base&nbsp;data&nbsp;for</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">%&nbsp;generic&nbsp;photon&nbsp;linear&nbsp;accelerator&nbsp;called&nbsp;'Generic'.&nbsp;By&nbsp;this&nbsp;means&nbsp;matRad&nbsp;</td></tr>
+<tr><td>84</td><td bgcolor="#FFFFFF">%&nbsp;will&nbsp;look&nbsp;for&nbsp;'photons_Generic.mat'&nbsp;in&nbsp;our&nbsp;root&nbsp;directory&nbsp;and&nbsp;will&nbsp;use&nbsp;</td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;data&nbsp;provided&nbsp;in&nbsp;there&nbsp;for&nbsp;dose&nbsp;calculation</td></tr>
+<tr><td>86</td><td bgcolor="#FF0000">pln.radiationMode&nbsp;=&nbsp;'photons';&nbsp;&nbsp;</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">pln.machine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'Generic';</td></tr>
+<tr><td>88</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>89</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">%&nbsp;Define&nbsp;the&nbsp;flavor&nbsp;of&nbsp;optimization&nbsp;along&nbsp;with&nbsp;the&nbsp;quantity&nbsp;that&nbsp;should&nbsp;be</td></tr>
+<tr><td>91</td><td bgcolor="#FFFFFF">%&nbsp;used&nbsp;for&nbsp;optimization.&nbsp;Possible&nbsp;values&nbsp;are&nbsp;(none:&nbsp;physical&nbsp;optimization;&nbsp;</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">%&nbsp;const_RBExD:&nbsp;constant&nbsp;RBE&nbsp;of&nbsp;1.1;&nbsp;LEMIV_effect:&nbsp;effect-based&nbsp;</td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">%&nbsp;optimization;&nbsp;LEMIV_RBExD:&nbsp;optimization&nbsp;of&nbsp;RBE-weighted&nbsp;dose.&nbsp;As&nbsp;we&nbsp;are&nbsp;</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF">%&nbsp;using&nbsp;photons,&nbsp;we&nbsp;simply&nbsp;set&nbsp;the&nbsp;parameter&nbsp;to&nbsp;'none'&nbsp;thereby&nbsp;indicating&nbsp;</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;physical&nbsp;dose&nbsp;should&nbsp;be&nbsp;optimized.</td></tr>
+<tr><td>96</td><td bgcolor="#FF0000">pln.propOpt.bioOptimization&nbsp;=&nbsp;'none';&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">%&nbsp;Now&nbsp;we&nbsp;have&nbsp;to&nbsp;set&nbsp;some&nbsp;beam&nbsp;parameters.&nbsp;We&nbsp;can&nbsp;define&nbsp;multiple&nbsp;beam&nbsp;</td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF">%&nbsp;angles&nbsp;for&nbsp;the&nbsp;treatment&nbsp;and&nbsp;pass&nbsp;these&nbsp;to&nbsp;the&nbsp;plan&nbsp;as&nbsp;a&nbsp;vector.&nbsp;matRad&nbsp;</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">%&nbsp;will&nbsp;then&nbsp;interpret&nbsp;the&nbsp;vector&nbsp;as&nbsp;multiple&nbsp;beams.&nbsp;In&nbsp;this&nbsp;case,&nbsp;we&nbsp;define</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">%&nbsp;linear&nbsp;spaced&nbsp;beams&nbsp;from&nbsp;0&nbsp;degree&nbsp;to&nbsp;359&nbsp;degree&nbsp;in&nbsp;40&nbsp;degree&nbsp;steps.&nbsp;This&nbsp;</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF">%&nbsp;results&nbsp;in&nbsp;9&nbsp;beams.&nbsp;All&nbsp;corresponding&nbsp;couch&nbsp;angles&nbsp;are&nbsp;set&nbsp;to&nbsp;0&nbsp;at&nbsp;this&nbsp;</td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">%&nbsp;point.&nbsp;Moreover,&nbsp;we&nbsp;set&nbsp;the&nbsp;bixelWidth&nbsp;to&nbsp;5,&nbsp;which&nbsp;results&nbsp;in&nbsp;a&nbsp;beamlet&nbsp;</td></tr>
+<tr><td>105</td><td bgcolor="#FFFFFF">%&nbsp;size&nbsp;of&nbsp;5&nbsp;x&nbsp;5&nbsp;mm&nbsp;in&nbsp;the&nbsp;isocenter&nbsp;plane.&nbsp;The&nbsp;number&nbsp;of&nbsp;fractions&nbsp;is&nbsp;set&nbsp;</td></tr>
+<tr><td>106</td><td bgcolor="#FFFFFF">%&nbsp;to&nbsp;30.&nbsp;Internally,&nbsp;matRad&nbsp;considers&nbsp;the&nbsp;fraction&nbsp;dose&nbsp;for&nbsp;optimization,&nbsp;</td></tr>
+<tr><td>107</td><td bgcolor="#FFFFFF">%&nbsp;however,&nbsp;objetives&nbsp;and&nbsp;constraints&nbsp;are&nbsp;defined&nbsp;for&nbsp;the&nbsp;entire&nbsp;treatment.</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">pln.numOfFractions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;30;</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">pln.propStf.gantryAngles&nbsp;&nbsp;&nbsp;=&nbsp;[0:40:359];</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">pln.propStf.couchAngles&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;zeros(1,numel(pln.propStf.gantryAngles));</td></tr>
+<tr><td>111</td><td bgcolor="#FF0000">pln.propStf.bixelWidth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;5;</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF">%&nbsp;Obtain&nbsp;the&nbsp;number&nbsp;of&nbsp;beams&nbsp;and&nbsp;voxels&nbsp;from&nbsp;the&nbsp;existing&nbsp;variables&nbsp;and&nbsp;</td></tr>
+<tr><td>115</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;the&nbsp;iso-center&nbsp;which&nbsp;is&nbsp;per&nbsp;default&nbsp;the&nbsp;center&nbsp;of&nbsp;gravity&nbsp;of&nbsp;</td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF">%&nbsp;all&nbsp;target&nbsp;voxels.</td></tr>
+<tr><td>117</td><td bgcolor="#FF0000">pln.propStf.numOfBeams&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;numel(pln.propStf.gantryAngles);</td></tr>
+<tr><td>118</td><td bgcolor="#FF0000">pln.propStf.isoCenter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ones(pln.propStf.numOfBeams,1)&nbsp;*&nbsp;matRad_getIsoCenter(cst,ct,0);</td></tr>
+<tr><td>119</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF">%%&nbsp;dose&nbsp;calculation&nbsp;settings</td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;resolution&nbsp;of&nbsp;dose&nbsp;calculation&nbsp;and&nbsp;optimization</td></tr>
+<tr><td>122</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.x&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>123</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.y&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>124</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.z&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>125</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF">%&nbsp;Enable&nbsp;sequencing&nbsp;and&nbsp;disable&nbsp;direct&nbsp;aperture&nbsp;optimization&nbsp;(DAO)&nbsp;for&nbsp;now.</td></tr>
+<tr><td>128</td><td bgcolor="#FFFFFF">%&nbsp;A&nbsp;DAO&nbsp;optimization&nbsp;is&nbsp;shown&nbsp;in&nbsp;a&nbsp;seperate&nbsp;example.</td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">pln.propOpt.runSequencing&nbsp;=&nbsp;1;</td></tr>
+<tr><td>130</td><td bgcolor="#FF0000">pln.propOpt.runDAO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0;</td></tr>
+<tr><td>131</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>132</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF">%&nbsp;and&nbsp;et&nbsp;voila&nbsp;our&nbsp;treatment&nbsp;plan&nbsp;structure&nbsp;is&nbsp;ready.&nbsp;Lets&nbsp;have&nbsp;a&nbsp;look:</td></tr>
+<tr><td>134</td><td bgcolor="#FF0000">display(pln);</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>136</td><td bgcolor="#FFFFFF">%%&nbsp;Generate&nbsp;Beam&nbsp;Geometry&nbsp;STF</td></tr>
+<tr><td>137</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;steering&nbsp;file&nbsp;struct&nbsp;comprises&nbsp;the&nbsp;complete&nbsp;beam&nbsp;geometry&nbsp;along&nbsp;with&nbsp;</td></tr>
+<tr><td>138</td><td bgcolor="#FFFFFF">%&nbsp;ray&nbsp;position,&nbsp;pencil&nbsp;beam&nbsp;positions&nbsp;and&nbsp;energies,&nbsp;source&nbsp;to&nbsp;axis&nbsp;distance&nbsp;(SAD)&nbsp;etc.</td></tr>
+<tr><td>139</td><td bgcolor="#FF0000">stf&nbsp;=&nbsp;matRad_generateStf(ct,cst,pln);</td></tr>
+<tr><td>140</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>142</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;display&nbsp;the&nbsp;beam&nbsp;geometry&nbsp;information&nbsp;of&nbsp;the&nbsp;6th&nbsp;beam</td></tr>
+<tr><td>143</td><td bgcolor="#FF0000">display(stf(6));</td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>145</td><td bgcolor="#FFFFFF">%%&nbsp;Dose&nbsp;Calculation</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;generate&nbsp;dosimetric&nbsp;information&nbsp;by&nbsp;pre-computing&nbsp;dose&nbsp;influence&nbsp;</td></tr>
+<tr><td>147</td><td bgcolor="#FFFFFF">%&nbsp;matrices&nbsp;for&nbsp;unit&nbsp;beamlet&nbsp;intensities.&nbsp;Having&nbsp;dose&nbsp;influences&nbsp;available&nbsp;</td></tr>
+<tr><td>148</td><td bgcolor="#FFFFFF">%&nbsp;allows&nbsp;subsequent&nbsp;inverse&nbsp;optimization.</td></tr>
+<tr><td>149</td><td bgcolor="#FF0000">dij&nbsp;=&nbsp;matRad_calcPhotonDose(ct,stf,pln,cst);</td></tr>
+<tr><td>150</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>151</td><td bgcolor="#FFFFFF">%%&nbsp;Inverse&nbsp;Optimization&nbsp;for&nbsp;IMRT</td></tr>
+<tr><td>152</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;goal&nbsp;of&nbsp;the&nbsp;fluence&nbsp;optimization&nbsp;is&nbsp;to&nbsp;find&nbsp;a&nbsp;set&nbsp;of&nbsp;beamlet/pencil&nbsp;</td></tr>
+<tr><td>153</td><td bgcolor="#FFFFFF">%&nbsp;beam&nbsp;weights&nbsp;which&nbsp;yield&nbsp;the&nbsp;best&nbsp;possible&nbsp;dose&nbsp;distribution&nbsp;according&nbsp;to</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;clinical&nbsp;objectives&nbsp;and&nbsp;constraints&nbsp;underlying&nbsp;the&nbsp;radiation&nbsp;</td></tr>
+<tr><td>155</td><td bgcolor="#FFFFFF">%&nbsp;treatment.&nbsp;Once&nbsp;the&nbsp;optimization&nbsp;has&nbsp;finished,&nbsp;trigger&nbsp;once&nbsp;the&nbsp;GUI&nbsp;to&nbsp;</td></tr>
+<tr><td>156</td><td bgcolor="#FFFFFF">%&nbsp;visualize&nbsp;the&nbsp;optimized&nbsp;dose&nbsp;cubes.</td></tr>
+<tr><td>157</td><td bgcolor="#FF0000">resultGUI&nbsp;=&nbsp;matRad_fluenceOptimization(dij,cst,pln);</td></tr>
+<tr><td>158</td><td bgcolor="#FF0000">matRadGUI;</td></tr>
+<tr><td>159</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF">%%&nbsp;Plot&nbsp;the&nbsp;Resulting&nbsp;Dose&nbsp;Slice</td></tr>
+<tr><td>161</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;plot&nbsp;the&nbsp;transversal&nbsp;iso-center&nbsp;dose&nbsp;slice</td></tr>
+<tr><td>162</td><td bgcolor="#FF0000">slice&nbsp;=&nbsp;round(pln.propStf.isoCenter(1,3)./ct.resolution.z);</td></tr>
+<tr><td>163</td><td bgcolor="#FF0000">figure</td></tr>
+<tr><td>164</td><td bgcolor="#FF0000">imagesc(resultGUI.physicalDose(:,:,slice)),colorbar,&nbsp;colormap(jet);</td></tr>
+<tr><td>165</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>166</td><td bgcolor="#FFFFFF">%%&nbsp;Now&nbsp;let's&nbsp;create&nbsp;another&nbsp;treatment&nbsp;plan&nbsp;but&nbsp;this&nbsp;time&nbsp;use&nbsp;a&nbsp;coarser&nbsp;beam&nbsp;spacing.</td></tr>
+<tr><td>167</td><td bgcolor="#FFFFFF">%&nbsp;Instead&nbsp;of&nbsp;40&nbsp;degree&nbsp;spacing&nbsp;use&nbsp;a&nbsp;50&nbsp;degree&nbsp;geantry&nbsp;beam&nbsp;spacing</td></tr>
+<tr><td>168</td><td bgcolor="#FF0000">pln.propStf.gantryAngles&nbsp;=&nbsp;[0:50:359];</td></tr>
+<tr><td>169</td><td bgcolor="#FF0000">pln.propStf.couchAngles&nbsp;&nbsp;=&nbsp;zeros(1,numel(pln.propStf.gantryAngles));</td></tr>
+<tr><td>170</td><td bgcolor="#FF0000">pln.propStf.numOfBeams&nbsp;&nbsp;&nbsp;=&nbsp;numel(pln.propStf.gantryAngles);</td></tr>
+<tr><td>171</td><td bgcolor="#FF0000">stf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_generateStf(ct,cst,pln);</td></tr>
+<tr><td>172</td><td bgcolor="#FF0000">pln.propStf.isoCenter&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;vertcat(stf.isoCenter);</td></tr>
+<tr><td>173</td><td bgcolor="#FF0000">dij&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_calcPhotonDose(ct,stf,pln,cst);</td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">resultGUI_coarse&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_fluenceOptimization(dij,cst,pln);</td></tr>
+<tr><td>175</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>176</td><td bgcolor="#FFFFFF">%%&nbsp;&nbsp;Visual&nbsp;Comparison&nbsp;of&nbsp;results</td></tr>
+<tr><td>177</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;compare&nbsp;the&nbsp;new&nbsp;recalculation&nbsp;against&nbsp;the&nbsp;optimization&nbsp;result.</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF">%&nbsp;Check&nbsp;if&nbsp;you&nbsp;have&nbsp;added&nbsp;all&nbsp;subdirectories&nbsp;to&nbsp;the&nbsp;Matlab&nbsp;search&nbsp;path,</td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF">%&nbsp;otherwise&nbsp;it&nbsp;will&nbsp;not&nbsp;find&nbsp;the&nbsp;plotting&nbsp;function</td></tr>
+<tr><td>180</td><td bgcolor="#FF0000">plane&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;3;</td></tr>
+<tr><td>181</td><td bgcolor="#FF0000">doseWindow&nbsp;=&nbsp;[0&nbsp;max([resultGUI.physicalDose(:);&nbsp;resultGUI_coarse.physicalDose(:)])];</td></tr>
+<tr><td>182</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>183</td><td bgcolor="#FF0000">figure,title('original&nbsp;plan&nbsp;-&nbsp;fine&nbsp;beam&nbsp;spacing')</td></tr>
+<tr><td>184</td><td bgcolor="#FF0000">matRad_plotSliceWrapper(gca,ct,cst,1,resultGUI.physicalDose,plane,slice,[],0.75,colorcube,[],doseWindow,[]);</td></tr>
+<tr><td>185</td><td bgcolor="#FF0000">figure,title('modified&nbsp;plan&nbsp;-&nbsp;coarse&nbsp;beam&nbsp;spacing')</td></tr>
+<tr><td>186</td><td bgcolor="#FF0000">matRad_plotSliceWrapper(gca,ct,cst,1,resultGUI_coarse.physicalDose,plane,slice,[],0.75,colorcube,[],doseWindow,[]);</td></tr>
+<tr><td>187</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>188</td><td bgcolor="#FFFFFF">%%&nbsp;</td></tr>
+<tr><td>189</td><td bgcolor="#FFFFFF">%&nbsp;At&nbsp;this&nbsp;point&nbsp;we&nbsp;would&nbsp;like&nbsp;to&nbsp;see&nbsp;the&nbsp;absolute&nbsp;difference&nbsp;of&nbsp;the&nbsp;first&nbsp;</td></tr>
+<tr><td>190</td><td bgcolor="#FFFFFF">%&nbsp;optimization&nbsp;(finer&nbsp;beam&nbsp;spacing)&nbsp;and&nbsp;the&nbsp;second&nbsp;optimization&nbsp;(coarser&nbsp;</td></tr>
+<tr><td>191</td><td bgcolor="#FFFFFF">%&nbsp;beam&nbsp;spacing)</td></tr>
+<tr><td>192</td><td bgcolor="#FF0000">absDiffCube&nbsp;=&nbsp;resultGUI.physicalDose-resultGUI_coarse.physicalDose;</td></tr>
+<tr><td>193</td><td bgcolor="#FF0000">figure,title(&nbsp;'fine&nbsp;beam&nbsp;spacing&nbsp;plan&nbsp;-&nbsp;coarse&nbsp;beam&nbsp;spacing&nbsp;plan')</td></tr>
+<tr><td>194</td><td bgcolor="#FF0000">matRad_plotSliceWrapper(gca,ct,cst,1,absDiffCube,plane,slice,[],[],colorcube);</td></tr>
+<tr><td>195</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF">%%&nbsp;Obtain&nbsp;dose&nbsp;statistics</td></tr>
+<tr><td>197</td><td bgcolor="#FFFFFF">%&nbsp;Two&nbsp;more&nbsp;columns&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;cst&nbsp;structure&nbsp;depicting&nbsp;the&nbsp;DVH&nbsp;and</td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF">%&nbsp;standard&nbsp;dose&nbsp;statistics&nbsp;such&nbsp;as&nbsp;D95,D98,&nbsp;mean&nbsp;dose,&nbsp;max&nbsp;dose&nbsp;etc.</td></tr>
+<tr><td>199</td><td bgcolor="#FF0000">[dvh,qi]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_indicatorWrapper(cst,pln,resultGUI);</td></tr>
+<tr><td>200</td><td bgcolor="#FF0000">[dvh_coarse,qi_coarse]&nbsp;=&nbsp;matRad_indicatorWrapper(cst,pln,resultGUI_coarse);</td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>202</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>203</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;treatment&nbsp;plan&nbsp;using&nbsp;more&nbsp;beams&nbsp;should&nbsp;in&nbsp;principle&nbsp;result&nbsp;in&nbsp;a</td></tr>
+<tr><td>204</td><td bgcolor="#FFFFFF">%&nbsp;better&nbsp;OAR&nbsp;sparing.&nbsp;Therefore&nbsp;lets&nbsp;have&nbsp;a&nbsp;look&nbsp;at&nbsp;the&nbsp;D95&nbsp;of&nbsp;the&nbsp;OAR&nbsp;of&nbsp;</td></tr>
+<tr><td>205</td><td bgcolor="#FFFFFF">%&nbsp;both&nbsp;plans</td></tr>
+<tr><td>206</td><td bgcolor="#FF0000">ixOAR&nbsp;=&nbsp;2;</td></tr>
+<tr><td>207</td><td bgcolor="#FF0000">display(qi(ixOAR).D_95);</td></tr>
+<tr><td>208</td><td bgcolor="#FF0000">display(qi_coarse(ixOAR).D_95);</td></tr>
+<tr><td>209</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>210</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>211</td><td bgcolor="#FFFFFF">%%&nbsp;</td></tr>
+<tr><td>212</td><td bgcolor="#FFFFFF">%&nbsp;Export&nbsp;the&nbsp;dose&nbsp;in&nbsp;binary&nbsp;format.&nbsp;matRad&nbsp;can&nbsp;write&nbsp;multiple&nbsp;formats,&nbsp;here&nbsp;we&nbsp;</td></tr>
+<tr><td>213</td><td bgcolor="#FFFFFF">%&nbsp;choose&nbsp;to&nbsp;export&nbsp;in&nbsp;nrrd&nbsp;format&nbsp;using&nbsp;the&nbsp;matRad_writeCube&nbsp;function,&nbsp;which&nbsp;</td></tr>
+<tr><td>214</td><td bgcolor="#FFFFFF">%&nbsp;chooses&nbsp;the&nbsp;appropriate&nbsp;subroutine&nbsp;from&nbsp;the&nbsp;extension.&nbsp;The&nbsp;metadata&nbsp;struct&nbsp;can</td></tr>
+<tr><td>215</td><td bgcolor="#FFFFFF">%&nbsp;also&nbsp;store&nbsp;more&nbsp;optional&nbsp;parameters,&nbsp;but&nbsp;requires&nbsp;only&nbsp;the&nbsp;resolution&nbsp;to&nbsp;be&nbsp;s</td></tr>
+<tr><td>216</td><td bgcolor="#FFFFFF">%&nbsp;set.</td></tr>
+<tr><td>217</td><td bgcolor="#FF0000">metadata&nbsp;=&nbsp;struct('resolution',[ct.resolution.x&nbsp;ct.resolution.y&nbsp;ct.resolution.z]);</td></tr>
+<tr><td>218</td><td bgcolor="#FF0000">matRad_writeCube([pwd&nbsp;filesep&nbsp;'photonDose_example2.nrrd'],resultGUI.physicalDose,'double',metadata);</td></tr>
+<tr><td>219</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>220</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>221</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

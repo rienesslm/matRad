@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcParticleDose.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcParticleDose.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;dij&nbsp;=&nbsp;matRad_calcParticleDose(ct,stf,pln,cst,calcDoseDirect)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;particle&nbsp;dose&nbsp;calculation&nbsp;wrapper</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij&nbsp;=&nbsp;matRad_calcParticleDose(ct,stf,pln,cst,calcDoseDirect)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;cube</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;steering&nbsp;information&nbsp;struct</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;plan&nbsp;meta&nbsp;information&nbsp;struct</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;calcDoseDirect:&nbsp;boolian&nbsp;switch&nbsp;to&nbsp;bypass&nbsp;dose&nbsp;influence&nbsp;matrix</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;computation&nbsp;and&nbsp;directly&nbsp;calculate&nbsp;dose;&nbsp;only&nbsp;makes</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sense&nbsp;in&nbsp;combination&nbsp;with&nbsp;matRad_calcDoseDirect.m</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;dij&nbsp;struct</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[1]&nbsp;http://iopscience.iop.org/0031-9155/41/8/005</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>36</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;&nbsp;MatRad_Config.instance();</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;init&nbsp;dose&nbsp;calc</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">matRad_calcDoseInit;</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF">%&nbsp;initialize&nbsp;waitbar</td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">figureWait&nbsp;=&nbsp;waitbar(0,'calculate&nbsp;dose&nbsp;influence&nbsp;matrix&nbsp;for&nbsp;particles...');</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF">%&nbsp;prevent&nbsp;closure&nbsp;of&nbsp;waitbar&nbsp;and&nbsp;show&nbsp;busy&nbsp;state</td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">set(figureWait,'pointer','watch');</td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF">%&nbsp;helper&nbsp;function&nbsp;for&nbsp;energy&nbsp;selection</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">round2&nbsp;=&nbsp;@(a,b)round(a*10^b)/10^b;</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">if&nbsp;(isequal(pln.propOpt.bioOptimization,'LEMIV_effect')&nbsp;||&nbsp;isequal(pln.propOpt.bioOptimization,'LEMIV_RBExD'))&nbsp;...&nbsp;</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alphaDoseTmpContainer&nbsp;=&nbsp;cell(numOfBixelsContainer,dij.numOfScenarios);</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;betaDoseTmpContainer&nbsp;&nbsp;=&nbsp;cell(numOfBixelsContainer,dij.numOfScenarios);</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:dij.numOfScenarios</td></tr>
+<tr><td>55</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.mAlphaDose{i}&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;spalloc(dij.doseGrid.numOfVoxels,numOfColumnsDij,1);</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.mSqrtBetaDose{i}&nbsp;=&nbsp;spalloc(dij.doseGrid.numOfVoxels,numOfColumnsDij,1);</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">elseif&nbsp;isequal(pln.propOpt.bioOptimization,'const_RBExD')&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'protons')</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.RBE&nbsp;=&nbsp;1.1;</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('matRad:&nbsp;Using&nbsp;a&nbsp;constant&nbsp;RBE&nbsp;of&nbsp;%g\n',dij.RBE);&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>64</td><td bgcolor="#FF0000">if&nbsp;isfield(pln,'propDoseCalc')&nbsp;&amp;&amp;&nbsp;...</td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;isfield(pln.propDoseCalc,'calcLET')&nbsp;&amp;&amp;&nbsp;...</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;pln.propDoseCalc.calcLET</td></tr>
+<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;if&nbsp;isfield(machine.data,'LET')</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;letDoseTmpContainer&nbsp;=&nbsp;cell(numOfBixelsContainer,dij.numOfScenarios);</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Allocate&nbsp;space&nbsp;for&nbsp;dij.dosexLET&nbsp;sparse&nbsp;matrix</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:dij.numOfScenarios</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.mLETDose{i}&nbsp;=&nbsp;spalloc(dij.doseGrid.numOfVoxels,numOfColumnsDij,1);</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;else</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('LET&nbsp;not&nbsp;available&nbsp;in&nbsp;the&nbsp;machine&nbsp;data.&nbsp;LET&nbsp;will&nbsp;not&nbsp;be&nbsp;calculated.');</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;end</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">%&nbsp;generates&nbsp;tissue&nbsp;class&nbsp;matrix&nbsp;for&nbsp;biological&nbsp;optimization</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">if&nbsp;(isequal(pln.propOpt.bioOptimization,'LEMIV_effect')&nbsp;||&nbsp;isequal(pln.propOpt.bioOptimization,'LEMIV_RBExD'))&nbsp;...&nbsp;</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;&nbsp;&nbsp;isfield(machine.data,'alphaX')&nbsp;&amp;&amp;&nbsp;isfield(machine.data,'betaX')</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('matRad:&nbsp;loading&nbsp;biological&nbsp;base&nbsp;data...&nbsp;');</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vTissueIndex&nbsp;=&nbsp;zeros(size(VdoseGrid,1),1);</td></tr>
+<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.ax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;zeros(dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.bx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;zeros(dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>88</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cst&nbsp;=&nbsp;matRad_setOverlapPriorities(cst);</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;resizing&nbsp;cst&nbsp;to&nbsp;dose&nbsp;cube&nbsp;resolution&nbsp;</td></tr>
+<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cst&nbsp;=&nbsp;matRad_resizeCstToGrid(cst,dij.ctGrid.x,dij.ctGrid.y,dij.ctGrid.z,...</td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.x,dij.doseGrid.y,dij.doseGrid.z);</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;retrieve&nbsp;photon&nbsp;LQM&nbsp;parameter&nbsp;for&nbsp;the&nbsp;current&nbsp;dose&nbsp;grid&nbsp;voxels</td></tr>
+<tr><td>95</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dij.ax,dij.bx]&nbsp;=&nbsp;matRad_getPhotonLQMParameters(cst,dij.doseGrid.numOfVoxels,1,VdoseGrid);</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:size(cst,1)</td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;if&nbsp;cst&nbsp;is&nbsp;compatiable&nbsp;</td></tr>
+<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(cst{i,5})&nbsp;&amp;&amp;&nbsp;isfield(cst{i,5},'alphaX')&nbsp;&amp;&amp;&nbsp;isfield(cst{i,5},'betaX')&nbsp;</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;if&nbsp;base&nbsp;data&nbsp;contains&nbsp;alphaX&nbsp;and&nbsp;betaX</td></tr>
+<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IdxTissue&nbsp;=&nbsp;find(ismember(machine.data(1).alphaX,cst{i,5}.alphaX)&nbsp;&amp;&nbsp;...</td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ismember(machine.data(1).betaX,cst{i,5}.betaX));</td></tr>
+<tr><td>105</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>106</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;consitency&nbsp;of&nbsp;biological&nbsp;baseData&nbsp;and&nbsp;cst&nbsp;settings</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(IdxTissue)</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isInVdoseGrid&nbsp;=&nbsp;ismember(VdoseGrid,cst{i,4}{1});</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vTissueIndex(isInVdoseGrid)&nbsp;=&nbsp;IdxTissue;</td></tr>
+<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>111</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('biological&nbsp;base&nbsp;data&nbsp;and&nbsp;cst&nbsp;inconsistent\n');</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vTissueIndex(row)&nbsp;=&nbsp;1;</td></tr>
+<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo(['matRad:&nbsp;tissue&nbsp;type&nbsp;of&nbsp;'&nbsp;cst{i,2}&nbsp;'&nbsp;was&nbsp;set&nbsp;to&nbsp;1\n']);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>117</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('done.\n');</td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('base&nbsp;data&nbsp;is&nbsp;incomplement&nbsp;-&nbsp;alphaX&nbsp;and/or&nbsp;betaX&nbsp;is&nbsp;missing');</td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>125</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF">%&nbsp;issue&nbsp;warning&nbsp;if&nbsp;biological&nbsp;optimization&nbsp;not&nbsp;possible</td></tr>
+<tr><td>128</td><td bgcolor="#FFFFFF">elseif&nbsp;sum(strcmp(pln.propOpt.bioOptimization,{'LEMIV_effect','LEMIV_RBExD'}))&gt;0&nbsp;&amp;&amp;&nbsp;~strcmp(pln.radiationMode,'carbon')&nbsp;||...</td></tr>
+<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~strcmp(pln.radiationMode,'protons')&nbsp;&amp;&amp;&nbsp;strcmp(pln.propOpt.bioOptimization,'const_RBExD')</td></tr>
+<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;warndlg([pln.propOpt.bioOptimization&nbsp;'&nbsp;optimization&nbsp;not&nbsp;possible&nbsp;with&nbsp;'&nbsp;pln.radiationMode&nbsp;'-&nbsp;physical&nbsp;optimization&nbsp;is&nbsp;carried&nbsp;out&nbsp;instead.']);</td></tr>
+<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propOpt.bioOptimization&nbsp;=&nbsp;'none';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>132</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>134</td><td bgcolor="#FFFFFF">%&nbsp;lateral&nbsp;cutoff&nbsp;for&nbsp;raytracing&nbsp;and&nbsp;geo&nbsp;calculations</td></tr>
+<tr><td>135</td><td bgcolor="#FF0000">effectiveLateralCutoff&nbsp;=&nbsp;matRad_cfg.propDoseCalc.defaultGeometricCutOff;</td></tr>
+<tr><td>136</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>137</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('matRad:&nbsp;Particle&nbsp;dose&nbsp;calculation...\n');</td></tr>
+<tr><td>138</td><td bgcolor="#FF0000">counter&nbsp;=&nbsp;0;</td></tr>
+<tr><td>139</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>140</td><td bgcolor="#FFFFFF">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>141</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:length(stf)&nbsp;%&nbsp;loop&nbsp;over&nbsp;all&nbsp;beams</td></tr>
+<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;</td></tr>
+<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;init&nbsp;beam</td></tr>
+<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_calcDoseInitBeam;</td></tr>
+<tr><td>145</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Determine&nbsp;lateral&nbsp;cutoff</td></tr>
+<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('matRad:&nbsp;calculate&nbsp;lateral&nbsp;cutoff...');</td></tr>
+<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cutOffLevel&nbsp;=&nbsp;matRad_cfg.propDoseCalc.defaultLateralCutOff;</td></tr>
+<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;visBoolLateralCutOff&nbsp;=&nbsp;0;</td></tr>
+<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;machine&nbsp;=&nbsp;matRad_calcLateralParticleCutOff(machine,cutOffLevel,stf(i),visBoolLateralCutOff);</td></tr>
+<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('done.\n');&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>152</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>153</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays&nbsp;%&nbsp;loop&nbsp;over&nbsp;all&nbsp;rays</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(stf(i).ray(j).energy)</td></tr>
+<tr><td>156</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;index&nbsp;of&nbsp;maximum&nbsp;used&nbsp;energy&nbsp;(round&nbsp;to&nbsp;keV&nbsp;for&nbsp;numerical</td></tr>
+<tr><td>158</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;reasons</td></tr>
+<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;energyIx&nbsp;=&nbsp;max(round2(stf(i).ray(j).energy,4))&nbsp;==&nbsp;round2([machine.data.energy],4);</td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>161</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxLateralCutoffDoseCalc&nbsp;=&nbsp;max(machine.data(energyIx).LatCutOff.CutOff);</td></tr>
+<tr><td>162</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>163</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Ray&nbsp;tracing&nbsp;for&nbsp;beam&nbsp;i&nbsp;and&nbsp;ray&nbsp;j</td></tr>
+<tr><td>164</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ix,radialDist_sq]&nbsp;=&nbsp;matRad_calcGeoDists(rot_coordsVdoseGrid,&nbsp;...</td></tr>
+<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).sourcePoint_bev,&nbsp;...</td></tr>
+<tr><td>166</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).targetPoint_bev,&nbsp;...</td></tr>
+<tr><td>167</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.meta.SAD,&nbsp;...</td></tr>
+<tr><td>168</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find(~isnan(radDepthVdoseGrid{1})),&nbsp;...</td></tr>
+<tr><td>169</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxLateralCutoffDoseCalc);</td></tr>
+<tr><td>170</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>171</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radDepths&nbsp;=&nbsp;radDepthVdoseGrid{1}(ix);&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>172</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>173</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;just&nbsp;use&nbsp;tissue&nbsp;classes&nbsp;of&nbsp;voxels&nbsp;found&nbsp;by&nbsp;ray&nbsp;tracer</td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(isequal(pln.propOpt.bioOptimization,'LEMIV_effect')&nbsp;||&nbsp;isequal(pln.propOpt.bioOptimization,'LEMIV_RBExD'))&nbsp;...&nbsp;</td></tr>
+<tr><td>175</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
+<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vTissueIndex_j&nbsp;=&nbsp;vTissueIndex(ix,:);</td></tr>
+<tr><td>177</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>179</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:stf(i).numOfBixelsPerRay(j)&nbsp;%&nbsp;loop&nbsp;over&nbsp;all&nbsp;bixels&nbsp;per&nbsp;ray</td></tr>
+<tr><td>180</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>181</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter&nbsp;=&nbsp;counter&nbsp;+&nbsp;1;</td></tr>
+<tr><td>182</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelsPerBeam&nbsp;=&nbsp;bixelsPerBeam&nbsp;+&nbsp;1;</td></tr>
+<tr><td>183</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>184</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Display&nbsp;progress&nbsp;and&nbsp;update&nbsp;text&nbsp;only&nbsp;200&nbsp;times</td></tr>
+<tr><td>185</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;mod(bixelsPerBeam,max(1,round(stf(i).totalNumOfBixels/200)))&nbsp;==&nbsp;0</td></tr>
+<tr><td>186</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_progress(bixelsPerBeam/max(1,round(stf(i).totalNumOfBixels/200)),...</td></tr>
+<tr><td>187</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;floor(stf(i).totalNumOfBixels/max(1,round(stf(i).totalNumOfBixels/200))));</td></tr>
+<tr><td>188</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>189</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>190</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;update&nbsp;waitbar&nbsp;only&nbsp;100&nbsp;times&nbsp;if&nbsp;it&nbsp;is&nbsp;not&nbsp;closed</td></tr>
+<tr><td>191</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;mod(counter,round(dij.totalNumOfBixels/100))&nbsp;==&nbsp;0&nbsp;&amp;&amp;&nbsp;ishandle(figureWait)</td></tr>
+<tr><td>192</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;waitbar(counter/dij.totalNumOfBixels,figureWait);</td></tr>
+<tr><td>193</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>194</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>195</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;remember&nbsp;beam&nbsp;and&nbsp;bixel&nbsp;number</td></tr>
+<tr><td>196</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~calcDoseDirect</td></tr>
+<tr><td>197</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.beamNum(counter)&nbsp;&nbsp;=&nbsp;i;</td></tr>
+<tr><td>198</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.rayNum(counter)&nbsp;&nbsp;&nbsp;=&nbsp;j;</td></tr>
+<tr><td>199</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.bixelNum(counter)&nbsp;=&nbsp;k;</td></tr>
+<tr><td>200</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>202</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;energy&nbsp;index&nbsp;in&nbsp;base&nbsp;data</td></tr>
+<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;energyIx&nbsp;=&nbsp;find(round2(stf(i).ray(j).energy(k),4)&nbsp;==&nbsp;round2([machine.data.energy],4));</td></tr>
+<tr><td>204</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>205</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;offset&nbsp;vector&nbsp;to&nbsp;account&nbsp;for&nbsp;additional&nbsp;offsets&nbsp;modelled&nbsp;in&nbsp;the&nbsp;base&nbsp;data&nbsp;and&nbsp;a&nbsp;potential&nbsp;</td></tr>
+<tr><td>206</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;range&nbsp;shifter.&nbsp;In&nbsp;the&nbsp;following,&nbsp;we&nbsp;only&nbsp;perform&nbsp;dose&nbsp;calculation&nbsp;for&nbsp;voxels&nbsp;having&nbsp;a&nbsp;radiological&nbsp;depth</td></tr>
+<tr><td>207</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;that&nbsp;is&nbsp;within&nbsp;the&nbsp;limits&nbsp;of&nbsp;the&nbsp;base&nbsp;data&nbsp;set&nbsp;(-&gt;&nbsp;machine.data(i).dephts).&nbsp;By&nbsp;this&nbsp;means,&nbsp;we&nbsp;only&nbsp;allow&nbsp;&nbsp;</td></tr>
+<tr><td>208</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;interpolations&nbsp;in&nbsp;matRad_calcParticleDoseBixel()&nbsp;and&nbsp;avoid&nbsp;extrapolations.</td></tr>
+<tr><td>209</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offsetRadDepth&nbsp;=&nbsp;machine.data(energyIx).offset&nbsp;-&nbsp;stf(i).ray(j).rangeShifter(k).eqThickness;</td></tr>
+<tr><td>210</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>211</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;depth&nbsp;depended&nbsp;lateral&nbsp;cut&nbsp;off</td></tr>
+<tr><td>212</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;cutOffLevel&nbsp;&gt;=&nbsp;1</td></tr>
+<tr><td>213</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currIx&nbsp;=&nbsp;radDepths&nbsp;&lt;=&nbsp;machine.data(energyIx).depths(end)&nbsp;+&nbsp;offsetRadDepth;</td></tr>
+<tr><td>214</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;cutOffLevel&nbsp;&lt;&nbsp;1&nbsp;&amp;&amp;&nbsp;cutOffLevel&nbsp;&gt;&nbsp;0</td></tr>
+<tr><td>215</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;perform&nbsp;rough&nbsp;2D&nbsp;clipping</td></tr>
+<tr><td>216</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currIx&nbsp;=&nbsp;radDepths&nbsp;&lt;=&nbsp;machine.data(energyIx).depths(end)&nbsp;+&nbsp;offsetRadDepth&nbsp;&amp;&nbsp;...</td></tr>
+<tr><td>217</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radialDist_sq&nbsp;&lt;=&nbsp;max(machine.data(energyIx).LatCutOff.CutOff.^2);</td></tr>
+<tr><td>218</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>219</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;peform&nbsp;fine&nbsp;2D&nbsp;clipping&nbsp;&nbsp;</td></tr>
+<tr><td>220</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;length(machine.data(energyIx).LatCutOff.CutOff)&nbsp;&gt;&nbsp;1</td></tr>
+<tr><td>221</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currIx(currIx)&nbsp;=&nbsp;matRad_interp1((machine.data(energyIx).LatCutOff.depths&nbsp;+&nbsp;offsetRadDepth)',...</td></tr>
+<tr><td>222</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(machine.data(energyIx).LatCutOff.CutOff.^2)',&nbsp;radDepths(currIx))&nbsp;&gt;=&nbsp;radialDist_sq(currIx);</td></tr>
+<tr><td>223</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>224</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>225</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('cutoff&nbsp;must&nbsp;be&nbsp;a&nbsp;value&nbsp;between&nbsp;0&nbsp;and&nbsp;1')</td></tr>
+<tr><td>226</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>227</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>228</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;empty&nbsp;bixels&nbsp;may&nbsp;happen&nbsp;during&nbsp;recalculation&nbsp;of&nbsp;error</td></tr>
+<tr><td>229</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;scenarios&nbsp;-&gt;&nbsp;skip&nbsp;to&nbsp;next&nbsp;bixel</td></tr>
+<tr><td>230</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~any(currIx)</td></tr>
+<tr><td>231</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
+<tr><td>232</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>233</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>234</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;adjust&nbsp;radDepth&nbsp;according&nbsp;to&nbsp;range&nbsp;shifter</td></tr>
+<tr><td>235</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currRadDepths&nbsp;=&nbsp;radDepths(currIx)&nbsp;+&nbsp;stf(i).ray(j).rangeShifter(k).eqThickness;</td></tr>
+<tr><td>236</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>237</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;initial&nbsp;focus&nbsp;sigma</td></tr>
+<tr><td>238</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni&nbsp;=&nbsp;matRad_interp1(machine.data(energyIx).initFocus.dist&nbsp;(stf(i).ray(j).focusIx(k),:)',&nbsp;...</td></tr>
+<tr><td>239</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).initFocus.sigma(stf(i).ray(j).focusIx(k),:)',stf(i).ray(j).SSD);</td></tr>
+<tr><td>240</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni_sq&nbsp;=&nbsp;sigmaIni^2;</td></tr>
+<tr><td>241</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>242</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;consider&nbsp;range&nbsp;shifter&nbsp;for&nbsp;protons&nbsp;if&nbsp;applicable</td></tr>
+<tr><td>243</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;stf(i).ray(j).rangeShifter(k).eqThickness&nbsp;&gt;&nbsp;0&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'protons')</td></tr>
+<tr><td>244</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>245</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;compute!</td></tr>
+<tr><td>246</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaRashi&nbsp;=&nbsp;matRad_calcSigmaRashi(machine.data(energyIx).energy,&nbsp;...</td></tr>
+<tr><td>247</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).rangeShifter(k),&nbsp;...</td></tr>
+<tr><td>248</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).SSD);</td></tr>
+<tr><td>249</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>250</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;add&nbsp;to&nbsp;initial&nbsp;sigma&nbsp;in&nbsp;quadrature</td></tr>
+<tr><td>251</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni_sq&nbsp;=&nbsp;sigmaIni_sq&nbsp;+&nbsp;&nbsp;sigmaRashi^2;</td></tr>
+<tr><td>252</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>253</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>254</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>255</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;particle&nbsp;dose&nbsp;for&nbsp;bixel&nbsp;k&nbsp;on&nbsp;ray&nbsp;j&nbsp;of&nbsp;beam&nbsp;i</td></tr>
+<tr><td>256</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelDose&nbsp;=&nbsp;matRad_calcParticleDoseBixel(...</td></tr>
+<tr><td>257</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currRadDepths,&nbsp;...</td></tr>
+<tr><td>258</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radialDist_sq(currIx),&nbsp;...</td></tr>
+<tr><td>259</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni_sq,&nbsp;...</td></tr>
+<tr><td>260</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>261</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;</td></tr>
+<tr><td>262</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;dij&nbsp;sampling&nbsp;is&nbsp;exluded&nbsp;for&nbsp;particles&nbsp;until&nbsp;we&nbsp;investigated&nbsp;the&nbsp;influence&nbsp;of&nbsp;voxel&nbsp;sampling&nbsp;for&nbsp;particles</td></tr>
+<tr><td>263</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%relDoseThreshold&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;0.02;&nbsp;&nbsp;&nbsp;%&nbsp;sample&nbsp;dose&nbsp;values&nbsp;beyond&nbsp;the&nbsp;relative&nbsp;dose</td></tr>
+<tr><td>264</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'dose';</td></tr>
+<tr><td>265</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%[currIx,bixelDose]&nbsp;=&nbsp;matRad_DijSampling(currIx,bixelDose,radDepths(currIx),radialDist_sq(currIx),Type,relDoseThreshold);</td></tr>
+<tr><td>266</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>267</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;dose&nbsp;for&nbsp;every&nbsp;bixel&nbsp;in&nbsp;cell&nbsp;array</td></tr>
+<tr><td>268</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseTmpContainer{mod(counter-1,numOfBixelsContainer)+1,1}&nbsp;=&nbsp;sparse(VdoseGrid(ix(currIx)),1,bixelDose,dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>269</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>270</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfield(dij,'mLETDose')</td></tr>
+<tr><td>271</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;particle&nbsp;LET&nbsp;for&nbsp;bixel&nbsp;k&nbsp;on&nbsp;ray&nbsp;j&nbsp;of&nbsp;beam&nbsp;i</td></tr>
+<tr><td>272</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depths&nbsp;=&nbsp;machine.data(energyIx).depths&nbsp;+&nbsp;machine.data(energyIx).offset;&nbsp;</td></tr>
+<tr><td>273</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelLET&nbsp;=&nbsp;matRad_interp1(depths,machine.data(energyIx).LET,currRadDepths);&nbsp;</td></tr>
+<tr><td>274</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>275</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;LET&nbsp;for&nbsp;every&nbsp;bixel&nbsp;in&nbsp;cell&nbsp;array</td></tr>
+<tr><td>276</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;letDoseTmpContainer{mod(counter-1,numOfBixelsContainer)+1,1}&nbsp;=&nbsp;sparse(VdoseGrid(ix(currIx)),1,bixelLET.*bixelDose,dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>277</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>278</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>279</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(isequal(pln.propOpt.bioOptimization,'LEMIV_effect')&nbsp;||&nbsp;isequal(pln.propOpt.bioOptimization,'LEMIV_RBExD'))&nbsp;...&nbsp;</td></tr>
+<tr><td>280</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
+<tr><td>281</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;alpha&nbsp;and&nbsp;beta&nbsp;values&nbsp;for&nbsp;bixel&nbsp;k&nbsp;on&nbsp;ray&nbsp;j&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>282</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[bixelAlpha,&nbsp;bixelBeta]&nbsp;=&nbsp;matRad_calcLQParameter(...</td></tr>
+<tr><td>283</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currRadDepths,...</td></tr>
+<tr><td>284</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vTissueIndex_j(currIx,:),...</td></tr>
+<tr><td>285</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx));</td></tr>
+<tr><td>286</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>287</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alphaDoseTmpContainer{mod(counter-1,numOfBixelsContainer)+1,1}&nbsp;=&nbsp;sparse(VdoseGrid(ix(currIx)),1,bixelAlpha.*bixelDose,dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>288</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;betaDoseTmpContainer{mod(counter-1,numOfBixelsContainer)+1,1}&nbsp;&nbsp;=&nbsp;sparse(VdoseGrid(ix(currIx)),1,sqrt(bixelBeta).*bixelDose,dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>289</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>290</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>291</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_calcDoseFillDij;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>292</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>293</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>294</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>295</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>296</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>297</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>298</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>299</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>300</td><td bgcolor="#FFFFFF">%Close&nbsp;Waitbar</td></tr>
+<tr><td>301</td><td bgcolor="#FF0000">if&nbsp;ishandle(figureWait)</td></tr>
+<tr><td>302</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;delete(figureWait);</td></tr>
+<tr><td>303</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>304</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>305</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>306</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcParticleDoseMC.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcParticleDoseMC.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;dij&nbsp;=&nbsp;matRad_calcParticleDoseMC(ct,stf,pln,cst,nCasePerBixel,calcDoseDirect)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;MCsqaure&nbsp;monte&nbsp;carlo&nbsp;photon&nbsp;dose&nbsp;calculation&nbsp;wrapper</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij&nbsp;=&nbsp;matRad_calcParticleDoseMc(ct,stf,pln,cst,calcDoseDirect)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	matRad&nbsp;ct&nbsp;struct</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	atRad&nbsp;steering&nbsp;information&nbsp;struct</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;plan&nbsp;meta&nbsp;information&nbsp;struct</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;nCasePerBixel:&nbsp;&nbsp;number&nbsp;of&nbsp;histories&nbsp;per&nbsp;beamlet</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;calcDoseDirect:&nbsp;binary&nbsp;switch&nbsp;to&nbsp;enable&nbsp;forward&nbsp;dose</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;calcualtion</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;dij&nbsp;struct</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;https://aapm.onlinelibrary.wiley.com/doi/abs/10.1118/1.4943377</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;http://www.openmcsquare.org/</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2019&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>37</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;if&nbsp;valid&nbsp;machine</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">if&nbsp;~strcmp(pln.radiationMode,'protons')&nbsp;||&nbsp;~strcmp(pln.machine,'generic_MCsquare')</td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Wrong&nbsp;radiation&nbsp;modality&nbsp;and/or&nbsp;machine.&nbsp;For&nbsp;now&nbsp;MCsquare&nbsp;requires&nbsp;machine&nbsp;generic_MCsquare!');&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;5</td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;set&nbsp;number&nbsp;of&nbsp;particles&nbsp;simulated&nbsp;per&nbsp;pencil&nbsp;beam</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;nCasePerBixel&nbsp;=&nbsp;matRad_cfg.propMC.MCsquare_defaultHistories;</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('Using&nbsp;default&nbsp;number&nbsp;of&nbsp;Histories&nbsp;per&nbsp;Bixel:&nbsp;%d\n',nCasePerBixel);</td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;6</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;calcDoseDirect&nbsp;=&nbsp;false;</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>55</td><td bgcolor="#FF0000">if&nbsp;isfield(pln,'propMC')&nbsp;&amp;&amp;&nbsp;isfield(pln.propMC,'outputVariance')</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('Variance&nbsp;scoring&nbsp;for&nbsp;MCsquare&nbsp;not&nbsp;yet&nbsp;supported.');</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">if&nbsp;~strcmp(pln.radiationMode,'protons')</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;errordlg('MCsquare&nbsp;is&nbsp;only&nbsp;supported&nbsp;for&nbsp;protons');</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>63</td><td bgcolor="#FF0000">env&nbsp;=&nbsp;matRad_getEnvironment();</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">%%&nbsp;check&nbsp;if&nbsp;binaries&nbsp;are&nbsp;available</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF">%Executables&nbsp;for&nbsp;simulation</td></tr>
+<tr><td>67</td><td bgcolor="#FF0000">if&nbsp;ispc</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;exist('MCSquare_windows.exe','file')&nbsp;~=&nbsp;2</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Could&nbsp;not&nbsp;find&nbsp;MCsquare&nbsp;binary.\n');</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mcSquareBinary&nbsp;=&nbsp;'MCSquare_windows.exe';</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">elseif&nbsp;ismac</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;exist('MCsquare_mac','file')&nbsp;~=&nbsp;2</td></tr>
+<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Could&nbsp;not&nbsp;find&nbsp;MCsquare&nbsp;binary.\n');</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mcSquareBinary&nbsp;=&nbsp;'./MCsquare_mac';</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%error('MCsquare&nbsp;binaries&nbsp;not&nbsp;available&nbsp;for&nbsp;mac&nbsp;OS.\n');</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF">elseif&nbsp;isunix</td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;exist('MCsquare_linux','file')&nbsp;~=&nbsp;2</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Could&nbsp;not&nbsp;find&nbsp;MCsquare&nbsp;binary.\n');</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mcSquareBinary&nbsp;=&nbsp;'./MCsquare_linux';</td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>87</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>88</td><td bgcolor="#FFFFFF">%Mex&nbsp;interface&nbsp;for&nbsp;import&nbsp;of&nbsp;sparse&nbsp;matrix</td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">if&nbsp;~calcDoseDirect&nbsp;&amp;&amp;&nbsp;~matRad_checkMexFileExists('matRad_sparseBeamletsReaderMCsquare')</td></tr>
+<tr><td>90</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('Compiled&nbsp;sparse&nbsp;reader&nbsp;interface&nbsp;not&nbsp;found.&nbsp;Trying&nbsp;to&nbsp;compile&nbsp;it&nbsp;on&nbsp;the&nbsp;fly!');&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
+<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_compileMCsquareSparseReader();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;catch&nbsp;MException</td></tr>
+<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Could&nbsp;not&nbsp;find/generate&nbsp;mex&nbsp;interface&nbsp;for&nbsp;reading&nbsp;the&nbsp;sparse&nbsp;matrix.&nbsp;\nCause&nbsp;of&nbsp;error:\n%s\n&nbsp;Please&nbsp;compile&nbsp;it&nbsp;yourself.',MException.message);</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;and&nbsp;change&nbsp;to&nbsp;MCsquare&nbsp;binary&nbsp;folder</td></tr>
+<tr><td>100</td><td bgcolor="#FF0000">currFolder&nbsp;=&nbsp;pwd;</td></tr>
+<tr><td>101</td><td bgcolor="#FF0000">fullfilename&nbsp;=&nbsp;mfilename('fullpath');</td></tr>
+<tr><td>102</td><td bgcolor="#FF0000">MCsquareFolder&nbsp;=&nbsp;[fullfilename(1:find(fullfilename==filesep,1,'last'))&nbsp;'MCsquare'&nbsp;filesep&nbsp;'bin'];</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">%&nbsp;cd&nbsp;to&nbsp;MCsquare&nbsp;folder&nbsp;(necessary&nbsp;for&nbsp;binary)</td></tr>
+<tr><td>105</td><td bgcolor="#FF0000">cd(MCsquareFolder);</td></tr>
+<tr><td>106</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>107</td><td bgcolor="#FFFFFF">%Check&nbsp;Materials</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">if&nbsp;~exist([MCsquareFolder&nbsp;filesep&nbsp;'Materials'],'dir')&nbsp;||&nbsp;~exist(fullfile(MCsquareFolder,'Materials','list.dat'),'file')</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('First&nbsp;call&nbsp;of&nbsp;MCsquare:&nbsp;unzipping&nbsp;Materials...');&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;unzip('Materials.zip');</td></tr>
+<tr><td>111</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('Done');</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF">%&nbsp;Since&nbsp;MCsquare&nbsp;1.1&nbsp;only&nbsp;allows&nbsp;similar&nbsp;resolution&nbsp;in&nbsp;x&amp;y,&nbsp;we&nbsp;do&nbsp;some</td></tr>
+<tr><td>115</td><td bgcolor="#FFFFFF">%&nbsp;extra&nbsp;checks&nbsp;on&nbsp;that&nbsp;before&nbsp;calling&nbsp;calcDoseInit.&nbsp;First,&nbsp;we&nbsp;make&nbsp;sure&nbsp;a</td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF">%&nbsp;dose&nbsp;grid&nbsp;resolution&nbsp;is&nbsp;set&nbsp;in&nbsp;the&nbsp;pln&nbsp;struct</td></tr>
+<tr><td>117</td><td bgcolor="#FF0000">if&nbsp;~isfield(pln,'propDoseCalc')&nbsp;...</td></tr>
+<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;~isfield(pln.propDoseCalc,'doseGrid')&nbsp;...</td></tr>
+<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;~isfield(pln.propDoseCalc.doseGrid,'resolution')&nbsp;...</td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;~all(isfield(pln.propDoseCalc.doseGrid.resolution,{'x','y','z'}))</td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Take&nbsp;default&nbsp;values</td></tr>
+<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propDoseCalc.doseGrid.resolution&nbsp;=&nbsp;matRad_cfg.propDoseCalc.defaultResolution;</td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>125</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF">%&nbsp;Now&nbsp;we&nbsp;check&nbsp;for&nbsp;different&nbsp;x/y</td></tr>
+<tr><td>127</td><td bgcolor="#FF0000">if&nbsp;pln.propDoseCalc.doseGrid.resolution.x&nbsp;~=&nbsp;pln.propDoseCalc.doseGrid.resolution.y</td></tr>
+<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propDoseCalc.doseGrid.resolution.x&nbsp;=&nbsp;mean([pln.propDoseCalc.doseGrid.resolution.x&nbsp;pln.propDoseCalc.doseGrid.resolution.y]);</td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propDoseCalc.doseGrid.resolution.y&nbsp;=&nbsp;pln.propDoseCalc.doseGrid.resolution.x;</td></tr>
+<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('Anisotropic&nbsp;resolution&nbsp;in&nbsp;axial&nbsp;plane&nbsp;for&nbsp;dose&nbsp;calculation&nbsp;with&nbsp;MCsquare&nbsp;not&nbsp;possible\nUsing&nbsp;average&nbsp;x&nbsp;=&nbsp;y&nbsp;=&nbsp;%g&nbsp;mm\n',pln.propDoseCalc.doseGrid.resolution.x);</td></tr>
+<tr><td>131</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>132</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF">%Now&nbsp;we&nbsp;can&nbsp;run&nbsp;calcDoseInit&nbsp;as&nbsp;usual</td></tr>
+<tr><td>134</td><td bgcolor="#FF0000">matRad_calcDoseInit;</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>136</td><td bgcolor="#FFFFFF">%Issue&nbsp;a&nbsp;warning&nbsp;when&nbsp;we&nbsp;have&nbsp;more&nbsp;than&nbsp;1&nbsp;scenario</td></tr>
+<tr><td>137</td><td bgcolor="#FF0000">if&nbsp;dij.numOfScenarios&nbsp;~=&nbsp;1</td></tr>
+<tr><td>138</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('MCsquare&nbsp;is&nbsp;only&nbsp;implemented&nbsp;for&nbsp;single&nbsp;scenario&nbsp;use&nbsp;at&nbsp;the&nbsp;moment.&nbsp;Will&nbsp;only&nbsp;use&nbsp;the&nbsp;first&nbsp;Scenario&nbsp;for&nbsp;Monte&nbsp;Carlo&nbsp;calculation!');</td></tr>
+<tr><td>139</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>140</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">%&nbsp;prefill&nbsp;ordering&nbsp;of&nbsp;MCsquare&nbsp;bixels</td></tr>
+<tr><td>142</td><td bgcolor="#FF0000">dij.MCsquareCalcOrder&nbsp;=&nbsp;NaN*ones(dij.totalNumOfBixels,1);</td></tr>
+<tr><td>143</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF">%&nbsp;We&nbsp;need&nbsp;to&nbsp;adjust&nbsp;the&nbsp;offset&nbsp;used&nbsp;in&nbsp;matRad_calcDoseInit</td></tr>
+<tr><td>145</td><td bgcolor="#FF0000">mcSquareAddIsoCenterOffset&nbsp;=&nbsp;[dij.doseGrid.resolution.x/2&nbsp;dij.doseGrid.resolution.y/2&nbsp;dij.doseGrid.resolution.z/2]&nbsp;...</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;[dij.ctGrid.resolution.x&nbsp;&nbsp;&nbsp;dij.ctGrid.resolution.y&nbsp;&nbsp;&nbsp;dij.ctGrid.resolution.z];</td></tr>
+<tr><td>147</td><td bgcolor="#FF0000">mcSquareAddIsoCenterOffset&nbsp;=&nbsp;mcSquareAddIsoCenterOffset&nbsp;-&nbsp;offset;</td></tr>
+<tr><td>148</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>149</td><td bgcolor="#FFFFFF">%&nbsp;for&nbsp;MCsquare&nbsp;we&nbsp;explicitly&nbsp;downsample&nbsp;the&nbsp;ct&nbsp;to&nbsp;the&nbsp;dose&nbsp;grid&nbsp;(might&nbsp;not</td></tr>
+<tr><td>150</td><td bgcolor="#FFFFFF">%&nbsp;be&nbsp;necessary&nbsp;in&nbsp;future&nbsp;MCsquare&nbsp;versions&nbsp;with&nbsp;separated&nbsp;grids)</td></tr>
+<tr><td>151</td><td bgcolor="#FF0000">for&nbsp;s&nbsp;=&nbsp;1:dij.numOfScenarios</td></tr>
+<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;HUcube{s}&nbsp;=&nbsp;&nbsp;matRad_interp3(dij.ctGrid.x,&nbsp;&nbsp;dij.ctGrid.y',&nbsp;&nbsp;dij.ctGrid.z,ct.cubeHU{s},&nbsp;...</td></tr>
+<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.x,dij.doseGrid.y',dij.doseGrid.z,'linear');</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>155</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>156</td><td bgcolor="#FFFFFF">%&nbsp;Explicitly&nbsp;setting&nbsp;the&nbsp;number&nbsp;of&nbsp;threads&nbsp;for&nbsp;MCsquare,&nbsp;0&nbsp;is&nbsp;all&nbsp;available</td></tr>
+<tr><td>157</td><td bgcolor="#FF0000">nbThreads&nbsp;=&nbsp;0;</td></tr>
+<tr><td>158</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>159</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;relative&nbsp;dose&nbsp;cutoff&nbsp;for&nbsp;storage&nbsp;in&nbsp;dose&nbsp;influence&nbsp;matrix,&nbsp;we&nbsp;use&nbsp;the</td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF">%&nbsp;default&nbsp;value&nbsp;for&nbsp;the&nbsp;lateral&nbsp;cutoff&nbsp;here</td></tr>
+<tr><td>161</td><td bgcolor="#FF0000">relDoseCutoff&nbsp;=&nbsp;1&nbsp;-&nbsp;matRad_cfg.propDoseCalc.defaultLateralCutOff;</td></tr>
+<tr><td>162</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;absolute&nbsp;calibration&nbsp;factor</td></tr>
+<tr><td>163</td><td bgcolor="#FFFFFF">%&nbsp;convert&nbsp;from&nbsp;eV/g/primary&nbsp;to&nbsp;Gy&nbsp;1e6&nbsp;primaries</td></tr>
+<tr><td>164</td><td bgcolor="#FF0000">absCalibrationFactorMC2&nbsp;=&nbsp;1.602176e-19&nbsp;*&nbsp;1.0e+9;</td></tr>
+<tr><td>165</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>166</td><td bgcolor="#FF0000">if&nbsp;isequal(pln.propOpt.bioOptimization,'const_RBExD')</td></tr>
+<tr><td>167</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.RBE&nbsp;=&nbsp;1.1;</td></tr>
+<tr><td>168</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('matRad:&nbsp;Using&nbsp;a&nbsp;constant&nbsp;RBE&nbsp;of&nbsp;%g\n',dij.RBE);</td></tr>
+<tr><td>169</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>170</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>171</td><td bgcolor="#FFFFFF">%&nbsp;MCsquare&nbsp;settings</td></tr>
+<tr><td>172</td><td bgcolor="#FF0000">MCsquareConfigFile&nbsp;=&nbsp;'MCsquareConfig.txt';</td></tr>
+<tr><td>173</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">MCsquareConfig&nbsp;=&nbsp;MatRad_MCsquareConfig;</td></tr>
+<tr><td>175</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>176</td><td bgcolor="#FF0000">MCsquareConfig.BDL_Plan_File&nbsp;=&nbsp;'currBixels.txt';</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">MCsquareConfig.CT_File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'MC2patientCT.mhd';</td></tr>
+<tr><td>178</td><td bgcolor="#FF0000">MCsquareConfig.Num_Threads&nbsp;&nbsp;&nbsp;=&nbsp;nbThreads;</td></tr>
+<tr><td>179</td><td bgcolor="#FF0000">MCsquareConfig.RNG_Seed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1234;</td></tr>
+<tr><td>180</td><td bgcolor="#FF0000">MCsquareConfig.Num_Primaries&nbsp;=&nbsp;nCasePerBixel;</td></tr>
+<tr><td>181</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>182</td><td bgcolor="#FFFFFF">%&nbsp;turn&nbsp;simulation&nbsp;of&nbsp;individual&nbsp;beamlets</td></tr>
+<tr><td>183</td><td bgcolor="#FF0000">MCsquareConfig.Beamlet_Mode&nbsp;=&nbsp;~calcDoseDirect;</td></tr>
+<tr><td>184</td><td bgcolor="#FFFFFF">%&nbsp;turn&nbsp;of&nbsp;writing&nbsp;of&nbsp;full&nbsp;dose&nbsp;cube</td></tr>
+<tr><td>185</td><td bgcolor="#FF0000">MCsquareConfig.Dose_MHD_Output&nbsp;=&nbsp;calcDoseDirect;</td></tr>
+<tr><td>186</td><td bgcolor="#FFFFFF">%&nbsp;turn&nbsp;on&nbsp;sparse&nbsp;output</td></tr>
+<tr><td>187</td><td bgcolor="#FF0000">MCsquareConfig.Dose_Sparse_Output&nbsp;=&nbsp;~calcDoseDirect;</td></tr>
+<tr><td>188</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;threshold&nbsp;of&nbsp;sparse&nbsp;matrix&nbsp;generation</td></tr>
+<tr><td>189</td><td bgcolor="#FF0000">MCsquareConfig.Dose_Sparse_Threshold&nbsp;=&nbsp;relDoseCutoff;</td></tr>
+<tr><td>190</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>191</td><td bgcolor="#FFFFFF">%&nbsp;write&nbsp;patient&nbsp;data</td></tr>
+<tr><td>192</td><td bgcolor="#FF0000">MCsquareBinCubeResolution&nbsp;=&nbsp;[dij.doseGrid.resolution.x&nbsp;...</td></tr>
+<tr><td>193</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.resolution.y&nbsp;...</td></tr>
+<tr><td>194</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.resolution.z];&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>195</td><td bgcolor="#FF0000">matRad_writeMhd(HUcube{1},MCsquareBinCubeResolution,MCsquareConfig.CT_File);</td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>197</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>199</td><td bgcolor="#FF0000">counter&nbsp;=&nbsp;0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>200</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:length(stf)</td></tr>
+<tr><td>201</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).gantryAngle&nbsp;=&nbsp;mod(180-stf(i).gantryAngle,360);&nbsp;%Different&nbsp;MCsquare&nbsp;geometry</td></tr>
+<tr><td>202</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).couchAngle&nbsp;&nbsp;=&nbsp;stf(i).couchAngle;</td></tr>
+<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).isoCenter&nbsp;&nbsp;&nbsp;=&nbsp;stf(i).isoCenter&nbsp;+&nbsp;mcSquareAddIsoCenterOffset;</td></tr>
+<tr><td>204</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energies&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;unique([stf(i).ray.energy]);</td></tr>
+<tr><td>205</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>206</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;allocate&nbsp;empty&nbsp;target&nbsp;point&nbsp;container</td></tr>
+<tr><td>207</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:numel(stfMCsquare(i).energies)</td></tr>
+<tr><td>208</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(j).targetPoints&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
+<tr><td>209</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(j).numOfPrimaries&nbsp;=&nbsp;[];</td></tr>
+<tr><td>210</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(j).rayNum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
+<tr><td>211</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(j).bixelNum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
+<tr><td>212</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>213</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>214</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays</td></tr>
+<tr><td>215</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:stf(i).numOfBixelsPerRay(j)</td></tr>
+<tr><td>216</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter&nbsp;=&nbsp;counter&nbsp;+&nbsp;1;</td></tr>
+<tr><td>217</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.beamNum(counter)&nbsp;&nbsp;=&nbsp;i;</td></tr>
+<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.rayNum(counter)&nbsp;&nbsp;&nbsp;=&nbsp;j;</td></tr>
+<tr><td>219</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.bixelNum(counter)&nbsp;=&nbsp;k;</td></tr>
+<tr><td>220</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>221</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>222</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:numel(stfMCsquare(i).energies)</td></tr>
+<tr><td>223</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;any(stf(i).ray(j).energy&nbsp;==&nbsp;stfMCsquare(i).energies(k))</td></tr>
+<tr><td>224</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(k).rayNum&nbsp;&nbsp;&nbsp;=&nbsp;[stfMCsquare(i).energyLayer(k).rayNum&nbsp;j];</td></tr>
+<tr><td>225</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(k).bixelNum&nbsp;=&nbsp;[stfMCsquare(i).energyLayer(k).bixelNum&nbsp;...</td></tr>
+<tr><td>226</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find(stf(i).ray(j).energy&nbsp;==&nbsp;stfMCsquare(i).energies(k))];</td></tr>
+<tr><td>227</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(k).targetPoints&nbsp;=&nbsp;[stfMCsquare(i).energyLayer(k).targetPoints;&nbsp;...</td></tr>
+<tr><td>228</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-stf(i).ray(j).rayPos_bev(1)&nbsp;stf(i).ray(j).rayPos_bev(3)];</td></tr>
+<tr><td>229</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;calcDoseDirect</td></tr>
+<tr><td>230</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(k).numOfPrimaries&nbsp;=&nbsp;[stfMCsquare(i).energyLayer(k).numOfPrimaries&nbsp;...</td></tr>
+<tr><td>231</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;round(stf(i).ray(j).weight(stf(i).ray(j).energy&nbsp;==&nbsp;stfMCsquare(i).energies(k))*MCsquareConfig.Num_Primaries)];</td></tr>
+<tr><td>232</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>233</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(k).numOfPrimaries&nbsp;=&nbsp;[stfMCsquare(i).energyLayer(k).numOfPrimaries&nbsp;...</td></tr>
+<tr><td>234</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MCsquareConfig.Num_Primaries];</td></tr>
+<tr><td>235</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>236</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>237</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>238</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>239</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>240</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>241</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>242</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>243</td><td bgcolor="#FFFFFF">%&nbsp;remember&nbsp;order</td></tr>
+<tr><td>244</td><td bgcolor="#FF0000">counterMCsquare&nbsp;=&nbsp;0;</td></tr>
+<tr><td>245</td><td bgcolor="#FF0000">MCsquareOrder&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(dij.totalNumOfBixels,1);</td></tr>
+<tr><td>246</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:length(stf)</td></tr>
+<tr><td>247</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:numel(stfMCsquare(i).energies)</td></tr>
+<tr><td>248</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:numel(stfMCsquare(i).energyLayer(j).numOfPrimaries)</td></tr>
+<tr><td>249</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counterMCsquare&nbsp;=&nbsp;counterMCsquare&nbsp;+&nbsp;1;</td></tr>
+<tr><td>250</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ix&nbsp;=&nbsp;find(i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;==&nbsp;dij.beamNum&nbsp;&amp;&nbsp;...</td></tr>
+<tr><td>251</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(j).rayNum(k)&nbsp;&nbsp;&nbsp;==&nbsp;dij.rayNum&nbsp;&amp;&nbsp;...</td></tr>
+<tr><td>252</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stfMCsquare(i).energyLayer(j).bixelNum(k)&nbsp;==&nbsp;dij.bixelNum);</td></tr>
+<tr><td>253</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>254</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MCsquareOrder(ix)&nbsp;=&nbsp;counterMCsquare;</td></tr>
+<tr><td>255</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>256</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>257</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>258</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>259</td><td bgcolor="#FF0000">if&nbsp;any(isnan(MCsquareOrder))</td></tr>
+<tr><td>260</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Invalid&nbsp;ordering&nbsp;of&nbsp;Beamlets&nbsp;for&nbsp;MCsquare&nbsp;computation!');</td></tr>
+<tr><td>261</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>262</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>263</td><td bgcolor="#FFFFFF">%%&nbsp;MC&nbsp;computation&nbsp;and&nbsp;dij&nbsp;filling</td></tr>
+<tr><td>264</td><td bgcolor="#FF0000">matRad_writeMCsquareinputAllFiles(MCsquareConfigFile,MCsquareConfig,stfMCsquare);</td></tr>
+<tr><td>265</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>266</td><td bgcolor="#FFFFFF">%&nbsp;run&nbsp;MCsquare</td></tr>
+<tr><td>267</td><td bgcolor="#FF0000">[status,cmdout]&nbsp;=&nbsp;system([mcSquareBinary&nbsp;'&nbsp;'&nbsp;MCsquareConfigFile],'-echo');</td></tr>
+<tr><td>268</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>269</td><td bgcolor="#FF0000">mask&nbsp;=&nbsp;false(dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>270</td><td bgcolor="#FF0000">mask(VdoseGrid)&nbsp;=&nbsp;true;</td></tr>
+<tr><td>271</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>272</td><td bgcolor="#FFFFFF">%&nbsp;read&nbsp;sparse&nbsp;matrix</td></tr>
+<tr><td>273</td><td bgcolor="#FF0000">if&nbsp;~calcDoseDirect</td></tr>
+<tr><td>274</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.physicalDose{1}&nbsp;=&nbsp;absCalibrationFactorMC2&nbsp;*&nbsp;matRad_sparseBeamletsReaderMCsquare&nbsp;(&nbsp;...</td></tr>
+<tr><td>275</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[MCsquareConfig.Output_Directory&nbsp;filesep&nbsp;'Sparse_Dose.bin'],&nbsp;...</td></tr>
+<tr><td>276</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.dimensions,&nbsp;...</td></tr>
+<tr><td>277</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.totalNumOfBixels,&nbsp;...</td></tr>
+<tr><td>278</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask);</td></tr>
+<tr><td>279</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>280</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;=&nbsp;matRad_readMhd(MCsquareConfig.Output_Directory,'Dose.mhd');</td></tr>
+<tr><td>281</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.physicalDose{1}&nbsp;=&nbsp;sparse(VdoseGrid,ones(numel(VdoseGrid),1),&nbsp;...</td></tr>
+<tr><td>282</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;absCalibrationFactorMC2&nbsp;*&nbsp;cube(VdoseGrid),&nbsp;...</td></tr>
+<tr><td>283</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>284</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>285</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>286</td><td bgcolor="#FFFFFF">%&nbsp;reorder&nbsp;influence&nbsp;matrix&nbsp;to&nbsp;comply&nbsp;with&nbsp;matRad&nbsp;default&nbsp;ordering</td></tr>
+<tr><td>287</td><td bgcolor="#FF0000">if&nbsp;MCsquareConfig.Beamlet_Mode</td></tr>
+<tr><td>288</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.physicalDose{1}&nbsp;=&nbsp;dij.physicalDose{1}(:,MCsquareOrder);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>289</td><td bgcolor="#FFFFFF">end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>290</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>291</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('matRad:&nbsp;done!\n');</td></tr>
+<tr><td>292</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>293</td><td bgcolor="#FF0000">try</td></tr>
+<tr><td>294</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;wait&nbsp;0.1s&nbsp;for&nbsp;closing&nbsp;all&nbsp;waitbars</td></tr>
+<tr><td>295</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;allWaitBarFigures&nbsp;=&nbsp;findall(0,'type','figure','tag','TMWWaitbar');</td></tr>
+<tr><td>296</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;delete(allWaitBarFigures);</td></tr>
+<tr><td>297</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pause(0.1);</td></tr>
+<tr><td>298</td><td bgcolor="#FF0000">catch</td></tr>
+<tr><td>299</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>300</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>301</td><td bgcolor="#FFFFFF">%%&nbsp;clear&nbsp;all&nbsp;data</td></tr>
+<tr><td>302</td><td bgcolor="#FF0000">delete([MCsquareConfig.CT_File(1:end-4)&nbsp;'.*']);</td></tr>
+<tr><td>303</td><td bgcolor="#FF0000">delete('currBixels.txt');</td></tr>
+<tr><td>304</td><td bgcolor="#FF0000">delete('MCsquareConfig.txt');</td></tr>
+<tr><td>305</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>306</td><td bgcolor="#FFFFFF">%For&nbsp;Octave&nbsp;temporarily&nbsp;disable&nbsp;confirmation&nbsp;for&nbsp;recursive&nbsp;rmdir</td></tr>
+<tr><td>307</td><td bgcolor="#FF0000">if&nbsp;strcmp(env,'OCTAVE')&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>308</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rmdirConfirmState&nbsp;=&nbsp;confirm_recursive_rmdir(0);</td></tr>
+<tr><td>309</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>310</td><td bgcolor="#FF0000">rmdir(MCsquareConfig.Output_Directory,'s');</td></tr>
+<tr><td>311</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>312</td><td bgcolor="#FFFFFF">%Reset&nbsp;to&nbsp;old&nbsp;confirmatoin&nbsp;state</td></tr>
+<tr><td>313</td><td bgcolor="#FF0000">if&nbsp;strcmp(env,'OCTAVE')</td></tr>
+<tr><td>314</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;confirm_recursive_rmdir(rmdirConfirmState);</td></tr>
+<tr><td>315</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>316</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>317</td><td bgcolor="#FFFFFF">%&nbsp;cd&nbsp;back</td></tr>
+<tr><td>318</td><td bgcolor="#FF0000">cd(currFolder);</td></tr>
+<tr><td>319</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>320</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>321</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

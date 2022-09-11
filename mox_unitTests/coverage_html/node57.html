@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcDoseDirect.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcDoseDirect.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;resultGUI&nbsp;=&nbsp;matRad_calcDoseDirect(ct,stf,pln,cst,w)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;dose&nbsp;calculation&nbsp;wrapper&nbsp;bypassing&nbsp;dij&nbsp;calculation</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resultGUI&nbsp;=&nbsp;matRad_calcDoseDirect(ct,stf,pln,cst)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resultGUI&nbsp;=&nbsp;matRad_calcDoseDirect(ct,stf,pln,cst,w)</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;cube</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;steering&nbsp;information&nbsp;struct</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;plan&nbsp;meta&nbsp;information&nbsp;struct</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;w:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional&nbsp;(if&nbsp;no&nbsp;weights&nbsp;available&nbsp;in&nbsp;stf):&nbsp;bixel&nbsp;weight</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resultGUI:&nbsp;&nbsp;matRad&nbsp;result&nbsp;struct</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>35</td><td bgcolor="#FF0000">calcDoseDirect&nbsp;=&nbsp;true;</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;if&nbsp;weight&nbsp;vector&nbsp;is&nbsp;available,&nbsp;either&nbsp;in&nbsp;function&nbsp;call&nbsp;or&nbsp;in&nbsp;stf&nbsp;-&nbsp;otherwise&nbsp;dose&nbsp;calculation&nbsp;not&nbsp;possible</td></tr>
+<tr><td>38</td><td bgcolor="#FF0000">if&nbsp;~exist('w','var')&nbsp;&amp;&amp;&nbsp;~isfield([stf.ray],'weight')</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('No&nbsp;weight&nbsp;vector&nbsp;available.&nbsp;Please&nbsp;provide&nbsp;w&nbsp;or&nbsp;add&nbsp;info&nbsp;to&nbsp;stf')</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">%&nbsp;copy&nbsp;bixel&nbsp;weight&nbsp;vector&nbsp;into&nbsp;stf&nbsp;struct</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">if&nbsp;exist('w','var')</td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;sum([stf.totalNumOfBixels])&nbsp;~=&nbsp;numel(w)</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('weighting&nbsp;does&nbsp;not&nbsp;match&nbsp;steering&nbsp;information')</td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;counter&nbsp;=&nbsp;0;</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:size(stf,2)</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:stf(i).numOfBixelsPerRay(j)</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter&nbsp;=&nbsp;counter&nbsp;+&nbsp;1;</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).weight(k)&nbsp;=&nbsp;w(counter);</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">else&nbsp;%&nbsp;weights&nbsp;need&nbsp;to&nbsp;be&nbsp;in&nbsp;stf!</td></tr>
+<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;w&nbsp;=&nbsp;NaN*ones(sum([stf.totalNumOfBixels]),1);</td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;counter&nbsp;=&nbsp;0;</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:size(stf,2)</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:stf(i).numOfBixelsPerRay(j)</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter&nbsp;=&nbsp;counter&nbsp;+&nbsp;1;</td></tr>
+<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;w(counter)&nbsp;=&nbsp;stf(i).ray(j).weight(k);</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">%&nbsp;dose&nbsp;calculation</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">if&nbsp;strcmp(pln.radiationMode,'photons')</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;dij&nbsp;=&nbsp;matRad_calcPhotonDose(ct,stf,pln,cst,calcDoseDirect);</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;%dij&nbsp;=&nbsp;matRad_calcPhotonDoseVmc(ct,stf,pln,cst,5000,4,calcDoseDirect);</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">elseif&nbsp;strcmp(pln.radiationMode,'protons')&nbsp;||&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;dij&nbsp;=&nbsp;matRad_calcParticleDose(ct,stf,pln,cst,calcDoseDirect);</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;cubes;&nbsp;use&nbsp;uniform&nbsp;weights&nbsp;here,&nbsp;weighting&nbsp;with&nbsp;actual&nbsp;fluence&nbsp;</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">%&nbsp;already&nbsp;performed&nbsp;in&nbsp;dij&nbsp;construction&nbsp;</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">resultGUI&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_calcCubes(ones(pln.propStf.numOfBeams,1),dij);</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">%&nbsp;remember&nbsp;original&nbsp;fluence&nbsp;weights</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">resultGUI.w&nbsp;&nbsp;=&nbsp;w;&nbsp;</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>84</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>87</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

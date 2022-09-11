@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\mox_unitTests\test_DoseObjectives.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\mox_unitTests\test_DoseObjectives.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;test_suite=test_DoseObjectives</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;%&nbsp;assignment&nbsp;of&nbsp;'localfunctions'&nbsp;is&nbsp;necessary&nbsp;in&nbsp;Matlab&nbsp;&gt;=&nbsp;2016</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_functions=localfunctions();</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;catch&nbsp;%&nbsp;no&nbsp;problem;&nbsp;early&nbsp;Matlab&nbsp;versions&nbsp;can&nbsp;use&nbsp;initTestSuite&nbsp;fine</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>6</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;test_functions&nbsp;=&nbsp;{};</td></tr>
+<tr><td>7</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;MyFolderInfo&nbsp;=&nbsp;dir('..\optimization\+DoseObjectives');&nbsp;%relative&nbsp;path</td></tr>
+<tr><td>8</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i=1:length(MyFolderInfo)</td></tr>
+<tr><td>9</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(MyFolderInfo(i).name(1)~='.')</td></tr>
+<tr><td>10</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;not(isequal(MyFolderInfo(i).name,&nbsp;'matRad_DoseObjective.m'))</td></tr>
+<tr><td>11</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_functions{end+1}&nbsp;=&nbsp;@()&nbsp;testDoseGrad(MyFolderInfo(i).name);</td></tr>
+<tr><td>12</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_functions{end+1}&nbsp;=&nbsp;@()&nbsp;testDoseObjectiveFunction(MyFolderInfo(i).name);</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>16</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;test_functions&nbsp;=&nbsp;test_functions';</td></tr>
+<tr><td>17</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;initTestSuite;</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">function&nbsp;testDoseGrad(fileName)</td></tr>
+<tr><td>21</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;concatenationOfFileName&nbsp;=&nbsp;strcat('DoseObjectives.',&nbsp;fileName);</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;functionNameHandle&nbsp;=&nbsp;str2func(concatenationOfFileName(1:end-2));</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%penalty&nbsp;=&nbsp;1;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%dRef&nbsp;=&nbsp;2;&nbsp;%Dose&nbsp;Prescription</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%vMinPercent&nbsp;=&nbsp;50;</td></tr>
+<tr><td>26</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dose&nbsp;=&nbsp;[10&nbsp;20&nbsp;30&nbsp;40&nbsp;50&nbsp;60]';</td></tr>
+<tr><td>27</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;obj&nbsp;=&nbsp;functionNameHandle();&nbsp;%Constructor</td></tr>
+<tr><td>28</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseGrad=obj.computeDoseObjectiveGradient(dose);</td></tr>
+<tr><td>29</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertTrue(isreal(doseGrad));&nbsp;%nth&nbsp;root&nbsp;problem&nbsp;(Problem&nbsp;based&nbsp;on&nbsp;complex&nbsp;values&nbsp;of&nbsp;EUD)</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%doseFunction&nbsp;=&nbsp;obj.computeDoseObjectiveFunction(dose);</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%[deriv,err]=derivest(@(x)&nbsp;obj.computeDoseObjectiveFunction(x),&nbsp;dose,&nbsp;'deriv',1,'vectorized','no','methodorder',2);</td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[grad,err,finaldelta]=gradest(@(x)&nbsp;obj.computeDoseObjectiveFunction(x'),&nbsp;dose');</td></tr>
+<tr><td>33</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;epsilon&nbsp;=&nbsp;doseGrad*obj.maxDerivativeError&nbsp;+&nbsp;err';</td></tr>
+<tr><td>34</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertElementsAlmostEqual(grad',&nbsp;doseGrad,&nbsp;'absolute',&nbsp;max(epsilon));&nbsp;%&nbsp;Accepts&nbsp;vectors&nbsp;and&nbsp;matrices&nbsp;|&nbsp;Accepts&nbsp;vectors&nbsp;as&nbsp;epsilon</td></tr>
+<tr><td>35</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertVectorsAlmostEqual(grad',&nbsp;doseGrad,&nbsp;'absolute',&nbsp;max(epsilon));&nbsp;%&nbsp;Just&nbsp;accepts&nbsp;verctors&nbsp;|&nbsp;Add&nbsp;err&nbsp;+&nbsp;errImp</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%assertElementsAlmostEqual(err,&nbsp;0);</td></tr>
+<tr><td>37</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertEqual(size(doseGrad),&nbsp;size(dose));</td></tr>
+<tr><td>38</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertNotEqual(doseGrad,&nbsp;NaN);</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertNotEqual(doseGrad,&nbsp;Inf);</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertNotEqual(doseGrad,&nbsp;-Inf);</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">function&nbsp;testDoseObjectiveFunction(fileName)</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;concatenationOfFileName&nbsp;=&nbsp;strcat('DoseObjectives.',&nbsp;fileName);</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;functionNameHandle&nbsp;=&nbsp;str2func(concatenationOfFileName(1:end-2));</td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%penalty&nbsp;=&nbsp;1;</td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%dRef&nbsp;=&nbsp;2;&nbsp;%Dose&nbsp;Prescription</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%vMinPercent&nbsp;=&nbsp;50;</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dose&nbsp;=&nbsp;[10&nbsp;20&nbsp;30&nbsp;40&nbsp;50&nbsp;60];</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;obj&nbsp;=&nbsp;functionNameHandle();&nbsp;%Constructor</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;=&nbsp;obj.computeDoseObjectiveFunction(dose);</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[r,c]&nbsp;=&nbsp;size(f);</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertTrue(isreal(f));</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertGreaterThan(f,&nbsp;zeros(r,c)&nbsp;-&nbsp;eps);</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertNotEqual(f,&nbsp;NaN);</td></tr>
+<tr><td>55</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertNotEqual(f,&nbsp;Inf);</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertNotEqual(f,&nbsp;-Inf);</td></tr>
+</table></p></body></html>

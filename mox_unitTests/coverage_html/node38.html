@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_interpDicomDoseCube.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_interpDicomDoseCube.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[&nbsp;dose&nbsp;]&nbsp;=&nbsp;matRad_interpDicomDoseCube(&nbsp;ct,&nbsp;currDose&nbsp;)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;interpolate&nbsp;a&nbsp;given&nbsp;Dicom&nbsp;Dose&nbsp;Cube&nbsp;dicom&nbsp;RTDOSE&nbsp;data</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[&nbsp;dose&nbsp;]&nbsp;=&nbsp;matRad_interpDicomDoseCube(&nbsp;ct,&nbsp;currDose&nbsp;)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;imported&nbsp;by&nbsp;the&nbsp;matRad_importDicomCt&nbsp;function</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;currDose:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;one&nbsp;(of&nbsp;several)&nbsp;dose&nbsp;cubes&nbsp;which&nbsp;should&nbsp;be&nbsp;interpolated</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dose:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;struct&nbsp;with&nbsp;different&nbsp;actual&nbsp;current&nbsp;dose&nbsp;cube&nbsp;and&nbsp;several</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;meta&nbsp;data</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;read&nbsp;information&nbsp;out&nbsp;of&nbsp;the&nbsp;RT&nbsp;file</td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">dosefile&nbsp;=&nbsp;currDose{1};</td></tr>
+<tr><td>33</td><td bgcolor="#FF0000">if&nbsp;verLessThan('matlab','9')</td></tr>
+<tr><td>34</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseInfo&nbsp;=&nbsp;dicominfo(dosefile);</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>36</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseInfo&nbsp;=&nbsp;dicominfo(dosefile,'UseDictionaryVR',true);</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;read&nbsp;the&nbsp;dosefile&nbsp;itself</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">dosedata&nbsp;=&nbsp;dicomread(dosefile);</td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">dose.cube&nbsp;=&nbsp;double(dosedata);</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">%&nbsp;dose.cube&nbsp;=&nbsp;single(dosedata);</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF">%&nbsp;give&nbsp;it&nbsp;an&nbsp;internal&nbsp;name</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">dose.internalName&nbsp;=&nbsp;currDose{12};</td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">%&nbsp;read&nbsp;out&nbsp;the&nbsp;resolution</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">dose.resolution.x&nbsp;=&nbsp;doseInfo.PixelSpacing(1);</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">dose.resolution.y&nbsp;=&nbsp;doseInfo.PixelSpacing(2);</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">dose.resolution.z&nbsp;=&nbsp;doseInfo.SliceThickness;</td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF">%&nbsp;target&nbsp;resolution&nbsp;is&nbsp;ct.resolution</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">target_resolution&nbsp;=&nbsp;ct.resolution;</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">%&nbsp;convert&nbsp;dosedata&nbsp;to&nbsp;3-D&nbsp;cube</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">dose.cube&nbsp;=&nbsp;squeeze(dose.cube(:,:,1,:));</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">%&nbsp;ct&nbsp;resolution&nbsp;is&nbsp;target&nbsp;resolution,&nbsp;now&nbsp;convert&nbsp;to&nbsp;new&nbsp;cube;</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF">%&nbsp;generating&nbsp;grid&nbsp;vectors</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">x&nbsp;=&nbsp;doseInfo.ImagePositionPatient(1)&nbsp;+&nbsp;doseInfo.ImageOrientationPatient(1)&nbsp;*&nbsp;...</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseInfo.PixelSpacing(1)&nbsp;*&nbsp;double([0:doseInfo.Columns&nbsp;-&nbsp;1]);</td></tr>
+<tr><td>63</td><td bgcolor="#FF0000">y&nbsp;=&nbsp;doseInfo.ImagePositionPatient(2)&nbsp;+&nbsp;doseInfo.ImageOrientationPatient(5)&nbsp;*&nbsp;...</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseInfo.PixelSpacing(2)&nbsp;*&nbsp;double([0:doseInfo.Rows&nbsp;-&nbsp;1]);</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">z&nbsp;=&nbsp;[doseInfo.ImagePositionPatient(3)&nbsp;+&nbsp;doseInfo.GridFrameOffsetVector];</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;up&nbsp;grid&nbsp;matrices&nbsp;-&nbsp;implicit&nbsp;dimension&nbsp;permuation&nbsp;(X&nbsp;Y&nbsp;Z-&gt;&nbsp;Y&nbsp;X&nbsp;Z)</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">%&nbsp;Matlab&nbsp;represents&nbsp;internally&nbsp;in&nbsp;the&nbsp;first&nbsp;matrix&nbsp;dimension&nbsp;the</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">%&nbsp;ordinate&nbsp;axis&nbsp;and&nbsp;in&nbsp;the&nbsp;second&nbsp;matrix&nbsp;dimension&nbsp;the&nbsp;abscissas&nbsp;axis</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">[&nbsp;X,&nbsp;&nbsp;Y,&nbsp;&nbsp;Z]&nbsp;=&nbsp;meshgrid(x,y,z);</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">[Xq,&nbsp;Yq,&nbsp;Zq]&nbsp;=&nbsp;meshgrid(ct.x,ct.y,ct.z);</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">%&nbsp;get&nbsp;GridScalingFactor</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">gridScale&nbsp;=&nbsp;double(doseInfo.DoseGridScaling);</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">%&nbsp;rescale&nbsp;dose.cube</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">dose.cube&nbsp;=&nbsp;gridScale&nbsp;*&nbsp;dose.cube;</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">%&nbsp;interpolation&nbsp;to&nbsp;ct&nbsp;grid&nbsp;-&nbsp;cube&nbsp;is&nbsp;now&nbsp;stored&nbsp;in&nbsp;Y&nbsp;X&nbsp;Z</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">dose.cube&nbsp;=&nbsp;interp3(X,Y,Z,dose.cube,Xq,Yq,Zq,'linear',0);</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">%&nbsp;write&nbsp;new&nbsp;parameters</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">dose.resolution&nbsp;=&nbsp;ct.resolution;</td></tr>
+<tr><td>83</td><td bgcolor="#FF0000">dose.x&nbsp;=&nbsp;ct.x;</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">dose.y&nbsp;=&nbsp;ct.y;</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">dose.z&nbsp;=&nbsp;ct.z;</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>87</td><td bgcolor="#FFFFFF">%&nbsp;write&nbsp;Dicom-Tags</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">dose.dicomInfo.PixelSpacing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[target_resolution.x;&nbsp;...</td></tr>
+<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target_resolution.y];</td></tr>
+<tr><td>90</td><td bgcolor="#FF0000">dose.dicomInfo.ImagePositionPatient&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[min(dose.x);&nbsp;min(dose.y);&nbsp;min(dose.z)];</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">dose.dicomInfo.SliceThickness&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;target_resolution.z;</td></tr>
+<tr><td>92</td><td bgcolor="#FF0000">dose.dicomInfo.ImageOrientationPatient&nbsp;=&nbsp;doseInfo.ImageOrientationPatient;</td></tr>
+<tr><td>93</td><td bgcolor="#FF0000">dose.dicomInfo.DoseType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;doseInfo.DoseType;</td></tr>
+<tr><td>94</td><td bgcolor="#FF0000">dose.dicomInfo.DoseSummationType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;doseInfo.DoseSummationType;</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">%dose.dicomInfo.InstanceNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;doseInfo.InstanceNumber;&nbsp;%Not</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">%always&nbsp;given</td></tr>
+<tr><td>97</td><td bgcolor="#FF0000">dose.dicomInfo.SOPClassUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;doseInfo.SOPClassUID;</td></tr>
+<tr><td>98</td><td bgcolor="#FF0000">dose.dicomInfo.SOPInstanceUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;doseInfo.SOPInstanceUID;</td></tr>
+<tr><td>99</td><td bgcolor="#FF0000">dose.dicomInfo.ReferencedRTPlanSequence&nbsp;=&nbsp;doseInfo.ReferencedRTPlanSequence;</td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

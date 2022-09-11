@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\examples\matRad_example6_protonsNoise.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\examples\matRad_example6_protonsNoise.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">%%&nbsp;Example:&nbsp;Proton&nbsp;Treatment&nbsp;Plan&nbsp;with&nbsp;Manipulated&nbsp;CT&nbsp;values</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2017&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%%&nbsp;</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;In&nbsp;this&nbsp;example&nbsp;we&nbsp;will&nbsp;show&nbsp;</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;(i)&nbsp;how&nbsp;to&nbsp;load&nbsp;patient&nbsp;data&nbsp;into&nbsp;matRad</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;(ii)&nbsp;how&nbsp;to&nbsp;setup&nbsp;a&nbsp;proton&nbsp;dose&nbsp;calculation&nbsp;</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;(iii)&nbsp;how&nbsp;to&nbsp;inversely&nbsp;optimize&nbsp;the&nbsp;pencil&nbsp;beam&nbsp;intensities&nbsp;directly&nbsp;from&nbsp;command&nbsp;window&nbsp;in&nbsp;MATLAB.</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;(iv)&nbsp;how&nbsp;to&nbsp;re-optimize&nbsp;a&nbsp;treatment&nbsp;plan</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;(v)&nbsp;how&nbsp;to&nbsp;manipulate&nbsp;the&nbsp;CT&nbsp;cube&nbsp;by&nbsp;adding&nbsp;noise&nbsp;to&nbsp;the&nbsp;cube&nbsp;</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;(vi)&nbsp;how&nbsp;to&nbsp;recalculate&nbsp;the&nbsp;dose&nbsp;considering&nbsp;the&nbsp;manipulated&nbsp;CT&nbsp;cube&nbsp;and&nbsp;the&nbsp;previously&nbsp;optimized&nbsp;pencil&nbsp;beam&nbsp;intensities</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;(vii)&nbsp;how&nbsp;to&nbsp;compare&nbsp;the&nbsp;two&nbsp;results</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%%&nbsp;Patient&nbsp;Data&nbsp;Import</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;begin&nbsp;with&nbsp;a&nbsp;clear&nbsp;Matlab&nbsp;environment&nbsp;and&nbsp;import&nbsp;the&nbsp;prostate&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;patient&nbsp;into&nbsp;your&nbsp;workspace.</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>30</td><td bgcolor="#FF0000">matRad_rc;&nbsp;%If&nbsp;this&nbsp;throws&nbsp;an&nbsp;error,&nbsp;run&nbsp;it&nbsp;from&nbsp;the&nbsp;parent&nbsp;directory&nbsp;first&nbsp;to&nbsp;set&nbsp;the&nbsp;paths</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">load('PROSTATE.mat');</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%%&nbsp;Treatment&nbsp;Plan</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;next&nbsp;step&nbsp;is&nbsp;to&nbsp;define&nbsp;your&nbsp;treatment&nbsp;plan&nbsp;labeled&nbsp;as&nbsp;'pln'.&nbsp;This&nbsp;</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;structure&nbsp;requires&nbsp;input&nbsp;from&nbsp;the&nbsp;treatment&nbsp;planner&nbsp;and&nbsp;defines&nbsp;</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;most&nbsp;important&nbsp;cornerstones&nbsp;of&nbsp;your&nbsp;treatment&nbsp;plan.</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">pln.radiationMode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'protons';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">pln.machine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'generic_MCsquare';</td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">pln.numOfFractions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;30;</td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">pln.propOpt.bioOptimization&nbsp;=&nbsp;'const_RBExD';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">pln.propStf.gantryAngles&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[90&nbsp;270];</td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">pln.propStf.couchAngles&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[0&nbsp;0];</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">pln.propStf.bixelWidth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;3;</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">pln.propStf.numOfBeams&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;numel(pln.propStf.gantryAngles);</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">pln.propStf.isoCenter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ones(pln.propStf.numOfBeams,1)&nbsp;*&nbsp;matRad_getIsoCenter(cst,ct,0);</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">pln.propOpt.runDAO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0;</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">pln.propOpt.runSequencing&nbsp;&nbsp;&nbsp;=&nbsp;0;</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF">%&nbsp;dose&nbsp;calculation&nbsp;settings</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.x&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.y&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.z&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">%%&nbsp;Generate&nbsp;Beam&nbsp;Geometry&nbsp;STF</td></tr>
+<tr><td>57</td><td bgcolor="#FF0000">stf&nbsp;=&nbsp;matRad_generateStf(ct,cst,pln);</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">%%&nbsp;Dose&nbsp;Calculation</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">dij&nbsp;=&nbsp;matRad_calcParticleDoseMC(ct,stf,pln,cst);</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF">%%&nbsp;Inverse&nbsp;Optimization&nbsp;for&nbsp;IMPT</td></tr>
+<tr><td>63</td><td bgcolor="#FF0000">resultGUI&nbsp;=&nbsp;matRad_fluenceOptimization(dij,cst,pln);</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">%%&nbsp;Calculate&nbsp;quality&nbsp;indicators&nbsp;</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">[dvh,qi]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_indicatorWrapper(cst,pln,resultGUI);</td></tr>
+<tr><td>67</td><td bgcolor="#FF0000">ixRectum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">display(qi(ixRectum).D_5);</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;change&nbsp;the&nbsp;optimization&nbsp;parameter&nbsp;of&nbsp;the&nbsp;rectum&nbsp;in&nbsp;such&nbsp;a&nbsp;way&nbsp;that&nbsp;it</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">%&nbsp;will&nbsp;be&nbsp;better&nbsp;spared.&nbsp;We&nbsp;increase&nbsp;the&nbsp;penalty&nbsp;and&nbsp;lower&nbsp;the&nbsp;threshold&nbsp;</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;squared&nbsp;overdose&nbsp;objective&nbsp;function.&nbsp;Afterwards&nbsp;we&nbsp;re-optimize&nbsp;</td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;treatment&nbsp;plan&nbsp;and&nbsp;evaluate&nbsp;dose&nbsp;statistics&nbsp;one&nbsp;more&nbsp;time.</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">objective&nbsp;=&nbsp;cst{ixRectum,6}{1};&nbsp;%This&nbsp;gives&nbsp;a&nbsp;struct</td></tr>
+<tr><td>77</td><td bgcolor="#FF0000">objective&nbsp;=&nbsp;matRad_DoseOptimizationFunction.createInstanceFromStruct(objective);&nbsp;%Now&nbsp;we&nbsp;turn&nbsp;it&nbsp;into&nbsp;a&nbsp;class</td></tr>
+<tr><td>78</td><td bgcolor="#FF0000">objective&nbsp;=&nbsp;objective.setDoseParameters(40);&nbsp;%We&nbsp;can&nbsp;simply&nbsp;call&nbsp;this&nbsp;function&nbsp;to&nbsp;change&nbsp;the/all&nbsp;dose&nbsp;parameter(s)</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">cst{ixRectum,6}{1}&nbsp;=&nbsp;struct(objective);&nbsp;%&nbsp;We&nbsp;put&nbsp;it&nbsp;back&nbsp;as&nbsp;struct</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">cst{ixRectum,6}{1}.parameters{1}&nbsp;=&nbsp;40;</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">cst{ixRectum,6}{1}.penalty&nbsp;=&nbsp;500;</td></tr>
+<tr><td>83</td><td bgcolor="#FF0000">resultGUI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_fluenceOptimization(dij,cst,pln);</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">[dvh2,qi2]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_indicatorWrapper(cst,pln,resultGUI);</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">display(qi2(ixRectum).D_5);</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>87</td><td bgcolor="#FFFFFF">%%&nbsp;Plot&nbsp;the&nbsp;Resulting&nbsp;Dose&nbsp;Slice</td></tr>
+<tr><td>88</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;plot&nbsp;the&nbsp;transversal&nbsp;iso-center&nbsp;dose&nbsp;slice</td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">slice&nbsp;=&nbsp;round(pln.propStf.isoCenter(1,3)./ct.resolution.z);</td></tr>
+<tr><td>90</td><td bgcolor="#FF0000">figure</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">imagesc(resultGUI.RBExDose(:,:,slice)),colorbar,&nbsp;colormap(jet)</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF">%&nbsp;Now&nbsp;let's&nbsp;simulate&nbsp;a&nbsp;range&nbsp;undershoot&nbsp;by&nbsp;scaling&nbsp;the&nbsp;relative&nbsp;stopping&nbsp;power&nbsp;cube&nbsp;by&nbsp;3.5%&nbsp;percent</td></tr>
+<tr><td>95</td><td bgcolor="#FF0000">ct_manip&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ct;</td></tr>
+<tr><td>96</td><td bgcolor="#FF0000">ct_manip.cubeHU{1}&nbsp;=&nbsp;1.035*ct_manip.cubeHU{1};</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF">%%&nbsp;Recalculate&nbsp;Plan&nbsp;with&nbsp;MC&nbsp;square</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;use&nbsp;the&nbsp;existing&nbsp;optimized&nbsp;pencil&nbsp;beam&nbsp;weights&nbsp;and&nbsp;recalculate&nbsp;the&nbsp;RBE&nbsp;weighted&nbsp;dose</td></tr>
+<tr><td>100</td><td bgcolor="#FF0000">resultGUI_noise&nbsp;=&nbsp;matRad_calcDoseDirectMC(ct_manip,stf,pln,cst,resultGUI.w);</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">%%&nbsp;&nbsp;Visual&nbsp;Comparison&nbsp;of&nbsp;results</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;compare&nbsp;the&nbsp;new&nbsp;recalculation&nbsp;against&nbsp;the&nbsp;optimization&nbsp;result.</td></tr>
+<tr><td>104</td><td bgcolor="#FF0000">plane&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;3;</td></tr>
+<tr><td>105</td><td bgcolor="#FF0000">doseWindow&nbsp;=&nbsp;[0&nbsp;max([resultGUI.RBExDose(:);&nbsp;resultGUI_noise.RBExDose(:)])];</td></tr>
+<tr><td>106</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">figure,title('original&nbsp;plan')</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">matRad_plotSliceWrapper(gca,ct,cst,1,resultGUI.RBExDose,plane,slice,[],0.75,colorcube,[],doseWindow,[]);</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">figure,title('manipulated&nbsp;plan')</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">matRad_plotSliceWrapper(gca,ct_manip,cst,1,resultGUI_noise.RBExDose,plane,slice,[],0.75,colorcube,[],doseWindow,[]);</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;plot&nbsp;single&nbsp;profiles&nbsp;along&nbsp;the&nbsp;beam&nbsp;direction</td></tr>
+<tr><td>113</td><td bgcolor="#FF0000">ixProfileY&nbsp;=&nbsp;round(pln.propStf.isoCenter(1,1)./ct.resolution.x);</td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">profileOrginal&nbsp;=&nbsp;resultGUI.RBExDose(:,ixProfileY,slice);</td></tr>
+<tr><td>116</td><td bgcolor="#FF0000">profileNoise&nbsp;&nbsp;&nbsp;=&nbsp;resultGUI_noise.RBExDose(:,ixProfileY,slice);</td></tr>
+<tr><td>117</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>118</td><td bgcolor="#FF0000">figure,plot(profileOrginal,'LineWidth',2),grid&nbsp;on,hold&nbsp;on,&nbsp;</td></tr>
+<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(profileNoise,'LineWidth',2),legend({'original&nbsp;profile','noise&nbsp;profile'}),</td></tr>
+<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel('mm'),ylabel('Gy(RBE)'),title('profile&nbsp;plot')</td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">%%&nbsp;Quantitative&nbsp;Comparison&nbsp;of&nbsp;results</td></tr>
+<tr><td>123</td><td bgcolor="#FFFFFF">%&nbsp;Compare&nbsp;the&nbsp;two&nbsp;dose&nbsp;cubes&nbsp;using&nbsp;a&nbsp;gamma-index&nbsp;analysis.</td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>125</td><td bgcolor="#FF0000">doseDifference&nbsp;&nbsp;&nbsp;=&nbsp;2;</td></tr>
+<tr><td>126</td><td bgcolor="#FF0000">distToAgreement&nbsp;&nbsp;=&nbsp;2;</td></tr>
+<tr><td>127</td><td bgcolor="#FF0000">n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>128</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">[gammaCube,gammaPassRateCell]&nbsp;=&nbsp;matRad_gammaIndex(...</td></tr>
+<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;resultGUI_noise.RBExDose,resultGUI.RBExDose,...</td></tr>
+<tr><td>131</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;[ct.resolution.x,&nbsp;ct.resolution.y,&nbsp;ct.resolution.z],...</td></tr>
+<tr><td>132</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;[doseDifference&nbsp;distToAgreement],slice,n,'global',cst);</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>134</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

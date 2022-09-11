@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_importFieldShapes.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_importFieldShapes.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;collimation&nbsp;=&nbsp;matRad_importFieldShapes(beamSequence,&nbsp;fractionSequence)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;function&nbsp;to&nbsp;import&nbsp;collimator&nbsp;shapes&nbsp;from&nbsp;a&nbsp;DICOM&nbsp;RT&nbsp;plan</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;collimation&nbsp;=&nbsp;matRad_importFieldShapes(beamSequence,&nbsp;fractionSequence)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;beamSequence:&nbsp;struct&nbsp;containing&nbsp;the&nbsp;beamSequence&nbsp;elements&nbsp;from&nbsp;the&nbsp;RT&nbsp;plan&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;fractionSequence:&nbsp;struct&nbsp;containing&nbsp;the&nbsp;fractionGroupSequence&nbsp;elements&nbsp;from&nbsp;the&nbsp;RT&nbsp;plan&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;collimation:&nbsp;struct&nbsp;with&nbsp;all&nbsp;meta&nbsp;information&nbsp;about&nbsp;the&nbsp;collimators&nbsp;and</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;all&nbsp;field&nbsp;shape&nbsp;matrices&nbsp;</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>31</td><td bgcolor="#FF0000">counter&nbsp;=&nbsp;0;</td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">maximumExtent&nbsp;=&nbsp;0;</td></tr>
+<tr><td>33</td><td bgcolor="#FF0000">tmpCollimation.Fields&nbsp;=&nbsp;struct;</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;for&nbsp;following&nbsp;meta&nbsp;data&nbsp;in&nbsp;every&nbsp;control&nbsp;point&nbsp;sequence</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;Format:&nbsp;'DICOM&nbsp;Name&nbsp;Tag'&nbsp;'Name&nbsp;in&nbsp;struct';&nbsp;...&nbsp;</td></tr>
+<tr><td>37</td><td bgcolor="#FF0000">meta&nbsp;=&nbsp;&nbsp;{'NominalBeamEnergy'&nbsp;'Energy';'GantryAngle'&nbsp;'GantryAngle';...</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'PatientSupportAngle'&nbsp;'CouchAngle';'SourceToSurfaceDistance'&nbsp;'SSD'};</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;extract&nbsp;field&nbsp;information</td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">beamSeqNames&nbsp;=&nbsp;fields(beamSequence);</td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:length(beamSeqNames)</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;currBeamSeq&nbsp;=&nbsp;beamSequence.(beamSeqNames{i});</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cumWeight&nbsp;=&nbsp;0;</td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;total&nbsp;MU&nbsp;applied&nbsp;by&nbsp;beam&nbsp;i</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.beamMeterset(i)&nbsp;=&nbsp;fractionSequence.ReferencedBeamSequence.(beamSeqNames{i}).BeamMeterset;</td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;collimator&nbsp;device&nbsp;types&nbsp;</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;currDeviceSeq&nbsp;=&nbsp;beamSequence.(beamSeqNames{i}).BeamLimitingDeviceSequence;</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;currDeviceSeqNames&nbsp;=&nbsp;fieldnames(currDeviceSeq);</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;set&nbsp;device&nbsp;specific&nbsp;parameters</td></tr>
+<tr><td>55</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;device&nbsp;=&nbsp;struct;</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:length(currDeviceSeqNames)</td></tr>
+<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currLimitsSeq&nbsp;=&nbsp;currDeviceSeq.(currDeviceSeqNames{j});</td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device(j).DeviceType&nbsp;=&nbsp;currLimitsSeq.RTBeamLimitingDeviceType;</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device(j).NumOfLeafs&nbsp;=&nbsp;currLimitsSeq.NumberOfLeafJawPairs;</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device(j).Direction&nbsp;=&nbsp;device(j).DeviceType(end);&nbsp;</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strncmpi(device(j).DeviceType,'MLC',3)</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device(j).Limits&nbsp;=&nbsp;currLimitsSeq.LeafPositionBoundaries;&nbsp;</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Devices{i}&nbsp;=&nbsp;device;</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;currControlPointSeqNames&nbsp;=&nbsp;fieldnames(currBeamSeq.ControlPointSequence);</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;all&nbsp;meta&nbsp;informations&nbsp;must&nbsp;be&nbsp;defined&nbsp;in&nbsp;the&nbsp;first&nbsp;control&nbsp;point&nbsp;sequence</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;see&nbsp;DICOM&nbsp;Doc&nbsp;Sec.&nbsp;C.8.8.14.5</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;http://dicom.nema.org/MEDICAL/Dicom/2015c/output/chtml/part03/sect_C.8.8.14.5.html</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:length(meta)</td></tr>
+<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
+<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FieldMeta.(meta{j,2})&nbsp;=&nbsp;currBeamSeq.ControlPointSequence.(currControlPointSeqNames{1}).(meta{j,1});</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;catch</td></tr>
+<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Field&nbsp;'&nbsp;meta{j,1}&nbsp;'&nbsp;not&nbsp;found&nbsp;on&nbsp;beam&nbsp;sequence&nbsp;'&nbsp;beamSeqNames{i}&nbsp;...</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.&nbsp;No&nbsp;field&nbsp;shape&nbsp;import&nbsp;performed!']);</td></tr>
+<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:length(currControlPointSeqNames)</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter&nbsp;=&nbsp;counter&nbsp;+&nbsp;1;</td></tr>
+<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currControlPointElement&nbsp;=&nbsp;currBeamSeq.ControlPointSequence.(currControlPointSeqNames{j});&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>84</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfield(currControlPointElement,&nbsp;'BeamLimitingDevicePositionSequence')</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;the&nbsp;leaf&nbsp;position&nbsp;for&nbsp;every&nbsp;device</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).LeafPos{length(currDeviceSeqNames),1}&nbsp;=&nbsp;[];</td></tr>
+<tr><td>88</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;beam&nbsp;limiting&nbsp;device&nbsp;position&nbsp;sequence&nbsp;has&nbsp;to&nbsp;be&nbsp;defined&nbsp;on</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;the&nbsp;first&nbsp;control&nbsp;point&nbsp;and&nbsp;has&nbsp;to&nbsp;be&nbsp;defined&nbsp;on&nbsp;following</td></tr>
+<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;points&nbsp;only&nbsp;if&nbsp;it&nbsp;changes&nbsp;-&gt;&nbsp;default&nbsp;initilation&nbsp;if&nbsp;counter&nbsp;&gt;&nbsp;1</td></tr>
+<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;counter&nbsp;&gt;&nbsp;1</td></tr>
+<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:length(currDeviceSeqNames)</td></tr>
+<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).LeafPos{k}&nbsp;=&nbsp;tmpCollimation.Fields(counter-1).LeafPos{k};</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>98</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:length(currDeviceSeqNames)</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfield(currControlPointElement.BeamLimitingDevicePositionSequence,currDeviceSeqNames{k})</td></tr>
+<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currLeafPos&nbsp;=&nbsp;currControlPointElement.BeamLimitingDevicePositionSequence.(currDeviceSeqNames{k}).LeafJawPositions;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deviceIx&nbsp;=&nbsp;find(strcmp({device(:).DeviceType},&nbsp;...</td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currControlPointElement.BeamLimitingDevicePositionSequence.(currDeviceSeqNames{k}).RTBeamLimitingDeviceType));</td></tr>
+<tr><td>105</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(length(currLeafPos)&nbsp;~=&nbsp;2&nbsp;*&nbsp;device(deviceIx).NumOfLeafs)</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Number&nbsp;of&nbsp;leafs/jaws&nbsp;does&nbsp;not&nbsp;match&nbsp;given&nbsp;number&nbsp;of&nbsp;leaf/jaw&nbsp;positions&nbsp;in&nbsp;control&nbsp;point&nbsp;sequence&nbsp;'&nbsp;...</td></tr>
+<tr><td>108</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currControlPointSeqNames{j}&nbsp;'&nbsp;on&nbsp;beam&nbsp;sequence&nbsp;'&nbsp;beamSeqNames{i}&nbsp;'&nbsp;for&nbsp;device&nbsp;'&nbsp;...</td></tr>
+<tr><td>109</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device(deviceIx).DeviceType&nbsp;'.&nbsp;No&nbsp;field&nbsp;shape&nbsp;import&nbsp;performed!']);</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;set&nbsp;left&nbsp;and&nbsp;right&nbsp;leaf&nbsp;positions</td></tr>
+<tr><td>114</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).LeafPos{deviceIx}(:,1)&nbsp;=&nbsp;currLeafPos(1:device(deviceIx).NumOfLeafs);</td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).LeafPos{deviceIx}(:,2)&nbsp;=&nbsp;currLeafPos(device(deviceIx).NumOfLeafs+1:end);</td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;the&nbsp;total&nbsp;maximum&nbsp;extent&nbsp;of&nbsp;one&nbsp;beam&nbsp;(in&nbsp;any&nbsp;direction)&nbsp;</td></tr>
+<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maximumExtent&nbsp;=&nbsp;max(maximumExtent,&nbsp;max(abs(currLeafPos)));&nbsp;%&nbsp;check&nbsp;opening&nbsp;direction</td></tr>
+<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;direction&nbsp;perpendicular&nbsp;to&nbsp;the&nbsp;openening&nbsp;for&nbsp;MLC</td></tr>
+<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strncmpi(device(k).DeviceType,'MLC',3)</td></tr>
+<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maximumExtent&nbsp;=&nbsp;max(maximumExtent,max(abs(device(deviceIx).Limits)));</td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>123</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter)&nbsp;=&nbsp;tmpCollimation.Fields(counter&nbsp;-&nbsp;1);</td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>128</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;field&nbsp;meta&nbsp;information</td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfield(currControlPointElement,&nbsp;'CumulativeMetersetWeight')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newCumWeight&nbsp;=&nbsp;currControlPointElement.CumulativeMetersetWeight;</td></tr>
+<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).Weight&nbsp;=&nbsp;(newCumWeight&nbsp;-&nbsp;cumWeight)&nbsp;/&nbsp;...</td></tr>
+<tr><td>132</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currBeamSeq.FinalCumulativeMetersetWeight&nbsp;*&nbsp;...</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.beamMeterset(i)/100;</td></tr>
+<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cumWeight&nbsp;=&nbsp;newCumWeight;</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['No&nbsp;CumulativeMetersetWeight&nbsp;found&nbsp;in&nbsp;control&nbsp;point&nbsp;sequence&nbsp;'&nbsp;currControlPointSeqNames{j}&nbsp;...</td></tr>
+<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'&nbsp;on&nbsp;beam&nbsp;'&nbsp;beamSeqNames{i}&nbsp;'.&nbsp;No&nbsp;field&nbsp;shape&nbsp;import&nbsp;performed!']);</td></tr>
+<tr><td>138</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
+<tr><td>139</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).SAD&nbsp;=&nbsp;currBeamSeq.SourceAxisDistance;</td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;other&nbsp;meta&nbsp;information&nbsp;is&nbsp;only&nbsp;included&nbsp;in&nbsp;all&nbsp;control&nbsp;point</td></tr>
+<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;sequences&nbsp;if&nbsp;it&nbsp;changes&nbsp;during&nbsp;treatment,&nbsp;otherwise&nbsp;use&nbsp;FieldMeta</td></tr>
+<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:length(meta)</td></tr>
+<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfield(currControlPointElement,meta{k,1})</td></tr>
+<tr><td>146</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).(meta{k,2})&nbsp;=&nbsp;currControlPointElement.(meta{k,1});</td></tr>
+<tr><td>147</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).(meta{k,2})&nbsp;=&nbsp;FieldMeta.(meta{k,2});</td></tr>
+<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>151</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;save&nbsp;information&nbsp;which&nbsp;control&nbsp;point&nbsp;sequence&nbsp;belongs&nbsp;to&nbsp;which&nbsp;beam&nbsp;sequence&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(counter).BeamIndex&nbsp;=&nbsp;i;</td></tr>
+<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>155</td><td bgcolor="#FF0000">tmpCollimation.numOfFields&nbsp;=&nbsp;counter;</td></tr>
+<tr><td>156</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">%&nbsp;field&nbsp;import&nbsp;works&nbsp;only&nbsp;if&nbsp;the&nbsp;leaf&nbsp;width&nbsp;is&nbsp;a&nbsp;multiple&nbsp;of&nbsp;the&nbsp;conv</td></tr>
+<tr><td>158</td><td bgcolor="#FFFFFF">%&nbsp;resolution</td></tr>
+<tr><td>159</td><td bgcolor="#FF0000">convResolution&nbsp;=&nbsp;.5;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>160</td><td bgcolor="#FF0000">tmpCollimation.convResolution&nbsp;=&nbsp;convResolution;</td></tr>
+<tr><td>161</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>162</td><td bgcolor="#FFFFFF">%&nbsp;get&nbsp;temporary&nbsp;shape&nbsp;limits&nbsp;to&nbsp;calculate&nbsp;the&nbsp;shapes</td></tr>
+<tr><td>163</td><td bgcolor="#FF0000">shapeLimit&nbsp;=&nbsp;ceil(maximumExtent&nbsp;/&nbsp;convResolution);</td></tr>
+<tr><td>164</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>165</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;field&nbsp;shapes&nbsp;from&nbsp;leaf&nbsp;positions</td></tr>
+<tr><td>166</td><td bgcolor="#FF0000">maximumVoxelExtent&nbsp;=&nbsp;0;</td></tr>
+<tr><td>167</td><td bgcolor="#FF0000">[X,Y]&nbsp;=&nbsp;meshgrid(-shapeLimit:shapeLimit-1);</td></tr>
+<tr><td>168</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:length(tmpCollimation.Fields)</td></tr>
+<tr><td>169</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;shape&nbsp;=&nbsp;ones(2*shapeLimit);&nbsp;</td></tr>
+<tr><td>170</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;beamIndex&nbsp;=&nbsp;tmpCollimation.Fields(i).BeamIndex;</td></tr>
+<tr><td>171</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:length(tmpCollimation.Devices{beamIndex})</td></tr>
+<tr><td>172</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;for&nbsp;ASYM&nbsp;and&nbsp;SYM&nbsp;jaws&nbsp;==&nbsp;type&nbsp;1</td></tr>
+<tr><td>173</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strncmpi(tmpCollimation.Devices{beamIndex}(j).DeviceType,'ASYM',4)</td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;=&nbsp;1;</td></tr>
+<tr><td>175</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;(strcmpi(tmpCollimation.Devices{beamIndex}(j).DeviceType,'X')&nbsp;||&nbsp;...</td></tr>
+<tr><td>176</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strcmpi(tmpCollimation.Devices{beamIndex}(j).DeviceType,'Y'))</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;=&nbsp;1;</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;MLC&nbsp;==&nbsp;type&nbsp;2</td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;strncmpi(tmpCollimation.Devices{beamIndex}(j).DeviceType,'MLC',3)</td></tr>
+<tr><td>180</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;=&nbsp;2;</td></tr>
+<tr><td>181</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>182</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Device&nbsp;type&nbsp;'&nbsp;tmpCollimation.Devices{beamIndex}(j).DeviceType&nbsp;...</td></tr>
+<tr><td>183</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'&nbsp;not&nbsp;supported.&nbsp;Field&nbsp;shapes&nbsp;could&nbsp;not&nbsp;be&nbsp;imported!']);</td></tr>
+<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
+<tr><td>185</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>186</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:tmpCollimation.Devices{beamIndex}(j).NumOfLeafs</td></tr>
+<tr><td>187</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;determine&nbsp;corner&nbsp;points&nbsp;of&nbsp;the&nbsp;open&nbsp;area</td></tr>
+<tr><td>188</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p1&nbsp;=&nbsp;ceil(tmpCollimation.Fields(i).LeafPos{j}(k,1)/convResolution)+shapeLimit;</td></tr>
+<tr><td>189</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p2&nbsp;=&nbsp;ceil(tmpCollimation.Fields(i).LeafPos{j}(k,2)/convResolution)+shapeLimit+1;</td></tr>
+<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;type&nbsp;==&nbsp;2</td></tr>
+<tr><td>191</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p3&nbsp;=&nbsp;ceil(tmpCollimation.Devices{beamIndex}(j).Limits(k)/convResolution)+shapeLimit+1;</td></tr>
+<tr><td>192</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p4&nbsp;=&nbsp;ceil(tmpCollimation.Devices{beamIndex}(j).Limits(k+1)/convResolution)+shapeLimit;</td></tr>
+<tr><td>193</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;%&nbsp;for&nbsp;one&nbsp;dimensional&nbsp;collimation&nbsp;(ASMX/Y)&nbsp;other&nbsp;direction&nbsp;is&nbsp;fully&nbsp;open</td></tr>
+<tr><td>194</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p3&nbsp;=&nbsp;1;</td></tr>
+<tr><td>195</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p4&nbsp;=&nbsp;2*shapeLimit;</td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>197</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;set&nbsp;elements&nbsp;covered&nbsp;by&nbsp;the&nbsp;collimator&nbsp;to&nbsp;0</td></tr>
+<tr><td>199</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;differentiate&nbsp;between&nbsp;x&nbsp;and&nbsp;y&nbsp;direction</td></tr>
+<tr><td>200</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(p1&nbsp;&gt;&nbsp;0)&nbsp;&amp;&amp;&nbsp;(p1&nbsp;&lt;=&nbsp;2*shapeLimit)&nbsp;&amp;&amp;&nbsp;...</td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(p2&nbsp;&gt;&nbsp;0)&nbsp;&amp;&amp;&nbsp;(p2&nbsp;&lt;=&nbsp;2*shapeLimit)&nbsp;&amp;&amp;&nbsp;...</td></tr>
+<tr><td>202</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(p3&nbsp;&gt;&nbsp;0)&nbsp;&amp;&amp;&nbsp;(p3&nbsp;&lt;=&nbsp;2*shapeLimit)&nbsp;&amp;&amp;&nbsp;...</td></tr>
+<tr><td>203</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(p4&nbsp;&gt;&nbsp;0)&nbsp;&amp;&amp;&nbsp;(p4&nbsp;&lt;=&nbsp;2*shapeLimit)</td></tr>
+<tr><td>204</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
+<tr><td>205</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmpi(tmpCollimation.Devices{beamIndex}(j).Direction,&nbsp;'X')</td></tr>
+<tr><td>206</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape(p3:p4,1:p1)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>207</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape(p3:p4,p2:end)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>208</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;strcmpi(tmpCollimation.Devices{beamIndex}(j).Direction,&nbsp;'Y')</td></tr>
+<tr><td>209</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape(1:p1,p3:p4)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>210</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape(p2:end,p3:p4)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>211</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>212</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Wrong&nbsp;collimation&nbsp;direction&nbsp;'&nbsp;tmpCollimation.Devices{beamIndex}(j).Direction&nbsp;...</td></tr>
+<tr><td>213</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'&nbsp;given&nbsp;for&nbsp;device&nbsp;'&nbsp;tmpCollimation.Devices{beamIndex}(j).DeviceType&nbsp;...</td></tr>
+<tr><td>214</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.&nbsp;Fields&nbsp;could&nbsp;not&nbsp;be&nbsp;imported.']);</td></tr>
+<tr><td>215</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
+<tr><td>216</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>217</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;catch</td></tr>
+<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning('Error&nbsp;in&nbsp;setting&nbsp;field&nbsp;shapes.&nbsp;Field&nbsp;shapes&nbsp;could&nbsp;not&nbsp;be&nbsp;imported.')</td></tr>
+<tr><td>219</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
+<tr><td>220</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>221</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>222</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>223</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>224</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;openVoxelDistance&nbsp;=&nbsp;[X(shape&nbsp;==&nbsp;1);&nbsp;Y(shape&nbsp;==&nbsp;1)];</td></tr>
+<tr><td>225</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maximumVoxelExtent&nbsp;=&nbsp;max(maximumVoxelExtent,&nbsp;max(abs(openVoxelDistance)));</td></tr>
+<tr><td>226</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(i).Shape&nbsp;=&nbsp;shape;</td></tr>
+<tr><td>227</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>228</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>229</td><td bgcolor="#FF0000">tmpCollimation.fieldWidth&nbsp;=&nbsp;2&nbsp;*&nbsp;maximumVoxelExtent&nbsp;*&nbsp;convResolution;</td></tr>
+<tr><td>230</td><td bgcolor="#FFFFFF">%&nbsp;truncate&nbsp;field&nbsp;shapes&nbsp;to&nbsp;a&nbsp;symmetrical&nbsp;field&nbsp;with&nbsp;limits&nbsp;maximumVoxelExtent</td></tr>
+<tr><td>231</td><td bgcolor="#FF0000">voxelRange&nbsp;=&nbsp;(-maximumVoxelExtent+1:maximumVoxelExtent)&nbsp;+&nbsp;shapeLimit;</td></tr>
+<tr><td>232</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:length(tmpCollimation.Fields)&nbsp;</td></tr>
+<tr><td>233</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCollimation.Fields(i).Shape&nbsp;=&nbsp;tmpCollimation.Fields(i).Shape(voxelRange,&nbsp;voxelRange);</td></tr>
+<tr><td>234</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>235</td><td bgcolor="#FF0000">collimation&nbsp;=&nbsp;tmpCollimation;</td></tr>
+<tr><td>236</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>237</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

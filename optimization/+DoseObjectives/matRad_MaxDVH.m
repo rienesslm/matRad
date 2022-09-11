@@ -22,6 +22,7 @@ classdef matRad_MaxDVH < DoseObjectives.matRad_DoseObjective
         name = 'Max DVH';
         parameterNames = {'d', 'V^{max}'};
         parameterTypes = {'dose','numeric'};
+        maxDerivativeError = 1e-3;
     end
     
     properties

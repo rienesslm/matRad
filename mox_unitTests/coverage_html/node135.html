@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\optimization\@matRad_OptimizationProblemDAO\matRad_daoVec2ApertureInfo.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\optimization\@matRad_OptimizationProblemDAO\matRad_daoVec2ApertureInfo.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;updatedInfo&nbsp;=&nbsp;matRad_daoVec2ApertureInfo(apertureInfo,apertureInfoVect)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;translate&nbsp;vector&nbsp;representation&nbsp;into&nbsp;struct</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;vector&nbsp;representation&nbsp;of&nbsp;the&nbsp;aperture&nbsp;shape&nbsp;and&nbsp;weight&nbsp;are&nbsp;translated&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;into&nbsp;an&nbsp;aperture&nbsp;info&nbsp;struct.&nbsp;At&nbsp;the&nbsp;same&nbsp;time,&nbsp;the&nbsp;updated&nbsp;bixel&nbsp;weight</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;vector&nbsp;w&nbsp;is&nbsp;computed&nbsp;and&nbsp;a&nbsp;vector&nbsp;listing&nbsp;the&nbsp;correspondence&nbsp;between&nbsp;leaf&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;tips&nbsp;and&nbsp;bixel&nbsp;indices&nbsp;for&nbsp;gradient&nbsp;calculation</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;updatedInfo&nbsp;=&nbsp;matRad_daoVec2ApertureInfo(apertureInfo,apertureInfoVect)</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;apertureInfo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;aperture&nbsp;shape&nbsp;info&nbsp;struct</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;apertureInfoVect:&nbsp;aperture&nbsp;weights&nbsp;and&nbsp;shapes&nbsp;parameterized&nbsp;as&nbsp;vector</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;updatedInfo:&nbsp;updated&nbsp;aperture&nbsp;shape&nbsp;info&nbsp;struct&nbsp;according&nbsp;to&nbsp;apertureInfoVect</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;function&nbsp;to&nbsp;update&nbsp;the&nbsp;apertureInfo&nbsp;struct&nbsp;after&nbsp;the&nbsp;each&nbsp;iteraton&nbsp;of&nbsp;the</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;optimization</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">w&nbsp;=&nbsp;zeros(apertureInfo.totalNumOfBixels,1);</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF">%&nbsp;initializing&nbsp;variables</td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">updatedInfo&nbsp;=&nbsp;apertureInfo;</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">updatedInfo.apertureVector&nbsp;=&nbsp;apertureInfoVect;</td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">shapeInd&nbsp;=&nbsp;1;</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">indVect&nbsp;=&nbsp;NaN*ones(apertureInfo.totalNumOfShapes&nbsp;+&nbsp;apertureInfo.totalNumOfLeafPairs,1);</td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF">%&nbsp;helper&nbsp;function&nbsp;to&nbsp;cope&nbsp;with&nbsp;numerical&nbsp;instabilities&nbsp;through&nbsp;rounding</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">round2&nbsp;=&nbsp;@(a,b)&nbsp;round(a*10^b)/10^b;</td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">%%&nbsp;update&nbsp;the&nbsp;shapeMaps</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">%&nbsp;here&nbsp;the&nbsp;new&nbsp;colimator&nbsp;positions&nbsp;are&nbsp;used&nbsp;to&nbsp;create&nbsp;new&nbsp;shapeMaps&nbsp;that</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;now&nbsp;include&nbsp;decimal&nbsp;values&nbsp;instead&nbsp;of&nbsp;binary</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">%&nbsp;loop&nbsp;over&nbsp;all&nbsp;beams</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numel(updatedInfo.beam)</td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%posOfRightCornerPixel&nbsp;=&nbsp;apertureInfo.beam(i).posOfCornerBixel(1)&nbsp;+&nbsp;(size(apertureInfo.beam(i).bixelIndMap,2)-1)*apertureInfo.bixelWidth;</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;pre&nbsp;compute&nbsp;left&nbsp;and&nbsp;right&nbsp;bixel&nbsp;edges</td></tr>
+<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;edges_l&nbsp;=&nbsp;updatedInfo.beam(i).posOfCornerBixel(1)...</td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;([1:size(apertureInfo.beam(i).bixelIndMap,2)]-1-1/2)*updatedInfo.bixelWidth;</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;edges_r&nbsp;=&nbsp;updatedInfo.beam(i).posOfCornerBixel(1)...</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;([1:size(apertureInfo.beam(i).bixelIndMap,2)]-1+1/2)*updatedInfo.bixelWidth;</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;loop&nbsp;over&nbsp;all&nbsp;shapes</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:updatedInfo.beam(i).numOfShapes</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;update&nbsp;the&nbsp;shape&nbsp;weight</td></tr>
+<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updatedInfo.beam(i).shape(j).weight&nbsp;=&nbsp;apertureInfoVect(shapeInd);</td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;dimensions&nbsp;of&nbsp;2d&nbsp;matrices&nbsp;that&nbsp;store&nbsp;shape/bixel&nbsp;information</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n&nbsp;=&nbsp;apertureInfo.beam(i).numOfActiveLeafPairs;</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;extract&nbsp;left&nbsp;and&nbsp;right&nbsp;leaf&nbsp;positions&nbsp;from&nbsp;shape&nbsp;vector</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vectorIx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;updatedInfo.beam(i).shape(j).vectorOffset&nbsp;+&nbsp;([1:n]-1);</td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;leftLeafPos&nbsp;&nbsp;=&nbsp;apertureInfoVect(vectorIx);</td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rightLeafPos&nbsp;=&nbsp;apertureInfoVect(vectorIx+apertureInfo.totalNumOfLeafPairs);</td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;update&nbsp;information&nbsp;in&nbsp;shape&nbsp;structure</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updatedInfo.beam(i).shape(j).leftLeafPos&nbsp;&nbsp;=&nbsp;leftLeafPos;</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updatedInfo.beam(i).shape(j).rightLeafPos&nbsp;=&nbsp;rightLeafPos;</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>87</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;rounding&nbsp;for&nbsp;numerical&nbsp;stability</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;leftLeafPos&nbsp;&nbsp;=&nbsp;round2(leftLeafPos,6);</td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rightLeafPos&nbsp;=&nbsp;round2(rightLeafPos,6);</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
+<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xPosIndLeftLeaf&nbsp;&nbsp;=&nbsp;round((leftLeafPos&nbsp;-&nbsp;apertureInfo.beam(i).posOfCornerBixel(1))/apertureInfo.bixelWidth&nbsp;+&nbsp;1);</td></tr>
+<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xPosIndRightLeaf&nbsp;=&nbsp;round((rightLeafPos&nbsp;-&nbsp;apertureInfo.beam(i).posOfCornerBixel(1))/apertureInfo.bixelWidth&nbsp;+&nbsp;1);</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;limits&nbsp;because&nbsp;of&nbsp;rounding&nbsp;off&nbsp;issues&nbsp;at&nbsp;maximum,&nbsp;i.e.,&nbsp;</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;enforce&nbsp;round(X.5)&nbsp;-&gt;&nbsp;X</td></tr>
+<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xPosIndLeftLeaf(leftLeafPos&nbsp;==&nbsp;apertureInfo.beam(i).lim_r)&nbsp;=&nbsp;...</td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.5&nbsp;+&nbsp;(leftLeafPos(leftLeafPos&nbsp;==&nbsp;apertureInfo.beam(i).lim_r)&nbsp;...</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;apertureInfo.beam(i).posOfCornerBixel(1))/apertureInfo.bixelWidth;</td></tr>
+<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xPosIndRightLeaf(rightLeafPos&nbsp;==&nbsp;apertureInfo.beam(i).lim_r)&nbsp;=&nbsp;...</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.5&nbsp;+&nbsp;(rightLeafPos(rightLeafPos&nbsp;==&nbsp;apertureInfo.beam(i).lim_r)&nbsp;...</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;apertureInfo.beam(i).posOfCornerBixel(1))/apertureInfo.bixelWidth;</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;the&nbsp;bixel&nbsp;index&nbsp;that&nbsp;the&nbsp;leaves&nbsp;currently&nbsp;touch</td></tr>
+<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelIndLeftLeaf&nbsp;&nbsp;=&nbsp;apertureInfo.beam(i).bixelIndMap((xPosIndLeftLeaf-1)*n+[1:n]');</td></tr>
+<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelIndRightLeaf&nbsp;=&nbsp;apertureInfo.beam(i).bixelIndMap((xPosIndRightLeaf-1)*n+[1:n]');</td></tr>
+<tr><td>107</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;any(isnan(bixelIndLeftLeaf))&nbsp;||&nbsp;any(isnan(bixelIndRightLeaf))</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('cannot&nbsp;map&nbsp;leaf&nbsp;position&nbsp;to&nbsp;bixel&nbsp;index');</td></tr>
+<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;store&nbsp;information&nbsp;in&nbsp;index&nbsp;vector&nbsp;for&nbsp;gradient&nbsp;calculation</td></tr>
+<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;indVect(apertureInfo.beam(i).shape(j).vectorOffset+[1:n]-1)&nbsp;=&nbsp;bixelIndLeftLeaf;</td></tr>
+<tr><td>114</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;indVect(apertureInfo.beam(i).shape(j).vectorOffset+[1:n]-1+apertureInfo.totalNumOfLeafPairs)&nbsp;=&nbsp;bixelIndRightLeaf;</td></tr>
+<tr><td>115</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;opening&nbsp;fraction&nbsp;for&nbsp;every&nbsp;bixel&nbsp;in&nbsp;shape&nbsp;to&nbsp;construct</td></tr>
+<tr><td>117</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;bixel&nbsp;weight&nbsp;vector</td></tr>
+<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coveredByLeftLeaf&nbsp;&nbsp;=&nbsp;bsxfun(@minus,leftLeafPos,edges_l)&nbsp;&nbsp;/&nbsp;updatedInfo.bixelWidth;</td></tr>
+<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coveredByRightLeaf&nbsp;=&nbsp;bsxfun(@minus,edges_r,rightLeafPos)&nbsp;/&nbsp;updatedInfo.bixelWidth;</td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>122</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tempMap&nbsp;=&nbsp;1&nbsp;-&nbsp;(coveredByLeftLeaf&nbsp;&nbsp;+&nbsp;abs(coveredByLeftLeaf))&nbsp;&nbsp;/&nbsp;2&nbsp;...</td></tr>
+<tr><td>123</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;(coveredByRightLeaf&nbsp;+&nbsp;abs(coveredByRightLeaf))&nbsp;/&nbsp;2;</td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>125</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;open&nbsp;bixels</td></tr>
+<tr><td>126</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tempMapIx&nbsp;=&nbsp;tempMap&nbsp;&gt;&nbsp;0;</td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currBixelIx&nbsp;=&nbsp;apertureInfo.beam(i).bixelIndMap(tempMapIx);</td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;w(currBixelIx)&nbsp;=&nbsp;w(currBixelIx)&nbsp;+&nbsp;tempMap(tempMapIx)*updatedInfo.beam(i).shape(j).weight;</td></tr>
+<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>131</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;save&nbsp;the&nbsp;tempMap&nbsp;(we&nbsp;need&nbsp;to&nbsp;apply&nbsp;a&nbsp;positivity&nbsp;operator&nbsp;!)</td></tr>
+<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updatedInfo.beam(i).shape(j).shapeMap&nbsp;=&nbsp;(tempMap&nbsp;&nbsp;+&nbsp;abs(tempMap))&nbsp;&nbsp;/&nbsp;2;</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;increment&nbsp;shape&nbsp;index</td></tr>
+<tr><td>135</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shapeInd&nbsp;=&nbsp;shapeInd&nbsp;+1;</td></tr>
+<tr><td>136</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>138</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>139</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">updatedInfo.bixelWeights&nbsp;=&nbsp;w;</td></tr>
+<tr><td>141</td><td bgcolor="#FF0000">updatedInfo.bixelIndices&nbsp;=&nbsp;indVect;</td></tr>
+<tr><td>142</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>143</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>145</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

@@ -22,6 +22,7 @@ classdef matRad_MinMaxDose < DoseConstraints.matRad_DoseConstraint
         name = 'Min/Max dose constraint';
         parameterNames = {'d^{min}', 'd^{max}','method'};
         parameterTypes = {'dose','dose',{'approx','voxelwise'}};
+        maxDerivativeError = 0;
     end
     
     properties

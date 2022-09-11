@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcLateralParticleCutOff.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcLateralParticleCutOff.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[&nbsp;machine&nbsp;]&nbsp;=&nbsp;matRad_calcLateralParticleCutOff(machine,cutOffLevel,stf,visBool)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;calculate&nbsp;a&nbsp;depth&nbsp;dependend&nbsp;lateral&nbsp;cutoff&nbsp;</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;for&nbsp;each&nbsp;pristine&nbsp;particle&nbsp;beam</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[&nbsp;machine&nbsp;]&nbsp;=&nbsp;matRad_calcLateralParticleCutOff(&nbsp;machine,cutOffLevel,stf,visBool&nbsp;)</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;machine:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine&nbsp;base&nbsp;data&nbsp;file</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cutOffLevel:&nbsp;&nbsp;&nbsp;&nbsp;cut&nbsp;off&nbsp;level&nbsp;-&nbsp;number&nbsp;between&nbsp;0&nbsp;and&nbsp;1</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	matRad&nbsp;steering&nbsp;information&nbsp;struct</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;visBool:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	toggle&nbsp;visualization&nbsp;(optional)</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;machine:&nbsp;&nbsp;&nbsp;&nbsp;	machine&nbsp;base&nbsp;data&nbsp;file&nbsp;including&nbsp;an&nbsp;additional&nbsp;field&nbsp;representing&nbsp;the&nbsp;lateral</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cutoff</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>34</td><td bgcolor="#FF0000">if&nbsp;cutOffLevel&nbsp;&lt;=&nbsp;0.98</td></tr>
+<tr><td>35</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;warning('a&nbsp;lateral&nbsp;cut&nbsp;off&nbsp;below&nbsp;0.98&nbsp;may&nbsp;result&nbsp;in&nbsp;an&nbsp;inaccurate&nbsp;dose&nbsp;calculation')&nbsp;</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>38</td><td bgcolor="#FF0000">conversionFactor&nbsp;=&nbsp;1.6021766208e-02;</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;function&nbsp;handle&nbsp;for&nbsp;calculating&nbsp;depth&nbsp;dose&nbsp;for&nbsp;APM</td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">sumGauss&nbsp;=&nbsp;@(x,mu,SqSigma,w)&nbsp;((1./sqrt(2*pi*ones(numel(x),1)&nbsp;*&nbsp;SqSigma')&nbsp;.*&nbsp;...</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exp(-bsxfun(@minus,x,mu').^2&nbsp;./&nbsp;(2*&nbsp;ones(numel(x),1)&nbsp;*&nbsp;SqSigma'&nbsp;)))&nbsp;*&nbsp;w);</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">if&nbsp;(cutOffLevel&nbsp;&lt;&nbsp;0&nbsp;||&nbsp;cutOffLevel&nbsp;&gt;&nbsp;1)</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;warning('lateral&nbsp;cutoff&nbsp;is&nbsp;out&nbsp;of&nbsp;range&nbsp;-&nbsp;using&nbsp;default&nbsp;cut&nbsp;off&nbsp;of&nbsp;0.99')&nbsp;</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;cutOffLevel&nbsp;=&nbsp;0.99;</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF">%&nbsp;define&nbsp;some&nbsp;variables&nbsp;needed&nbsp;for&nbsp;the&nbsp;cutoff&nbsp;calculation</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">vX&nbsp;=&nbsp;[0&nbsp;logspace(-1,3,1200)];&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF">%&nbsp;integration&nbsp;steps</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">r_mid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0.5*(vX(1:end-1)&nbsp;+&nbsp;&nbsp;vX(2:end))';&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">dr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;(vX(2:end)&nbsp;-&nbsp;vX(1:end-1))';</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">radialDist_sq&nbsp;&nbsp;=&nbsp;r_mid.^2;</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;number&nbsp;of&nbsp;depth&nbsp;points&nbsp;for&nbsp;which&nbsp;a&nbsp;lateral&nbsp;cutoff&nbsp;is&nbsp;determined</td></tr>
+<tr><td>57</td><td bgcolor="#FF0000">numDepthVal&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;35;&nbsp;</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">%&nbsp;helper&nbsp;function&nbsp;for&nbsp;energy&nbsp;selection</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">round2&nbsp;=&nbsp;@(a,b)round(a*10^b)/10^b;</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF">%&nbsp;extract&nbsp;SSD&nbsp;for&nbsp;each&nbsp;bixel</td></tr>
+<tr><td>63</td><td bgcolor="#FF0000">vSSD&nbsp;=&nbsp;ones(1,length([stf.ray(:).energy]));</td></tr>
+<tr><td>64</td><td bgcolor="#FF0000">cnt&nbsp;=&nbsp;1;</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;&nbsp;=&nbsp;1:length(stf.ray)</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vSSD(cnt:cnt+numel([stf.ray(i).energy])-1)&nbsp;=&nbsp;stf.ray(i).SSD;</td></tr>
+<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cnt&nbsp;=&nbsp;cnt&nbsp;+&nbsp;numel(stf.ray(i).energy);</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">%&nbsp;setup&nbsp;energy,&nbsp;focus&nbsp;index,&nbsp;sigma&nbsp;look&nbsp;up&nbsp;table&nbsp;-&nbsp;only&nbsp;consider&nbsp;unique&nbsp;rows</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">[energySigmaLUT,ixUnique]&nbsp;&nbsp;=&nbsp;unique([[stf.ray(:).energy];&nbsp;[stf.ray(:).focusIx]&nbsp;;&nbsp;vSSD]','rows');</td></tr>
+<tr><td>72</td><td bgcolor="#FF0000">rangeShifterLUT&nbsp;=&nbsp;[stf.ray(:).rangeShifter];</td></tr>
+<tr><td>73</td><td bgcolor="#FF0000">rangeShifterLUT&nbsp;=&nbsp;rangeShifterLUT(1,ixUnique);</td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">%&nbsp;find&nbsp;the&nbsp;largest&nbsp;inital&nbsp;beam&nbsp;width&nbsp;considering&nbsp;focus&nbsp;index,&nbsp;SSD&nbsp;and&nbsp;range&nbsp;shifter&nbsp;for&nbsp;each&nbsp;individual&nbsp;energy</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:size(energySigmaLUT,1)</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;index&nbsp;of&nbsp;maximum&nbsp;used&nbsp;energy&nbsp;(round&nbsp;to&nbsp;keV&nbsp;for&nbsp;numerical&nbsp;reasons</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;energyIx&nbsp;=&nbsp;max(round2(energySigmaLUT(i,1),4))&nbsp;==&nbsp;round2([machine.data.energy],4);</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;currFoci&nbsp;=&nbsp;energySigmaLUT(i,2);</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni&nbsp;=&nbsp;matRad_interp1(machine.data(energyIx).initFocus.dist(currFoci,:)',...</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).initFocus.sigma(currFoci,:)',...</td></tr>
+<tr><td>84</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;energySigmaLUT(i,3));</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni_sq&nbsp;=&nbsp;sigmaIni^2;</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>87</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;consider&nbsp;range&nbsp;shifter&nbsp;for&nbsp;protons&nbsp;if&nbsp;applicable</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;&nbsp;strcmp(machine.meta.radiationMode,'protons')&nbsp;&amp;&amp;&nbsp;rangeShifterLUT(i).eqThickness&nbsp;&gt;&nbsp;0&nbsp;&nbsp;&amp;&amp;&nbsp;~strcmp(machine.meta.machine,'Generic')</td></tr>
+<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%get&nbsp;max&nbsp;range&nbsp;shift</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaRashi&nbsp;=&nbsp;matRad_calcSigmaRashi(machine.data(energyIx).energy,&nbsp;...</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rangeShifterLUT(i),&nbsp;...</td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;energySigmaLUT(i,3));</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;add&nbsp;to&nbsp;initial&nbsp;sigma&nbsp;in&nbsp;quadrature</td></tr>
+<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni_sq&nbsp;=&nbsp;sigmaIni_sq&nbsp;+&nbsp;&nbsp;sigmaRashi.^2;</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;energySigmaLUT(i,4)&nbsp;=&nbsp;sigmaIni_sq;</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">%&nbsp;find&nbsp;for&nbsp;each&nbsp;individual&nbsp;energy&nbsp;the&nbsp;broadest&nbsp;inital&nbsp;beam&nbsp;width</td></tr>
+<tr><td>105</td><td bgcolor="#FF0000">uniqueEnergies&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;unique(energySigmaLUT(:,1));</td></tr>
+<tr><td>106</td><td bgcolor="#FF0000">largestSigmaSq4uniqueEnergies&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(numel(uniqueEnergies),1);</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">ix_Max&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(numel(uniqueEnergies),1);</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numel(uniqueEnergies)</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[largestSigmaSq4uniqueEnergies(i),&nbsp;ix_Max(i)]&nbsp;=&nbsp;max(energySigmaLUT(uniqueEnergies(i)&nbsp;==&nbsp;energySigmaLUT(:,1),4));</td></tr>
+<tr><td>110</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">%&nbsp;get&nbsp;energy&nbsp;indices&nbsp;for&nbsp;looping</td></tr>
+<tr><td>113</td><td bgcolor="#FF0000">vEnergiesIx&nbsp;=&nbsp;find(ismember([machine.data(:).energy],uniqueEnergies(:,1)));</td></tr>
+<tr><td>114</td><td bgcolor="#FF0000">cnt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>115</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF">%&nbsp;loop&nbsp;over&nbsp;all&nbsp;entries&nbsp;in&nbsp;the&nbsp;machine.data&nbsp;struct</td></tr>
+<tr><td>117</td><td bgcolor="#FF0000">for&nbsp;energyIx&nbsp;=&nbsp;vEnergiesIx</td></tr>
+<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;set&nbsp;default&nbsp;depth&nbsp;cut&nbsp;off&nbsp;-&nbsp;finite&nbsp;value&nbsp;will&nbsp;be&nbsp;set&nbsp;during&nbsp;first&nbsp;iteration</td></tr>
+<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;depthDoseCutOff&nbsp;=&nbsp;inf;</td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;the&nbsp;current&nbsp;integrated&nbsp;depth&nbsp;dose&nbsp;profile</td></tr>
+<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isstruct(machine.data(energyIx).Z)</td></tr>
+<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idd_org&nbsp;=&nbsp;sumGauss(machine.data(energyIx).depths,machine.data(energyIx).Z.mean,...</td></tr>
+<tr><td>125</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).Z.width.^2,...</td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).Z.weight)&nbsp;*&nbsp;conversionFactor;</td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idd_org&nbsp;=&nbsp;machine.data(energyIx).Z&nbsp;*&nbsp;conversionFactor;</td></tr>
+<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[~,peakIxOrg]&nbsp;=&nbsp;max(idd_org);&nbsp;</td></tr>
+<tr><td>132</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;indices&nbsp;for&nbsp;which&nbsp;a&nbsp;lateral&nbsp;cutoff&nbsp;should&nbsp;be&nbsp;calculated</td></tr>
+<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cumIntEnergy&nbsp;=&nbsp;cumtrapz(machine.data(energyIx).depths,idd_org);</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;peakTailRelation&nbsp;&nbsp;&nbsp;=&nbsp;0.5;</td></tr>
+<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numDepthValToPeak&nbsp;&nbsp;=&nbsp;ceil(numDepthVal*peakTailRelation);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;number&nbsp;of&nbsp;depth&nbsp;values&nbsp;from&nbsp;0&nbsp;to&nbsp;peak&nbsp;position</td></tr>
+<tr><td>138</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numDepthValTail&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ceil(numDepthVal*(1-peakTailRelation));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;number&nbsp;of&nbsp;depth&nbsp;values&nbsp;behind&nbsp;peak&nbsp;position</td></tr>
+<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;energyStepsToPeak&nbsp;&nbsp;=&nbsp;cumIntEnergy(peakIxOrg)/numDepthValToPeak;</td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;energyStepsTail&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;(cumIntEnergy(end)-cumIntEnergy(peakIxOrg))/numDepthValTail;</td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;make&nbsp;sure&nbsp;to&nbsp;include&nbsp;0,&nbsp;peak&nbsp;position&nbsp;and&nbsp;end&nbsp;position</td></tr>
+<tr><td>142</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vEnergySteps&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;unique([0:energyStepsToPeak:cumIntEnergy(peakIxOrg)&nbsp;cumIntEnergy(peakIxOrg)&nbsp;...</td></tr>
+<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cumIntEnergy(peakIxOrg+1):energyStepsTail:cumIntEnergy(end)&nbsp;cumIntEnergy(end)]);</td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[cumIntEnergy,ix]&nbsp;=&nbsp;unique(cumIntEnergy);</td></tr>
+<tr><td>146</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;depthValues&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_interp1(cumIntEnergy,machine.data(energyIx).depths(ix),vEnergySteps);</td></tr>
+<tr><td>147</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isstruct(machine.data(energyIx).Z)</td></tr>
+<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idd&nbsp;=&nbsp;sumGauss(depthValues,machine.data(energyIx).Z.mean,...</td></tr>
+<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).Z.width.^2,...</td></tr>
+<tr><td>151</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).Z.weight)&nbsp;*&nbsp;conversionFactor;</td></tr>
+<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>153</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idd&nbsp;&nbsp;=&nbsp;matRad_interp1(machine.data(energyIx).depths,machine.data(energyIx).Z,depthValues)&nbsp;*&nbsp;conversionFactor;&nbsp;</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>155</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cnt&nbsp;=&nbsp;cnt&nbsp;+1&nbsp;;</td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;%&nbsp;calculate&nbsp;dose&nbsp;in&nbsp;spot</td></tr>
+<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;baseData&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;machine.data(energyIx);</td></tr>
+<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;baseData.LatCutOff.CompFac&nbsp;=&nbsp;1;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;</td></tr>
+<tr><td>161</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:numel(depthValues)</td></tr>
+<tr><td>162</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>163</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;save&nbsp;depth&nbsp;value</td></tr>
+<tr><td>164</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).LatCutOff.depths(j)&nbsp;=&nbsp;depthValues(j);</td></tr>
+<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>166</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;cutOffLevel&nbsp;==&nbsp;1</td></tr>
+<tr><td>167</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).LatCutOff.CompFac&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>168</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).LatCutOff.CutOff(j)&nbsp;=&nbsp;Inf;</td></tr>
+<tr><td>169</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>170</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>171</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;dose</td></tr>
+<tr><td>172</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dose_r&nbsp;=&nbsp;matRad_calcParticleDoseBixel(depthValues(j)&nbsp;+&nbsp;baseData.offset,&nbsp;radialDist_sq,&nbsp;largestSigmaSq4uniqueEnergies(cnt),&nbsp;baseData);</td></tr>
+<tr><td>173</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cumArea&nbsp;=&nbsp;cumsum(2*pi.*r_mid.*dose_r.*dr);</td></tr>
+<tr><td>175</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;relativeTolerance&nbsp;=&nbsp;0.5;&nbsp;%in&nbsp;[%]</td></tr>
+<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;abs((cumArea(end)./(idd(j)))-1)*100&nbsp;&gt;&nbsp;relativeTolerance</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning('LateralParticleCutOff:&nbsp;shell&nbsp;integration&nbsp;is&nbsp;wrong&nbsp;!')</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>180</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IX&nbsp;=&nbsp;find(cumArea&nbsp;&gt;=&nbsp;idd(j)&nbsp;*&nbsp;cutOffLevel,1,&nbsp;'first');&nbsp;</td></tr>
+<tr><td>181</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).LatCutOff.CompFac&nbsp;=&nbsp;cutOffLevel^-1;</td></tr>
+<tr><td>182</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>183</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(IX)</td></tr>
+<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depthDoseCutOff&nbsp;=&nbsp;Inf;</td></tr>
+<tr><td>185</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning('LateralParticleCutOff:&nbsp;Couldnt&nbsp;find&nbsp;lateral&nbsp;cut&nbsp;off&nbsp;!')</td></tr>
+<tr><td>186</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;isnumeric(IX)</td></tr>
+<tr><td>187</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depthDoseCutOff&nbsp;=&nbsp;r_mid(IX);</td></tr>
+<tr><td>188</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>189</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).LatCutOff.CutOff(j)&nbsp;=&nbsp;depthDoseCutOff;</td></tr>
+<tr><td>191</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>192</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>193</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>194</td><td bgcolor="#FFFFFF">end&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>195</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF">%%&nbsp;visualization</td></tr>
+<tr><td>197</td><td bgcolor="#FF0000">if&nbsp;visBool</td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>199</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;determine&nbsp;which&nbsp;pencil&nbsp;beam&nbsp;should&nbsp;be&nbsp;plotted</td></tr>
+<tr><td>200</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;subIx&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ceil(numel(vEnergiesIx)/2);</td></tr>
+<tr><td>201</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;energyIx&nbsp;=&nbsp;vEnergiesIx(subIx);</td></tr>
+<tr><td>202</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;baseData&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;machine.data(energyIx);</td></tr>
+<tr><td>204</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;focusIx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;energySigmaLUT(ix_Max(subIx),2);</td></tr>
+<tr><td>205</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maxSSD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;energySigmaLUT(ix_Max(subIx),3);</td></tr>
+<tr><td>206</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rangeShifter&nbsp;&nbsp;&nbsp;=&nbsp;rangeShifterLUT(ix_Max(subIx));</td></tr>
+<tr><td>207</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;TmpCompFac&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;baseData.LatCutOff.CompFac;</td></tr>
+<tr><td>208</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;baseData.LatCutOff.CompFac&nbsp;=&nbsp;1;</td></tr>
+<tr><td>209</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>210</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;plot&nbsp;3D&nbsp;cutoff&nbsp;at&nbsp;one&nbsp;specific&nbsp;depth&nbsp;on&nbsp;a&nbsp;rather&nbsp;sparse&nbsp;grid</td></tr>
+<tr><td>211</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sStep&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0.5;</td></tr>
+<tr><td>212</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vLatX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;-100&nbsp;:&nbsp;sStep&nbsp;:&nbsp;100;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>213</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dimX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;numel(vLatX);</td></tr>
+<tr><td>214</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;midPos&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;round(length(vLatX)/2);</td></tr>
+<tr><td>215</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[X,Y]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;meshgrid(vLatX,vLatX);</td></tr>
+<tr><td>216</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>217</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;radDepths&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[0:sStep:machine.data(energyIx).depths(end)]&nbsp;+&nbsp;machine.data(energyIx).offset;</td></tr>
+<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;radialDist_sq&nbsp;=&nbsp;(X.^2&nbsp;+&nbsp;Y.^2);</td></tr>
+<tr><td>219</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;radialDist_sq&nbsp;=&nbsp;radialDist_sq(:);</td></tr>
+<tr><td>220</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;mDose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;zeros(dimX,dimX,numel(radDepths));</td></tr>
+<tr><td>221</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vDoseInt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;zeros(numel(radDepths),1);</td></tr>
+<tr><td>222</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>223</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;kk&nbsp;=&nbsp;1:numel(radDepths)&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>224</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>225</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;initial&nbsp;focus&nbsp;sigma</td></tr>
+<tr><td>226</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni&nbsp;=&nbsp;matRad_interp1(machine.data(energyIx).initFocus.dist(focusIx,:)',&nbsp;...</td></tr>
+<tr><td>227</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).initFocus.sigma(focusIx,:)',maxSSD);</td></tr>
+<tr><td>228</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni_sq&nbsp;=&nbsp;sigmaIni^2;</td></tr>
+<tr><td>229</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>230</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;consider&nbsp;range&nbsp;shifter&nbsp;for&nbsp;protons&nbsp;if&nbsp;applicable</td></tr>
+<tr><td>231</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;rangeShifter.eqThickness&nbsp;&gt;&nbsp;0&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'protons')</td></tr>
+<tr><td>232</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>233</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;compute!</td></tr>
+<tr><td>234</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaRashi&nbsp;=&nbsp;matRad_calcSigmaRashi(machine.data(energyIx).energy,rangeShifter,maxSSD);</td></tr>
+<tr><td>235</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>236</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;add&nbsp;to&nbsp;initial&nbsp;sigma&nbsp;in&nbsp;quadrature</td></tr>
+<tr><td>237</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sigmaIni_sq&nbsp;=&nbsp;sigmaIni_sq&nbsp;+&nbsp;&nbsp;sigmaRashi^2;</td></tr>
+<tr><td>238</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>239</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>240</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>241</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mDose(:,:,kk)&nbsp;=&nbsp;reshape(matRad_calcParticleDoseBixel(radDepths(kk),&nbsp;radialDist_sq,&nbsp;sigmaIni_sq,baseData),[dimX&nbsp;dimX]);</td></tr>
+<tr><td>242</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>243</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[~,IX]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;min(abs((machine.data(energyIx).LatCutOff.depths&nbsp;+&nbsp;machine.data(energyIx).offset)&nbsp;-&nbsp;radDepths(kk)));</td></tr>
+<tr><td>244</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TmpCutOff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;machine.data(energyIx).LatCutOff.CutOff(IX);&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>245</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vXCut&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;vX(vX&lt;=TmpCutOff);</td></tr>
+<tr><td>246</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>247</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;integration&nbsp;steps</td></tr>
+<tr><td>248</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_mid_Cut&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;(0.5*(vXCut(1:end-1)&nbsp;+&nbsp;&nbsp;vXCut(2:end)))';&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>249</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dr_Cut&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;(vXCut(2:end)&nbsp;-&nbsp;vXCut(1:end-1))';</td></tr>
+<tr><td>250</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radialDist_sqCut&nbsp;=&nbsp;r_mid_Cut.^2;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>251</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>252</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dose_r_Cut&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;matRad_calcParticleDoseBixel(radDepths(kk),&nbsp;radialDist_sqCut(:),&nbsp;sigmaIni_sq,baseData);</td></tr>
+<tr><td>253</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>254</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cumAreaCut&nbsp;=&nbsp;cumsum(2*pi.*r_mid_Cut.*dose_r_Cut.*dr_Cut);&nbsp;&nbsp;</td></tr>
+<tr><td>255</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>256</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(cumAreaCut)</td></tr>
+<tr><td>257</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vDoseInt(kk)&nbsp;=&nbsp;cumAreaCut(end);</td></tr>
+<tr><td>258</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>259</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>260</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>261</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;obtain&nbsp;maximum&nbsp;dose</td></tr>
+<tr><td>262</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isstruct(machine.data(energyIx).Z)</td></tr>
+<tr><td>263</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idd&nbsp;=&nbsp;sumGauss(depthValues,machine.data(energyIx).Z.mean,...</td></tr>
+<tr><td>264</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).Z.width.^2,...</td></tr>
+<tr><td>265</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).Z.weight)&nbsp;*&nbsp;conversionFactor;</td></tr>
+<tr><td>266</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>267</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idd&nbsp;&nbsp;=&nbsp;matRad_interp1(machine.data(energyIx).depths,machine.data(energyIx).Z,depthValues)&nbsp;*&nbsp;conversionFactor;&nbsp;</td></tr>
+<tr><td>268</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>269</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>270</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[~,peakixDepth]&nbsp;=&nbsp;max(idd);&nbsp;</td></tr>
+<tr><td>271</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dosePeakPos&nbsp;=&nbsp;matRad_calcParticleDoseBixel(machine.data(energyIx).depths(peakixDepth),&nbsp;0,&nbsp;sigmaIni_sq,&nbsp;baseData);&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>272</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>273</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vLevelsDose&nbsp;=&nbsp;dosePeakPos.*[0.01&nbsp;0.05&nbsp;0.1&nbsp;0.9];</td></tr>
+<tr><td>274</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseSlice&nbsp;&nbsp;&nbsp;=&nbsp;squeeze(mDose(midPos,:,:));</td></tr>
+<tr><td>275</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;figure,set(gcf,'Color',[1&nbsp;1&nbsp;1]);</td></tr>
+<tr><td>276</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;subplot(311),h=imagesc(squeeze(mDose(midPos,:,:)));hold&nbsp;on;</td></tr>
+<tr><td>277</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(h,'AlphaData',&nbsp;.8*double(doseSlice&gt;0));</td></tr>
+<tr><td>278</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;contour(doseSlice,vLevelsDose,'LevelListMode','manual','LineWidth',2);hold&nbsp;on</td></tr>
+<tr><td>279</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>280</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ax&nbsp;=&nbsp;gca;</td></tr>
+<tr><td>281</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ax.XTickLabelMode&nbsp;=&nbsp;'manual';</td></tr>
+<tr><td>282</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ax.XTickLabel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;strsplit(num2str(ax.XTick*sStep&nbsp;+&nbsp;machine.data(energyIx).offset),'&nbsp;')';</td></tr>
+<tr><td>283</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ax.YTickLabelMode&nbsp;=&nbsp;'manual';</td></tr>
+<tr><td>284</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ax.YTickLabel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;strsplit(num2str(ax.YTick*sStep&nbsp;+&nbsp;machine.data(energyIx).offset),'&nbsp;')';</td></tr>
+<tr><td>285</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;</td></tr>
+<tr><td>286</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;plot(1+(machine.data(energyIx).LatCutOff.depths)*sStep^-1,...</td></tr>
+<tr><td>287</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data(energyIx).LatCutOff.CutOff&nbsp;*&nbsp;sStep^-1&nbsp;+&nbsp;midPos,'rx');</td></tr>
+<tr><td>288</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>289</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;legend({'isodose&nbsp;1%,5%,10%&nbsp;90%','calculated&nbsp;cutoff'})&nbsp;,colorbar,set(gca,'FontSize',12),xlabel('z&nbsp;[mm]'),ylabel('x&nbsp;[mm]');</td></tr>
+<tr><td>290</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>291</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;entry&nbsp;=&nbsp;machine.data(energyIx);</td></tr>
+<tr><td>292</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isstruct(entry.Z)</td></tr>
+<tr><td>293</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idd&nbsp;=&nbsp;sumGauss(entry.depths,entry.Z.mean,entry.Z.width.^2,entry.Z.weight);</td></tr>
+<tr><td>294</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>295</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idd&nbsp;=&nbsp;machine.data(energyIx).Z;</td></tr>
+<tr><td>296</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>297</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;subplot(312),plot(machine.data(energyIx).depths,idd*conversionFactor,'k','LineWidth',2),grid&nbsp;on,hold&nbsp;on</td></tr>
+<tr><td>298</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(radDepths&nbsp;-&nbsp;machine.data(energyIx).offset,vDoseInt,'r--','LineWidth',2),hold&nbsp;on,</td></tr>
+<tr><td>299</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(radDepths&nbsp;-&nbsp;machine.data(energyIx).offset,vDoseInt&nbsp;*&nbsp;TmpCompFac,'bx','LineWidth',1),hold&nbsp;on,</td></tr>
+<tr><td>300</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;legend({'original&nbsp;IDD',['cut&nbsp;off&nbsp;IDD&nbsp;at&nbsp;'&nbsp;num2str(cutOffLevel)&nbsp;'%'],'cut&nbsp;off&nbsp;IDD&nbsp;with&nbsp;compensation'},'Location','northwest'),</td></tr>
+<tr><td>301</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xlabel('z&nbsp;[mm]'),ylabel('[MeV&nbsp;cm^2&nbsp;/(g&nbsp;*&nbsp;primary)]'),set(gca,'FontSize',12)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>302</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>303</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;totEnergy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;trapz(machine.data(energyIx).depths,idd*conversionFactor)&nbsp;;</td></tr>
+<tr><td>304</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;totEnergyCutOff&nbsp;&nbsp;=&nbsp;trapz(radDepths,vDoseInt&nbsp;*&nbsp;TmpCompFac)&nbsp;;</td></tr>
+<tr><td>305</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;relDiff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;((totEnergy/totEnergyCutOff)-1)*100;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>306</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;title(['rel&nbsp;diff&nbsp;of&nbsp;integral&nbsp;dose&nbsp;'&nbsp;num2str(relDiff)&nbsp;'%']);</td></tr>
+<tr><td>307</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;baseData.LatCutOff.CompFac&nbsp;=&nbsp;TmpCompFac;</td></tr>
+<tr><td>308</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>309</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;subplot(313),</td></tr>
+<tr><td>310</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfield(machine.data(energyIx),'sigma1')</td></tr>
+<tr><td>311</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yyaxis&nbsp;left;</td></tr>
+<tr><td>312</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(machine.data(energyIx).LatCutOff.depths,machine.data(energyIx).LatCutOff.CutOff,'LineWidth',2),hold&nbsp;on</td></tr>
+<tr><td>313</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(machine.data(energyIx).depths,(machine.data(energyIx).sigma1),':','LineWidth',2),grid&nbsp;on,hold&nbsp;on,ylabel('mm')</td></tr>
+<tr><td>314</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yyaxis&nbsp;right;&nbsp;</td></tr>
+<tr><td>315</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(machine.data(energyIx).depths,(machine.data(energyIx).sigma2),'-.','LineWidth',2),grid&nbsp;on,hold&nbsp;on,ylabel('mm')</td></tr>
+<tr><td>316</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;legend({'Cutoff','sigma1','sigma2'});</td></tr>
+<tr><td>317</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>318</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yyaxis&nbsp;left;plot(machine.data(energyIx).LatCutOff.depths,machine.data(energyIx).LatCutOff.CutOff,'LineWidth',2),hold&nbsp;on,ylabel('mm')</td></tr>
+<tr><td>319</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yyaxis&nbsp;right;subplot(313),plot(machine.data(energyIx).depths,machine.data(energyIx).sigma,'LineWidth',2),grid&nbsp;on,hold&nbsp;on</td></tr>
+<tr><td>320</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;legend({'Cutoff','sigma'});ylabel('mm')</td></tr>
+<tr><td>321</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>322</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>323</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(gca,'FontSize',12),xlabel('z&nbsp;[mm]'),&nbsp;&nbsp;ylabel('mm')</td></tr>
+<tr><td>324</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>325</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;plot&nbsp;cutoff&nbsp;of&nbsp;different&nbsp;energies</td></tr>
+<tr><td>326</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;figure,set(gcf,'Color',[1&nbsp;1&nbsp;1]);</td></tr>
+<tr><td>327</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cnt&nbsp;=&nbsp;1;</td></tr>
+<tr><td>328</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;vEnergiesIx</td></tr>
+<tr><td>329</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(machine.data(i).LatCutOff.depths,machine.data(i).LatCutOff.CutOff,'LineWidth',1.5),hold&nbsp;on</td></tr>
+<tr><td>330</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cellLegend{cnt}&nbsp;=&nbsp;[num2str(machine.data(i).energy)&nbsp;'&nbsp;MeV'];</td></tr>
+<tr><td>331</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cnt&nbsp;=&nbsp;cnt&nbsp;+&nbsp;1;</td></tr>
+<tr><td>332</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>333</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;grid&nbsp;on,&nbsp;grid&nbsp;minor,xlabel('depth&nbsp;in&nbsp;[mm]'),ylabel('lateral&nbsp;cutoff&nbsp;in&nbsp;[mm]')</td></tr>
+<tr><td>334</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;title(['cutoff&nbsp;level&nbsp;=&nbsp;'&nbsp;num2str(cutOffLevel)]),</td></tr>
+<tr><td>335</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ylim&nbsp;=&nbsp;get(gca,'Ylim');&nbsp;&nbsp;&nbsp;&nbsp;set(gca,'Ylim',[0&nbsp;ylim(2)+3]),&nbsp;&nbsp;&nbsp;&nbsp;legend(cellLegend)</td></tr>
+<tr><td>336</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>337</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>338</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>339</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>340</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>341</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>342</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>343</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

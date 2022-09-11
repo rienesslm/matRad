@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_writeNRRD.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_writeNRRD.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;matRad_writeNRRD(filename,cube,metadata)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;NRRD&nbsp;writer</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;matRad_writeNRRD(filename,cube,datatype,...</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;additionalFields,additionalKeyValuePairs)</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;filename:&nbsp;&nbsp;&nbsp;full&nbsp;output&nbsp;path,&nbsp;including&nbsp;the&nbsp;nrrd&nbsp;extension</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cube:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;that&nbsp;is&nbsp;to&nbsp;be&nbsp;written</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;metadata:&nbsp;&nbsp;&nbsp;struct&nbsp;of&nbsp;metadata.&nbsp;Writer&nbsp;will&nbsp;wrap&nbsp;the&nbsp;existing&nbsp;metadata&nbsp;</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;nrrd&nbsp;standard-specific&nbsp;fields&nbsp;[1].</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[1]&nbsp;http://teem.sourceforge.net/nrrd/format.html5</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%%&nbsp;Setup&nbsp;Header</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%The&nbsp;NRRD&nbsp;header&nbsp;description&nbsp;line</td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">version&nbsp;=&nbsp;5;</td></tr>
+<tr><td>33</td><td bgcolor="#FF0000">nrrdVersionStringPrefix&nbsp;=&nbsp;'NRRD000';</td></tr>
+<tr><td>34</td><td bgcolor="#FF0000">nrrdVersionString&nbsp;=&nbsp;[nrrdVersionStringPrefix&nbsp;num2str(version)];</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>36</td><td bgcolor="#FF0000">header&nbsp;=&nbsp;sprintf('%s\n',nrrdVersionString);</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%add&nbsp;matRad&nbsp;specific&nbsp;comment</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">header&nbsp;=&nbsp;header_addComment(header,'Created&nbsp;With&nbsp;matRad&nbsp;-&nbsp;An&nbsp;open&nbsp;source&nbsp;multi-modality&nbsp;radiation&nbsp;treatment&nbsp;planning&nbsp;sytem');</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF">%Add&nbsp;Datatype&nbsp;field</td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">header&nbsp;=&nbsp;header_addField(header,'type',matlabTypeToNRRD(metadata.datatype));</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF">%NRRD&nbsp;wants&nbsp;to&nbsp;know&nbsp;how&nbsp;the&nbsp;bytes&nbsp;are&nbsp;aligned&nbsp;for&nbsp;datatypes&nbsp;&gt;&nbsp;1&nbsp;byte</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF">%(little&nbsp;endian&nbsp;vs&nbsp;big&nbsp;endian)</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">try</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;=&nbsp;zeros(1,metadata.datatype);</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;varInfo&nbsp;=&nbsp;whos('z');</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;varInfo.bytes&nbsp;&gt;&nbsp;1</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[~,~,endian]&nbsp;=&nbsp;computer;</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch&nbsp;endian</td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'L'</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'endian','little');</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'B'</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'endian','big');</td></tr>
+<tr><td>55</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;otherwise</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Unknown&nbsp;endian!');</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">catch</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error(['Unknown&nbsp;datatype:&nbsp;'&nbsp;metadata.datatype']);</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">%Check&nbsp;if&nbsp;compression&nbsp;was&nbsp;defined</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">if&nbsp;~isfield(metadata,'compress')</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.compress&nbsp;=&nbsp;false;</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">end&nbsp;&nbsp;</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">%If&nbsp;we&nbsp;use&nbsp;compression,&nbsp;try&nbsp;to&nbsp;compress,&nbsp;otherwise&nbsp;use&nbsp;raw&nbsp;data&nbsp;</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">if&nbsp;metadata.compress</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;write&nbsp;a&nbsp;temporary&nbsp;file&nbsp;to&nbsp;gzip&nbsp;with&nbsp;matlab</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%It&nbsp;might&nbsp;be&nbsp;also&nbsp;possible&nbsp;to&nbsp;do&nbsp;this&nbsp;with&nbsp;java&nbsp;directly&nbsp;as&nbsp;stream</td></tr>
+<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpRawFile&nbsp;=&nbsp;[tempname()&nbsp;'.bin'];</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fTmp&nbsp;=&nbsp;fopen(tmpRawFile,&nbsp;'wb');</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fwrite(fTmp,cube,metadata.datatype);</td></tr>
+<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fclose(fTmp);</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Now&nbsp;zip&nbsp;the&nbsp;file</td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fNameZip&nbsp;=&nbsp;gzip(tmpRawFile);</td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fNameZip&nbsp;=&nbsp;fNameZip{1};</td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;need&nbsp;this&nbsp;to&nbsp;determine&nbsp;the&nbsp;file&nbsp;size</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fDir&nbsp;=&nbsp;dir(fNameZip);</td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Read&nbsp;the&nbsp;zipped&nbsp;data</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fTmp&nbsp;=&nbsp;fopen(fNameZip,&nbsp;'rb');</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fileData&nbsp;=&nbsp;fread(fTmp,fDir.bytes,'uint8');</td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fclose(fTmp);</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Delete&nbsp;temporary&nbsp;files</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete(tmpRawFile,fNameZip);</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Set&nbsp;the&nbsp;datatype&nbsp;to&nbsp;binary&nbsp;for&nbsp;writing&nbsp;the&nbsp;zipped&nbsp;data</td></tr>
+<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metadata.datatype&nbsp;=&nbsp;'uint8';</td></tr>
+<tr><td>95</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'encoding','gzip');</td></tr>
+<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;catch</td></tr>
+<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warn('Could&nbsp;not&nbsp;open&nbsp;temporary&nbsp;file,&nbsp;writing&nbsp;without&nbsp;compression!');</td></tr>
+<tr><td>98</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'encoding','raw');</td></tr>
+<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fileData&nbsp;=&nbsp;cube;</td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>102</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'encoding','raw');</td></tr>
+<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fileData&nbsp;=&nbsp;cube;</td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>105</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>106</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>107</td><td bgcolor="#FFFFFF">%Dimensionality</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">cubeDim&nbsp;=&nbsp;size(cube);</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">header&nbsp;=&nbsp;header_addField(header,'dimension',num2str(numel(cubeDim)));</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">strCubeDim&nbsp;=&nbsp;vec2str(cubeDim);</td></tr>
+<tr><td>111</td><td bgcolor="#FF0000">header&nbsp;=&nbsp;header_addField(header,'sizes',strCubeDim);</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">%Coordinate&nbsp;system&nbsp;-&nbsp;optional</td></tr>
+<tr><td>114</td><td bgcolor="#FF0000">if&nbsp;isfield(metadata,'coordinateSystem')</td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'space',metadata.coordinateSystem);</td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>117</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>118</td><td bgcolor="#FFFFFF">%Reference&nbsp;Point&nbsp;-&nbsp;optional</td></tr>
+<tr><td>119</td><td bgcolor="#FF0000">if&nbsp;isfield(metadata,'imageOrigin')</td></tr>
+<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vecOrigin&nbsp;=&nbsp;matVec2nrrdVec(metadata.imageOrigin);</td></tr>
+<tr><td>121</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'space&nbsp;origin',vecOrigin);</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>123</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF">%Axis&nbsp;permutation&nbsp;</td></tr>
+<tr><td>125</td><td bgcolor="#FF0000">if&nbsp;isfield(metadata,'resolution')</td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%If&nbsp;we&nbsp;have&nbsp;more&nbsp;space&nbsp;information,&nbsp;write&nbsp;the&nbsp;space&nbsp;axis</td></tr>
+<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfield(metadata,'axisPermutation')</td></tr>
+<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strDirection&nbsp;=&nbsp;'';</td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;dim&nbsp;=&nbsp;1:numel(cubeDim)</td></tr>
+<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimVec&nbsp;=&nbsp;zeros(1,numel(cubeDim));</td></tr>
+<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimVec(dim)&nbsp;=&nbsp;1;</td></tr>
+<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimVec&nbsp;=&nbsp;dimVec(metadata.axisPermutation);</td></tr>
+<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dimVec&nbsp;=&nbsp;dimVec&nbsp;.*&nbsp;metadata.resolution;</td></tr>
+<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strDirection&nbsp;=&nbsp;[strDirection&nbsp;matVec2nrrdVec(dimVec)&nbsp;'&nbsp;'];</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'space&nbsp;directions',strDirection);</td></tr>
+<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Otherwise&nbsp;only&nbsp;write&nbsp;resolution</td></tr>
+<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strSpacings&nbsp;=&nbsp;vec2str(metadata.resolution);</td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addField(header,'spacings',strSpacings);</td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>142</td><td bgcolor="#FFFFFF">end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>143</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF">%Additional&nbsp;key-value-pairs&nbsp;if&nbsp;present</td></tr>
+<tr><td>145</td><td bgcolor="#FFFFFF">%Will&nbsp;be&nbsp;added&nbsp;in&nbsp;a&nbsp;later&nbsp;release</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">%{</td></tr>
+<tr><td>147</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&gt;&nbsp;3</td></tr>
+<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;keys&nbsp;=&nbsp;fieldnames(additionalKeyValuePairs);</td></tr>
+<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;f&nbsp;=&nbsp;1:numel(fields)</td></tr>
+<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key&nbsp;=&nbsp;keys{f};</td></tr>
+<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;additionalKeyValuePairs.(keys{f});</td></tr>
+<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Format&nbsp;the&nbsp;description&nbsp;to&nbsp;fit</td></tr>
+<tr><td>154</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isvector(description)</td></tr>
+<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;mat2str(description);</td></tr>
+<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;description(2:end-1);</td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;isnumeric(description)</td></tr>
+<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;num2str(description);</td></tr>
+<tr><td>159</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;</td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>161</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>162</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;and(~ischar(value),~iscellstr(value))</td></tr>
+<tr><td>164</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Cannot&nbsp;convert&nbsp;value&nbsp;for&nbsp;key&nbsp;'&nbsp;key&nbsp;'&nbsp;to&nbsp;string,&nbsp;key-value-pair&nbsp;will&nbsp;be&nbsp;ignored!']);</td></tr>
+<tr><td>165</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
+<tr><td>166</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>167</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>168</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;header&nbsp;=&nbsp;header_addKeyValuePair(header,key,value);</td></tr>
+<tr><td>169</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end;</td></tr>
+<tr><td>170</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>171</td><td bgcolor="#FFFFFF">%}</td></tr>
+<tr><td>172</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>173</td><td bgcolor="#FFFFFF">%%&nbsp;Write&nbsp;File</td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">try</td></tr>
+<tr><td>175</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Write&nbsp;Header&nbsp;to&nbsp;file&nbsp;with&nbsp;the&nbsp;separating&nbsp;blank&nbsp;line</td></tr>
+<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fileHandle&nbsp;=&nbsp;fopen(filename,'w');</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fprintf(fileHandle,'%s\n',header);</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Write&nbsp;raw&nbsp;or&nbsp;compressed&nbsp;data&nbsp;to&nbsp;file</td></tr>
+<tr><td>180</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fwrite(fileHandle,fileData,metadata.datatype);</td></tr>
+<tr><td>181</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fclose(fileHandle);</td></tr>
+<tr><td>182</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>183</td><td bgcolor="#FF0000">catch&nbsp;MExc</td></tr>
+<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fclose('all');</td></tr>
+<tr><td>185</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error(sprintf('File&nbsp;%s&nbsp;could&nbsp;not&nbsp;be&nbsp;written!\n%s',filename,getReport(MExc)));</td></tr>
+<tr><td>186</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>187</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>188</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>189</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>190</td><td bgcolor="#FFFFFF">%Used&nbsp;to&nbsp;add&nbsp;comments&nbsp;to&nbsp;the&nbsp;header</td></tr>
+<tr><td>191</td><td bgcolor="#FFFFFF">function&nbsp;newHeader&nbsp;=&nbsp;header_addComment(header,comment)</td></tr>
+<tr><td>192</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;newHeader&nbsp;=&nbsp;sprintf('%s#&nbsp;%s\n',header,comment);</td></tr>
+<tr><td>193</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>194</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>195</td><td bgcolor="#FFFFFF">%Used&nbsp;to&nbsp;add&nbsp;fields&nbsp;to&nbsp;the&nbsp;header</td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF">function&nbsp;newHeader&nbsp;=&nbsp;header_addField(header,fieldName,fieldDescription)</td></tr>
+<tr><td>197</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;newHeader&nbsp;=&nbsp;sprintf('%s%s:&nbsp;%s\n',header,fieldName,fieldDescription);</td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>199</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>200</td><td bgcolor="#FFFFFF">%Used&nbsp;to&nbsp;add&nbsp;key-value&nbsp;pairs&nbsp;to&nbsp;the&nbsp;header</td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF">function&nbsp;newHeader&nbsp;=&nbsp;header_addKeyValuePair(header,key,value)</td></tr>
+<tr><td>202</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;strrep(value,':=','');</td></tr>
+<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;newHeader&nbsp;=&nbsp;sprintf('%s%s:=%s\n',header,key,value);</td></tr>
+<tr><td>204</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>205</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>206</td><td bgcolor="#FFFFFF">%Used&nbsp;to&nbsp;format&nbsp;dimenional&nbsp;info&nbsp;according&nbsp;to&nbsp;nrrd&nbsp;specification</td></tr>
+<tr><td>207</td><td bgcolor="#FFFFFF">function&nbsp;strOutput&nbsp;=&nbsp;vec2str(V)</td></tr>
+<tr><td>208</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;strOutput&nbsp;=&nbsp;mat2str(V);</td></tr>
+<tr><td>209</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;strOutput&nbsp;=&nbsp;strOutput(2:end-1);</td></tr>
+<tr><td>210</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>211</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>212</td><td bgcolor="#FFFFFF">%Used&nbsp;to&nbsp;format&nbsp;a&nbsp;matlab&nbsp;vector&nbsp;to&nbsp;nrrd&nbsp;vector&nbsp;with&nbsp;brackets</td></tr>
+<tr><td>213</td><td bgcolor="#FFFFFF">function&nbsp;strOutput&nbsp;=&nbsp;matVec2nrrdVec(V)</td></tr>
+<tr><td>214</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;strOutput&nbsp;=&nbsp;'(';</td></tr>
+<tr><td>215</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;v&nbsp;=&nbsp;1:numel(V)</td></tr>
+<tr><td>216</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strOutput&nbsp;=&nbsp;[strOutput&nbsp;num2str(V(v))&nbsp;','];</td></tr>
+<tr><td>217</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;strOutput&nbsp;=&nbsp;[strOutput(1:end-1)&nbsp;')'];</td></tr>
+<tr><td>219</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>220</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>221</td><td bgcolor="#FFFFFF">%Used&nbsp;to&nbsp;map&nbsp;matlab&nbsp;definitions&nbsp;of&nbsp;datatypes&nbsp;to&nbsp;the&nbsp;NRRD&nbsp;specs</td></tr>
+<tr><td>222</td><td bgcolor="#FFFFFF">%seems&nbsp;to&nbsp;be&nbsp;only&nbsp;single&nbsp;has&nbsp;to&nbsp;be&nbsp;converted&nbsp;to&nbsp;float</td></tr>
+<tr><td>223</td><td bgcolor="#FFFFFF">function&nbsp;newType&nbsp;=&nbsp;matlabTypeToNRRD(datatype)</td></tr>
+<tr><td>224</td><td bgcolor="#FF0000">switch&nbsp;datatype</td></tr>
+<tr><td>225</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'single'</td></tr>
+<tr><td>226</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'float';</td></tr>
+<tr><td>227</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;otherwise</td></tr>
+<tr><td>228</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;datatype;</td></tr>
+<tr><td>229</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>230</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>231</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>232</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

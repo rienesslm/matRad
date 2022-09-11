@@ -23,6 +23,7 @@
         parameterNames = {'d^{ref}', 'V^{min}', 'V^{max}'};
         %parameterIsDose = logical([1 0 0]);
         parameterTypes = {'dose','numeric','numeric'};
+        maxDerivativeError = 9e-1;
     end
     
     properties

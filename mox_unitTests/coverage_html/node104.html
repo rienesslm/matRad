@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\moDoc_Tests\doc_test.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\moDoc_Tests\doc_test.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;doc_test()</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;This&nbsp;function&nbsp;illustrates&nbsp;a&nbsp;documentation&nbsp;test&nbsp;defined&nbsp;for&nbsp;MOdox.</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Other&nbsp;than&nbsp;that&nbsp;it&nbsp;does&nbsp;absolutely&nbsp;nothing</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Examples:</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;a=2;</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;disp(a)</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;Expected&nbsp;output&nbsp;is&nbsp;prefixed&nbsp;by&nbsp;'%||'&nbsp;as&nbsp;in&nbsp;the&nbsp;following&nbsp;line:</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%||&nbsp;2</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;The&nbsp;test&nbsp;continues&nbsp;because&nbsp;no&nbsp;interruption&nbsp;through&nbsp;whitespace,</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;as&nbsp;the&nbsp;previous&nbsp;line&nbsp;used&nbsp;a&nbsp;'%'&nbsp;comment&nbsp;character;</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;thus&nbsp;the&nbsp;'a'&nbsp;variable&nbsp;is&nbsp;still&nbsp;in&nbsp;the&nbsp;namespace&nbsp;and&nbsp;can&nbsp;be&nbsp;</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;accessed.</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;b=3+a;</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;disp(a+[3&nbsp;4])</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%||&nbsp;[5&nbsp;6]</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;A&nbsp;new&nbsp;test&nbsp;starts&nbsp;here&nbsp;because&nbsp;the&nbsp;previous&nbsp;line&nbsp;was&nbsp;white-space</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;only.&nbsp;Thus&nbsp;the&nbsp;'a'&nbsp;and&nbsp;'b'&nbsp;variables&nbsp;are&nbsp;not&nbsp;present&nbsp;here&nbsp;anymore.</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;The&nbsp;following&nbsp;expression&nbsp;raises&nbsp;an&nbsp;error&nbsp;because&nbsp;the&nbsp;'b'&nbsp;variable</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;is&nbsp;not&nbsp;defined&nbsp;(and&nbsp;does&nbsp;not&nbsp;carry&nbsp;over&nbsp;from&nbsp;the&nbsp;previous&nbsp;test).</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;Because&nbsp;the&nbsp;expected&nbsp;output&nbsp;indicates&nbsp;an&nbsp;error&nbsp;as&nbsp;well,&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;the&nbsp;test&nbsp;passes</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;disp(b)</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%||&nbsp;error('Some&nbsp;error')</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;A&nbsp;set&nbsp;of&nbsp;expressions&nbsp;is&nbsp;ignored&nbsp;if&nbsp;there&nbsp;is&nbsp;no&nbsp;expected&nbsp;output&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;(that&nbsp;is,&nbsp;no&nbsp;lines&nbsp;starting&nbsp;with&nbsp;'%||').</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;Thus,&nbsp;the&nbsp;following&nbsp;expression&nbsp;is&nbsp;not&nbsp;part&nbsp;of&nbsp;any&nbsp;test,</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;and&nbsp;therefore&nbsp;does&nbsp;not&nbsp;raise&nbsp;an&nbsp;error.</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;error('this&nbsp;is&nbsp;never&nbsp;executed)</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;%&nbsp;tests&nbsp;end&nbsp;here&nbsp;because&nbsp;test&nbsp;indentation&nbsp;has&nbsp;ended</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

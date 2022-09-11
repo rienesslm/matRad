@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\plotting\matRad_plotVoiContourSlice.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\plotting\matRad_plotVoiContourSlice.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[voiContourHandles]&nbsp;=&nbsp;matRad_plotVoiContourSlice(axesHandle,cst,ct,ctIndex,selection,plane,slice,cMap,varargin)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;that&nbsp;plots&nbsp;the&nbsp;contours&nbsp;of&nbsp;the&nbsp;segmentations&nbsp;given&nbsp;in&nbsp;cst</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;voiContourHandles&nbsp;=&nbsp;matRad_plotVoiContourSlice(axesHandle,cst,ct,ctIndex,selection,plane,slice)&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;voiContourHandles&nbsp;=&nbsp;matRad_plotVoiContourSlice(axesHandle,cst,ct,ctIndex,selection,plane,slice,cMap)&nbsp;</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;voiContourHandles&nbsp;=&nbsp;matRad_plotVoiContourSlice(axesHandle,cst,ct,ctIndex,selection,plane,slice,cMap,...)&nbsp;</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;axesHandle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;axes&nbsp;the&nbsp;slice&nbsp;should&nbsp;be&nbsp;displayed&nbsp;in</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;cell&nbsp;array</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;ct&nbsp;structure</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ctIndex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;of&nbsp;the&nbsp;ct&nbsp;cube</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;selection&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logicals&nbsp;defining&nbsp;the&nbsp;current&nbsp;selection&nbsp;of&nbsp;contours</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;should&nbsp;be&nbsp;plotted.&nbsp;Can&nbsp;be&nbsp;set&nbsp;to&nbsp;[]&nbsp;to&nbsp;plot</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;non-ignored&nbsp;contours.</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;plane&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plane&nbsp;view&nbsp;(coronal=1,sagittal=2,axial=3)</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;slice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;slice&nbsp;in&nbsp;the&nbsp;selected&nbsp;plane&nbsp;of&nbsp;the&nbsp;3D&nbsp;cube</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cMap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional&nbsp;argument&nbsp;defining&nbsp;the&nbsp;colormap,&nbsp;default&nbsp;is</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;colorcube</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;varargin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Additional&nbsp;Matlab&nbsp;Line-Property/value&nbsp;pairs</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;voiContourHandles:&nbsp;&nbsp;handles&nbsp;of&nbsp;the&nbsp;plotted&nbsp;contours</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;visibleOnSlice:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logicals&nbsp;defining&nbsp;if&nbsp;the&nbsp;contour&nbsp;is&nbsp;actually</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visible&nbsp;on&nbsp;the&nbsp;current&nbsp;slice</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">[env,&nbsp;~]&nbsp;=&nbsp;matRad_getEnvironment();</td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF">%&nbsp;overwrite&nbsp;colormap</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">if&nbsp;exist('cMap',&nbsp;'var')&nbsp;&amp;&amp;&nbsp;~isempty(cMap)</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cMapScale&nbsp;=&nbsp;size(cMap,1)-1;</td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%determine&nbsp;colors</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;colors&nbsp;=&nbsp;cMap(round(linspace(1,cMapScale,size(cst,1))),:);</td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:size(cst,1)</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfield(cst{i,5},'visibleColor')</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;colors(i,:)&nbsp;=&nbsp;cst{i,5}.visibleColor;</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;colors(i,:)&nbsp;=&nbsp;[0&nbsp;0&nbsp;0];</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">if&nbsp;isempty(selection)&nbsp;||&nbsp;numel(selection)&nbsp;~=&nbsp;size(cst,1)</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selection&nbsp;=&nbsp;true(size(cst,1),1);</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">voiContourHandles&nbsp;=&nbsp;cell(0);</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">switch&nbsp;env</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'MATLAB'</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiContourHandles&nbsp;=&nbsp;gobjects(0);</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'OCTAVE'</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiContourHandles&nbsp;=&nbsp;[];</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">for&nbsp;s&nbsp;=&nbsp;1:size(cst,1)</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~strcmp(cst{s,3},'IGNORED')&nbsp;&amp;&amp;&nbsp;selection(s)</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Check&nbsp;for&nbsp;precalculated&nbsp;contours</td></tr>
+<tr><td>78</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;=[];</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;size(cst,2)&nbsp;&gt;=&nbsp;7&nbsp;&amp;&amp;&nbsp;~isempty(cst{s,7})</td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;=&nbsp;cst{s,7}{slice,plane};</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%If&nbsp;we&nbsp;do&nbsp;not&nbsp;have&nbsp;precomputed&nbsp;contours&nbsp;available,&nbsp;then&nbsp;compute&nbsp;them</td></tr>
+<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask&nbsp;=&nbsp;zeros(size(ct{ctIndex}));</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask(cst{s,4}{ctIndex})&nbsp;=&nbsp;1;</td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;plane&nbsp;==&nbsp;1&nbsp;&amp;&amp;&nbsp;any(any(mask(slice,:,:)&nbsp;&gt;&nbsp;0))</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;=&nbsp;contourc(squeeze(mask(slice,:,:)),.5*[1&nbsp;1]);</td></tr>
+<tr><td>88</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;plane&nbsp;==&nbsp;2&nbsp;&amp;&amp;&nbsp;any(any(mask(:,slice,:)&nbsp;&gt;&nbsp;0))</td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;=&nbsp;contourc(squeeze(mask(:,slice,:)),.5*[1&nbsp;1]);</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;plane&nbsp;==&nbsp;3&nbsp;&amp;&amp;&nbsp;any(any(mask(:,:,slice)&nbsp;&gt;&nbsp;0))</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;=&nbsp;contourc(squeeze(mask(:,:,slice)),.5*[1&nbsp;1]);</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;</td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;plot&nbsp;precalculated&nbsp;contourc&nbsp;data</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch&nbsp;env</td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'MATLAB'</td></tr>
+<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpLineHandle&nbsp;=&nbsp;gobjects(0);</td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'OCTAVE'</td></tr>
+<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpLineHandle&nbsp;=&nbsp;[];</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;any(C(:))</td></tr>
+<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lower&nbsp;=&nbsp;1;&nbsp;%&nbsp;lower&nbsp;marks&nbsp;the&nbsp;beginning&nbsp;of&nbsp;a&nbsp;section</td></tr>
+<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;lower-1&nbsp;~=&nbsp;size(C,2)</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps&nbsp;=&nbsp;C(2,lower);&nbsp;%&nbsp;number&nbsp;of&nbsp;elements&nbsp;of&nbsp;current&nbsp;line&nbsp;section</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpLineHandle(end+1)&nbsp;=&nbsp;line(C(1,lower+1:lower+steps),...</td></tr>
+<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(2,lower+1:lower+steps),...</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Color',colors(s,:),'Parent',axesHandle,varargin{:});</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lower&nbsp;=&nbsp;lower+steps+1;</td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiContourHandles{end+1}&nbsp;=&nbsp;tmpLineHandle;</td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>117</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;empty&nbsp;line&nbsp;object</td></tr>
+<tr><td>118</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiContourHandles{end+1}&nbsp;=&nbsp;{};</td></tr>
+<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>123</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>125</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

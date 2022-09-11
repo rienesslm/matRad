@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\examples\matRad_example1_phantom.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\examples\matRad_example1_phantom.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">%%&nbsp;Example:&nbsp;Generate&nbsp;your&nbsp;own&nbsp;phantom&nbsp;geometry</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2018&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%%&nbsp;</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;In&nbsp;this&nbsp;example&nbsp;we&nbsp;will&nbsp;show</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;(i)&nbsp;how&nbsp;to&nbsp;create&nbsp;arbitrary&nbsp;ct&nbsp;data&nbsp;(resolution,&nbsp;ct&nbsp;numbers)</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;(ii)&nbsp;how&nbsp;to&nbsp;create&nbsp;a&nbsp;cst&nbsp;structure&nbsp;containing&nbsp;the&nbsp;volume&nbsp;of&nbsp;interests&nbsp;of&nbsp;the&nbsp;phantom</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;(iii)&nbsp;generate&nbsp;a&nbsp;treatment&nbsp;plan&nbsp;for&nbsp;this&nbsp;phantom</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>22</td><td bgcolor="#FF0000">matRad_rc;&nbsp;%If&nbsp;this&nbsp;throws&nbsp;an&nbsp;error,&nbsp;run&nbsp;it&nbsp;from&nbsp;the&nbsp;parent&nbsp;directory&nbsp;first&nbsp;to&nbsp;set&nbsp;the&nbsp;paths</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%%&nbsp;Create&nbsp;a&nbsp;CT&nbsp;image&nbsp;series</td></tr>
+<tr><td>25</td><td bgcolor="#FF0000">xDim&nbsp;=&nbsp;200;</td></tr>
+<tr><td>26</td><td bgcolor="#FF0000">yDim&nbsp;=&nbsp;200;</td></tr>
+<tr><td>27</td><td bgcolor="#FF0000">zDim&nbsp;=&nbsp;50;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>29</td><td bgcolor="#FF0000">ct.cubeDim&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[yDim&nbsp;xDim&nbsp;zDim];&nbsp;%&nbsp;second&nbsp;cube&nbsp;dimension&nbsp;represents&nbsp;the&nbsp;x-coordinate</td></tr>
+<tr><td>30</td><td bgcolor="#FF0000">ct.resolution.x&nbsp;=&nbsp;2;</td></tr>
+<tr><td>31</td><td bgcolor="#FF0000">ct.resolution.y&nbsp;=&nbsp;2;</td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">ct.resolution.z&nbsp;=&nbsp;3;</td></tr>
+<tr><td>33</td><td bgcolor="#FF0000">ct.numOfCtScen&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">&nbsp;</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;create&nbsp;an&nbsp;ct&nbsp;image&nbsp;series&nbsp;with&nbsp;zeros&nbsp;-&nbsp;it&nbsp;will&nbsp;be&nbsp;filled&nbsp;later</td></tr>
+<tr><td>36</td><td bgcolor="#FF0000">ct.cubeHU{1}&nbsp;=&nbsp;ones(ct.cubeDim)&nbsp;*&nbsp;-1000;&nbsp;%&nbsp;assign&nbsp;HU&nbsp;of&nbsp;Air</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%%&nbsp;Create&nbsp;the&nbsp;VOI&nbsp;data&nbsp;for&nbsp;the&nbsp;phantom</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;Now&nbsp;we&nbsp;define&nbsp;structures&nbsp;a&nbsp;contour&nbsp;for&nbsp;the&nbsp;phantom&nbsp;and&nbsp;a&nbsp;target</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">ixOAR&nbsp;=&nbsp;1;</td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">ixPTV&nbsp;=&nbsp;2;</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF">%&nbsp;define&nbsp;general&nbsp;VOI&nbsp;properties</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">cst{ixOAR,1}&nbsp;=&nbsp;0;</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">cst{ixOAR,2}&nbsp;=&nbsp;'contour';</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">cst{ixOAR,3}&nbsp;=&nbsp;'OAR';</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">cst{ixPTV,1}&nbsp;=&nbsp;1;</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">cst{ixPTV,2}&nbsp;=&nbsp;'target';</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">cst{ixPTV,3}&nbsp;=&nbsp;'TARGET';</td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">%&nbsp;define&nbsp;optimization&nbsp;parameter&nbsp;for&nbsp;both&nbsp;VOIs</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">cst{ixOAR,5}.TissueClass&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>55</td><td bgcolor="#FF0000">cst{ixOAR,5}.alphaX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0.1000;</td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">cst{ixOAR,5}.betaX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0.0500;</td></tr>
+<tr><td>57</td><td bgcolor="#FF0000">cst{ixOAR,5}.Priority&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;2;</td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">cst{ixOAR,5}.Visible&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">cst{ixOAR,5}.visibleColor&nbsp;=&nbsp;[0&nbsp;0&nbsp;0];</td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF">%&nbsp;define&nbsp;objective&nbsp;as&nbsp;struct&nbsp;for&nbsp;compatibility&nbsp;with&nbsp;GNU&nbsp;Octave&nbsp;I/O</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">cst{ixOAR,6}{1}&nbsp;=&nbsp;struct(DoseObjectives.matRad_SquaredOverdosing(10,30));</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>64</td><td bgcolor="#FF0000">cst{ixPTV,5}.TissueClass&nbsp;=&nbsp;1;</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">cst{ixPTV,5}.alphaX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0.1000;</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">cst{ixPTV,5}.betaX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0.0500;</td></tr>
+<tr><td>67</td><td bgcolor="#FF0000">cst{ixPTV,5}.Priority&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">cst{ixPTV,5}.Visible&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">cst{ixPTV,5}.visibleColor&nbsp;=&nbsp;[1&nbsp;1&nbsp;1];</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">%&nbsp;define&nbsp;objective&nbsp;as&nbsp;struct&nbsp;for&nbsp;compatibility&nbsp;with&nbsp;GNU&nbsp;Octave&nbsp;I/O</td></tr>
+<tr><td>72</td><td bgcolor="#FF0000">cst{ixPTV,6}{1}&nbsp;=&nbsp;struct(DoseObjectives.matRad_SquaredDeviation(800,60));</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF">%%&nbsp;Lets&nbsp;create&nbsp;either&nbsp;a&nbsp;cubic&nbsp;or&nbsp;a&nbsp;spheric&nbsp;phantom</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">TYPE&nbsp;=&nbsp;'spheric';&nbsp;&nbsp;&nbsp;%&nbsp;either&nbsp;'cubic'&nbsp;or&nbsp;'spheric'</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">%&nbsp;first&nbsp;the&nbsp;OAR</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">cubeHelper&nbsp;=&nbsp;zeros(ct.cubeDim);</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">switch&nbsp;TYPE</td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;case&nbsp;{'cubic'}</td></tr>
+<tr><td>84</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xLowOAR&nbsp;&nbsp;=&nbsp;round(xDim/2&nbsp;-&nbsp;xDim/4);</td></tr>
+<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xHighOAR&nbsp;=&nbsp;round(xDim/2&nbsp;+&nbsp;xDim/4);</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yLowOAR&nbsp;&nbsp;=&nbsp;round(yDim/2&nbsp;-&nbsp;yDim/4);</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yHighOAR&nbsp;=&nbsp;round(yDim/2&nbsp;+&nbsp;yDim/4);</td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zLowOAR&nbsp;&nbsp;=&nbsp;round(zDim/2&nbsp;-&nbsp;zDim/4);</td></tr>
+<tr><td>90</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zHighOAR&nbsp;=&nbsp;round(zDim/2&nbsp;+&nbsp;zDim/4);</td></tr>
+<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;x&nbsp;=&nbsp;xLowOAR:1:xHighOAR</td></tr>
+<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;y&nbsp;=&nbsp;yLowOAR:1:yHighOAR</td></tr>
+<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;z&nbsp;=&nbsp;zLowOAR:1:zHighOAR</td></tr>
+<tr><td>95</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cubeHelper(y,x,z)&nbsp;=&nbsp;1;</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;case&nbsp;{'spheric'}</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>102</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radiusOAR&nbsp;=&nbsp;xDim/4;</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;x&nbsp;=&nbsp;1:xDim</td></tr>
+<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;y&nbsp;=&nbsp;1:yDim</td></tr>
+<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;z&nbsp;=&nbsp;1:zDim</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currPost&nbsp;=&nbsp;[y&nbsp;x&nbsp;z]&nbsp;-&nbsp;round([ct.cubeDim./2]);</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;&nbsp;sqrt(sum(currPost.^2))&nbsp;&lt;&nbsp;radiusOAR</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cubeHelper(y,x,z)&nbsp;=&nbsp;1;</td></tr>
+<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>115</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>117</td><td bgcolor="#FFFFFF">%&nbsp;extract&nbsp;the&nbsp;voxel&nbsp;indices&nbsp;and&nbsp;save&nbsp;it&nbsp;in&nbsp;the&nbsp;cst</td></tr>
+<tr><td>118</td><td bgcolor="#FF0000">cst{ixOAR,4}{1}&nbsp;=&nbsp;find(cubeHelper);</td></tr>
+<tr><td>119</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">%&nbsp;second&nbsp;the&nbsp;PTV</td></tr>
+<tr><td>122</td><td bgcolor="#FF0000">cubeHelper&nbsp;=&nbsp;zeros(ct.cubeDim);</td></tr>
+<tr><td>123</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>124</td><td bgcolor="#FF0000">switch&nbsp;TYPE</td></tr>
+<tr><td>125</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;case&nbsp;{'cubic'}</td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xLowPTV&nbsp;&nbsp;=&nbsp;round(xDim/2&nbsp;-&nbsp;xDim/8);</td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xHighPTV&nbsp;=&nbsp;round(xDim/2&nbsp;+&nbsp;xDim/8);</td></tr>
+<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yLowPTV&nbsp;&nbsp;=&nbsp;round(yDim/2&nbsp;-&nbsp;yDim/8);</td></tr>
+<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yHighPTV&nbsp;=&nbsp;round(yDim/2&nbsp;+&nbsp;yDim/8);</td></tr>
+<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zLowPTV&nbsp;&nbsp;=&nbsp;round(zDim/2&nbsp;-&nbsp;zDim/8);</td></tr>
+<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zHighPTV&nbsp;=&nbsp;round(zDim/2&nbsp;+&nbsp;zDim/8);</td></tr>
+<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>135</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cubeHelper&nbsp;=&nbsp;zeros(ct.cubeDim);</td></tr>
+<tr><td>136</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;x&nbsp;=&nbsp;xLowPTV:1:xHighPTV</td></tr>
+<tr><td>138</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;y&nbsp;=&nbsp;yLowPTV:1:yHighPTV</td></tr>
+<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;z&nbsp;=&nbsp;zLowPTV:1:zHighPTV</td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cubeHelper(y,x,z)&nbsp;=&nbsp;1;</td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>145</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;case&nbsp;{'spheric'}</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radiusPTV&nbsp;=&nbsp;xDim/12;</td></tr>
+<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;x&nbsp;=&nbsp;1:xDim</td></tr>
+<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;y&nbsp;=&nbsp;1:yDim</td></tr>
+<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;z&nbsp;=&nbsp;1:zDim</td></tr>
+<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currPost&nbsp;=&nbsp;[x&nbsp;y&nbsp;z]&nbsp;-&nbsp;round([ct.cubeDim./2]);</td></tr>
+<tr><td>153</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;&nbsp;sqrt(sum(currPost.^2))&nbsp;&lt;&nbsp;radiusPTV</td></tr>
+<tr><td>154</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cubeHelper(y,x,z)&nbsp;=&nbsp;1;</td></tr>
+<tr><td>155</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>156</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>158</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>159</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>161</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>162</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>163</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>164</td><td bgcolor="#FFFFFF">%&nbsp;extract&nbsp;the&nbsp;voxel&nbsp;indices&nbsp;and&nbsp;save&nbsp;it&nbsp;in&nbsp;the&nbsp;cst</td></tr>
+<tr><td>165</td><td bgcolor="#FF0000">cst{ixPTV,4}{1}&nbsp;=&nbsp;find(cubeHelper);</td></tr>
+<tr><td>166</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>167</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>168</td><td bgcolor="#FFFFFF">%&nbsp;now&nbsp;we&nbsp;have&nbsp;ct&nbsp;data&nbsp;and&nbsp;cst&nbsp;data&nbsp;for&nbsp;a&nbsp;new&nbsp;phantom</td></tr>
+<tr><td>169</td><td bgcolor="#FF0000">display(ct);</td></tr>
+<tr><td>170</td><td bgcolor="#FF0000">display(cst);</td></tr>
+<tr><td>171</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>172</td><td bgcolor="#FFFFFF">%%&nbsp;Assign&nbsp;relative&nbsp;electron&nbsp;densities</td></tr>
+<tr><td>173</td><td bgcolor="#FF0000">vIxOAR&nbsp;=&nbsp;cst{ixOAR,4}{1};</td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">vIxPTV&nbsp;=&nbsp;cst{ixPTV,4}{1};</td></tr>
+<tr><td>175</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>176</td><td bgcolor="#FF0000">ct.cubeHU{1}(vIxOAR)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">ct.cubeHU{1}(vIxPTV)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF">%%&nbsp;Treatment&nbsp;Plan</td></tr>
+<tr><td>180</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;next&nbsp;step&nbsp;is&nbsp;to&nbsp;define&nbsp;your&nbsp;treatment&nbsp;plan&nbsp;labeled&nbsp;as&nbsp;'pln'.&nbsp;This&nbsp;</td></tr>
+<tr><td>181</td><td bgcolor="#FFFFFF">%&nbsp;structure&nbsp;requires&nbsp;input&nbsp;from&nbsp;the&nbsp;treatment&nbsp;planner&nbsp;and&nbsp;defines&nbsp;the&nbsp;most</td></tr>
+<tr><td>182</td><td bgcolor="#FFFFFF">%&nbsp;important&nbsp;cornerstones&nbsp;of&nbsp;your&nbsp;treatment&nbsp;plan.</td></tr>
+<tr><td>183</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>184</td><td bgcolor="#FFFFFF">%&nbsp;First&nbsp;of&nbsp;all,&nbsp;we&nbsp;need&nbsp;to&nbsp;define&nbsp;what&nbsp;kind&nbsp;of&nbsp;radiation&nbsp;modality&nbsp;we&nbsp;would</td></tr>
+<tr><td>185</td><td bgcolor="#FFFFFF">%&nbsp;like&nbsp;to&nbsp;use.&nbsp;Possible&nbsp;values&nbsp;are&nbsp;photons,&nbsp;protons&nbsp;or&nbsp;carbon.&nbsp;In&nbsp;this</td></tr>
+<tr><td>186</td><td bgcolor="#FFFFFF">%&nbsp;example&nbsp;we&nbsp;would&nbsp;like&nbsp;to&nbsp;use&nbsp;photons&nbsp;for&nbsp;treatment&nbsp;planning.&nbsp;Next,&nbsp;we</td></tr>
+<tr><td>187</td><td bgcolor="#FFFFFF">%&nbsp;need&nbsp;to&nbsp;define&nbsp;a&nbsp;treatment&nbsp;machine&nbsp;to&nbsp;correctly&nbsp;load&nbsp;the&nbsp;corresponding&nbsp;</td></tr>
+<tr><td>188</td><td bgcolor="#FFFFFF">%&nbsp;base&nbsp;data.&nbsp;matRad&nbsp;features&nbsp;generic&nbsp;base&nbsp;data&nbsp;in&nbsp;the&nbsp;file</td></tr>
+<tr><td>189</td><td bgcolor="#FFFFFF">%&nbsp;'photons_Generic.mat';&nbsp;consequently&nbsp;the&nbsp;machine&nbsp;has&nbsp;to&nbsp;be&nbsp;set&nbsp;to&nbsp;'Generic'</td></tr>
+<tr><td>190</td><td bgcolor="#FF0000">pln.radiationMode&nbsp;=&nbsp;'photons';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>191</td><td bgcolor="#FF0000">pln.machine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'Generic';</td></tr>
+<tr><td>192</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>193</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>194</td><td bgcolor="#FFFFFF">%&nbsp;Define&nbsp;the&nbsp;flavor&nbsp;of&nbsp;biological&nbsp;optimization&nbsp;for&nbsp;treatment&nbsp;planning&nbsp;along</td></tr>
+<tr><td>195</td><td bgcolor="#FFFFFF">%&nbsp;with&nbsp;the&nbsp;quantity&nbsp;that&nbsp;should&nbsp;be&nbsp;used&nbsp;for&nbsp;optimization.&nbsp;Possible&nbsp;values&nbsp;</td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF">%&nbsp;are&nbsp;(none:&nbsp;physical&nbsp;dose&nbsp;based&nbsp;optimization;&nbsp;const_RBExD:&nbsp;constant&nbsp;RBE&nbsp;of&nbsp;1.1;&nbsp;</td></tr>
+<tr><td>197</td><td bgcolor="#FFFFFF">%&nbsp;LEMIV_effect:&nbsp;effect-based&nbsp;optimization;&nbsp;LEMIV_RBExD:&nbsp;optimization&nbsp;of&nbsp;</td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF">%&nbsp;RBE-weighted&nbsp;dose.&nbsp;As&nbsp;we&nbsp;use&nbsp;photons,&nbsp;we&nbsp;select&nbsp;'none'&nbsp;as&nbsp;we&nbsp;want&nbsp;to&nbsp;optimize&nbsp;the&nbsp;</td></tr>
+<tr><td>199</td><td bgcolor="#FFFFFF">%&nbsp;physical&nbsp;dose.</td></tr>
+<tr><td>200</td><td bgcolor="#FF0000">pln.propOpt.bioOptimization&nbsp;=&nbsp;'none';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>202</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>203</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;remaining&nbsp;plan&nbsp;parameters&nbsp;are&nbsp;set&nbsp;like&nbsp;in&nbsp;the&nbsp;previous&nbsp;example&nbsp;files</td></tr>
+<tr><td>204</td><td bgcolor="#FF0000">pln.numOfFractions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;30;</td></tr>
+<tr><td>205</td><td bgcolor="#FF0000">pln.propStf.gantryAngles&nbsp;&nbsp;=&nbsp;[0&nbsp;45];</td></tr>
+<tr><td>206</td><td bgcolor="#FF0000">pln.propStf.couchAngles&nbsp;&nbsp;&nbsp;=&nbsp;[0&nbsp;0];</td></tr>
+<tr><td>207</td><td bgcolor="#FF0000">pln.propStf.bixelWidth&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;5;</td></tr>
+<tr><td>208</td><td bgcolor="#FF0000">pln.propStf.numOfBeams&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;numel(pln.propStf.gantryAngles);</td></tr>
+<tr><td>209</td><td bgcolor="#FF0000">pln.propStf.isoCenter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ones(pln.propStf.numOfBeams,1)&nbsp;*&nbsp;matRad_getIsoCenter(cst,ct,0);</td></tr>
+<tr><td>210</td><td bgcolor="#FF0000">pln.propOpt.runDAO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0;</td></tr>
+<tr><td>211</td><td bgcolor="#FF0000">pln.propOpt.runSequencing&nbsp;=&nbsp;0;</td></tr>
+<tr><td>212</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>213</td><td bgcolor="#FFFFFF">%&nbsp;dose&nbsp;calculation&nbsp;settings</td></tr>
+<tr><td>214</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.x&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>215</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.y&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>216</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.z&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>217</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>218</td><td bgcolor="#FFFFFF">%%&nbsp;Generate&nbsp;Beam&nbsp;Geometry&nbsp;STF</td></tr>
+<tr><td>219</td><td bgcolor="#FF0000">stf&nbsp;=&nbsp;matRad_generateStf(ct,cst,pln);</td></tr>
+<tr><td>220</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>221</td><td bgcolor="#FFFFFF">%%&nbsp;Dose&nbsp;Calculation</td></tr>
+<tr><td>222</td><td bgcolor="#FF0000">dij&nbsp;=&nbsp;matRad_calcPhotonDose(ct,stf,pln,cst);</td></tr>
+<tr><td>223</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>224</td><td bgcolor="#FFFFFF">%%&nbsp;Inverse&nbsp;Optimization&nbsp;for&nbsp;intensity-modulated&nbsp;photon&nbsp;therapy</td></tr>
+<tr><td>225</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;goal&nbsp;of&nbsp;the&nbsp;fluence&nbsp;optimization&nbsp;is&nbsp;to&nbsp;find&nbsp;a&nbsp;set&nbsp;of&nbsp;bixel/spot&nbsp;</td></tr>
+<tr><td>226</td><td bgcolor="#FFFFFF">%&nbsp;weights&nbsp;which&nbsp;yield&nbsp;the&nbsp;best&nbsp;possible&nbsp;dose&nbsp;distribution&nbsp;according&nbsp;to&nbsp;the</td></tr>
+<tr><td>227</td><td bgcolor="#FFFFFF">%&nbsp;clinical&nbsp;objectives&nbsp;and&nbsp;constraints&nbsp;underlying&nbsp;the&nbsp;radiation&nbsp;treatment.</td></tr>
+<tr><td>228</td><td bgcolor="#FF0000">resultGUI&nbsp;=&nbsp;matRad_fluenceOptimization(dij,cst,pln);</td></tr>
+<tr><td>229</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>230</td><td bgcolor="#FFFFFF">%%&nbsp;Plot&nbsp;the&nbsp;resulting&nbsp;dose&nbsp;slice</td></tr>
+<tr><td>231</td><td bgcolor="#FF0000">plane&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;3;</td></tr>
+<tr><td>232</td><td bgcolor="#FF0000">slice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;round(pln.propStf.isoCenter(1,3)./ct.resolution.z);</td></tr>
+<tr><td>233</td><td bgcolor="#FF0000">doseWindow&nbsp;=&nbsp;[0&nbsp;max([resultGUI.physicalDose(:)])];</td></tr>
+<tr><td>234</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>235</td><td bgcolor="#FF0000">figure,title('phantom&nbsp;plan')</td></tr>
+<tr><td>236</td><td bgcolor="#FF0000">matRad_plotSliceWrapper(gca,ct,cst,1,resultGUI.physicalDose,plane,slice,[],[],colorcube,[],doseWindow,[]);</td></tr>
+<tr><td>237</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>238</td><td bgcolor="#FFFFFF">%%&nbsp;</td></tr>
+<tr><td>239</td><td bgcolor="#FFFFFF">%&nbsp;We&nbsp;export&nbsp;the&nbsp;the&nbsp;created&nbsp;phantom&nbsp;&amp;&nbsp;dose&nbsp;as&nbsp;dicom.&nbsp;This&nbsp;is&nbsp;handled&nbsp;by&nbsp;the&nbsp;</td></tr>
+<tr><td>240</td><td bgcolor="#FFFFFF">%&nbsp;class&nbsp;matRad_DicomExporter.&nbsp;When&nbsp;no&nbsp;arguments&nbsp;are&nbsp;given,&nbsp;the&nbsp;exporter&nbsp;searches</td></tr>
+<tr><td>241</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;workspace&nbsp;itself&nbsp;for&nbsp;matRad-structures.&nbsp;The&nbsp;output&nbsp;directory&nbsp;can&nbsp;be&nbsp;set&nbsp;by</td></tr>
+<tr><td>242</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;property&nbsp;dicomDir.&nbsp;While&nbsp;the&nbsp;different&nbsp;DICOM&nbsp;datasets&nbsp;(ct,&nbsp;RTStruct,&nbsp;etc)&nbsp;</td></tr>
+<tr><td>243</td><td bgcolor="#FFFFFF">%&nbsp;can&nbsp;be&nbsp;exported&nbsp;individually,&nbsp;we&nbsp;call&nbsp;the&nbsp;wrapper&nbsp;to&nbsp;do&nbsp;all&nbsp;possible&nbsp;exports.</td></tr>
+<tr><td>244</td><td bgcolor="#FF0000">dcmExport&nbsp;=&nbsp;matRad_DicomExporter();</td></tr>
+<tr><td>245</td><td bgcolor="#FF0000">dcmExport.dicomDir&nbsp;=&nbsp;[pwd&nbsp;filesep&nbsp;'dicomExport'];</td></tr>
+<tr><td>246</td><td bgcolor="#FF0000">dcmExport.matRad_exportDicom();</td></tr>
+<tr><td>247</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>248</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

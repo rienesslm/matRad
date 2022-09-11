@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_xiaLeafSequencing.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_xiaLeafSequencing.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;resultGUI&nbsp;=&nbsp;matRad_xiaLeafSequencing(resultGUI,stf,dij,numOfLevels,visBool)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;multileaf&nbsp;collimator&nbsp;leaf&nbsp;sequencing&nbsp;algorithm&nbsp;</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;for&nbsp;intensity&nbsp;modulated&nbsp;beams&nbsp;with&nbsp;multiple&nbsp;static&nbsp;segments&nbsp;according&nbsp;to&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;Xia&nbsp;et&nbsp;al.&nbsp;(1998)&nbsp;Medical&nbsp;Physics</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resultGUI&nbsp;=&nbsp;matRad_xiaLeafSequencing(resultGUI,stf,dij,numOfLevels)</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resultGUI&nbsp;=&nbsp;matRad_xiaLeafSequencing(resultGUI,stf,dij,numOfLevels,visBool)</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resultGUI:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resultGUI&nbsp;struct&nbsp;to&nbsp;which&nbsp;the&nbsp;output&nbsp;data&nbsp;will&nbsp;be&nbsp;added,&nbsp;if</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;field&nbsp;is&nbsp;empty&nbsp;resultGUI&nbsp;struct&nbsp;will&nbsp;be&nbsp;created</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;steering&nbsp;information&nbsp;struct</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad's&nbsp;dij&nbsp;matrix</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;numOfLevels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;stratification&nbsp;levels</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;visBool:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toggle&nbsp;on/off&nbsp;visualization&nbsp;(optional)</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resultGUI:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;result&nbsp;struct&nbsp;containing&nbsp;the&nbsp;new&nbsp;dose&nbsp;cube&nbsp;as&nbsp;well&nbsp;as&nbsp;</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;weights</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[1]&nbsp;http://online.medphys.org/resource/1/mphya6/v25/i8/p1424_s1</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;if&nbsp;visBool&nbsp;not&nbsp;set&nbsp;toogle&nbsp;off&nbsp;visualization</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;5</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;visBool&nbsp;=&nbsp;0;</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">mode&nbsp;=&nbsp;'rl';&nbsp;%&nbsp;sliding&nbsp;window&nbsp;(sw)&nbsp;or&nbsp;reducing&nbsp;level&nbsp;(rl)</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">numOfBeams&nbsp;=&nbsp;numel(stf);</td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">if&nbsp;visBool</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;the&nbsp;sequencing&nbsp;figure</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sz&nbsp;=&nbsp;[800&nbsp;1000];&nbsp;%&nbsp;figure&nbsp;size</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;screensize&nbsp;=&nbsp;get(0,'ScreenSize');</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xpos&nbsp;=&nbsp;ceil((screensize(3)-sz(2))/2);&nbsp;%&nbsp;center&nbsp;the&nbsp;figure&nbsp;on&nbsp;the&nbsp;screen&nbsp;horizontally</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ypos&nbsp;=&nbsp;ceil((screensize(4)-sz(1))/2);&nbsp;%&nbsp;center&nbsp;the&nbsp;figure&nbsp;on&nbsp;the&nbsp;screen&nbsp;vertically</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;seqFig&nbsp;=&nbsp;figure('position',[xpos,ypos,sz(2),sz(1)]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>56</td><td bgcolor="#FF0000">offset&nbsp;=&nbsp;0;</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numOfBeams</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numOfRaysPerBeam&nbsp;=&nbsp;stf(i).numOfRays;</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;relevant&nbsp;weights&nbsp;for&nbsp;current&nbsp;beam</td></tr>
+<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;wOfCurrBeams&nbsp;=&nbsp;resultGUI.w(1+offset:numOfRaysPerBeam+offset);%REVIEW&nbsp;OFFSET</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;=&nbsp;ones(numOfRaysPerBeam,1)*NaN;</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;Z&nbsp;=&nbsp;ones(numOfRaysPerBeam,1)*NaN;</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j=1:stf(i).numOfRays</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X(j)&nbsp;=&nbsp;stf(i).ray(j).rayPos_bev(:,1);</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Z(j)&nbsp;=&nbsp;stf(i).ray(j).rayPos_bev(:,3);</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;sort&nbsp;bixels&nbsp;into&nbsp;matrix</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;minX&nbsp;=&nbsp;min(X);</td></tr>
+<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maxX&nbsp;=&nbsp;max(X);</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;minZ&nbsp;=&nbsp;min(Z);</td></tr>
+<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maxZ&nbsp;=&nbsp;max(Z);</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dimOfFluenceMxX&nbsp;=&nbsp;(maxX-minX)/stf(i).bixelWidth&nbsp;+&nbsp;1;</td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dimOfFluenceMxZ&nbsp;=&nbsp;(maxZ-minZ)/stf(i).bixelWidth&nbsp;+&nbsp;1;</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Create&nbsp;the&nbsp;fluence&nbsp;matrix.</td></tr>
+<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fluenceMx&nbsp;=&nbsp;zeros(dimOfFluenceMxZ,dimOfFluenceMxX);</td></tr>
+<tr><td>84</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Calculate&nbsp;X&nbsp;and&nbsp;Z&nbsp;position&nbsp;of&nbsp;every&nbsp;fluence's&nbsp;matrix&nbsp;spot</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;z&nbsp;axis&nbsp;=&nbsp;axis&nbsp;of&nbsp;leaf&nbsp;movement!</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xPos&nbsp;=&nbsp;(X-minX)/stf(i).bixelWidth+1;</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zPos&nbsp;=&nbsp;(Z-minZ)/stf(i).bixelWidth+1;</td></tr>
+<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Make&nbsp;subscripts&nbsp;for&nbsp;fluence&nbsp;matrix</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;indInFluenceMx&nbsp;=&nbsp;zPos&nbsp;+&nbsp;(xPos-1)*dimOfFluenceMxZ;</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Save&nbsp;weights&nbsp;in&nbsp;fluence&nbsp;matrix.</td></tr>
+<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fluenceMx(indInFluenceMx)&nbsp;=&nbsp;wOfCurrBeams;</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Stratification</td></tr>
+<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;calFac&nbsp;=&nbsp;max(fluenceMx(:));</td></tr>
+<tr><td>98</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;D_k&nbsp;=&nbsp;round(fluenceMx/calFac*numOfLevels);&nbsp;</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;the&nbsp;stratification&nbsp;in&nbsp;the&nbsp;initial&nbsp;intensity&nbsp;matrix&nbsp;D_0.</td></tr>
+<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;D_0&nbsp;=&nbsp;D_k;</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;the&nbsp;maximun&nbsp;intensity&nbsp;(Equation&nbsp;5)</td></tr>
+<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;L_k&nbsp;=&nbsp;max(D_k(:));</td></tr>
+<tr><td>105</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>106</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;the&nbsp;maximun&nbsp;initial&nbsp;intensity&nbsp;matrix&nbsp;value&nbsp;in&nbsp;L_0.</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;L_0&nbsp;=&nbsp;L_k;</td></tr>
+<tr><td>108</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>109</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Set&nbsp;k=0,&nbsp;this&nbsp;variable&nbsp;is&nbsp;used&nbsp;for&nbsp;residuals&nbsp;intensity&nbsp;matrices&nbsp;D_k.</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k&nbsp;=&nbsp;0;</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;container&nbsp;to&nbsp;remember&nbsp;generated&nbsp;shapes;&nbsp;allocate&nbsp;space&nbsp;for&nbsp;10000&nbsp;shapes</td></tr>
+<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;shapes&nbsp;=&nbsp;NaN*ones(dimOfFluenceMxZ,dimOfFluenceMxX,10000);</td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;visBool</td></tr>
+<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clf(seqFig);</td></tr>
+<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;colormap(seqFig,'jet');</td></tr>
+<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seqSubPlots(1)&nbsp;=&nbsp;subplot(2,2,1,'parent',seqFig);</td></tr>
+<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imagesc(D_k,'parent',seqSubPlots(1));</td></tr>
+<tr><td>121</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(seqSubPlots(1),'CLim',[0&nbsp;L_0],'YDir','normal');</td></tr>
+<tr><td>122</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title(seqSubPlots(1),['Beam&nbsp;#&nbsp;'&nbsp;num2str(i)&nbsp;':&nbsp;L_0&nbsp;=&nbsp;'&nbsp;num2str(L_0)&nbsp;'&nbsp;-&nbsp;'&nbsp;num2str(numel(unique(D_0)))&nbsp;'&nbsp;intensity&nbsp;levels'])</td></tr>
+<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel(seqSubPlots(1),'x&nbsp;-&nbsp;direction&nbsp;parallel&nbsp;to&nbsp;leaf&nbsp;motion&nbsp;')</td></tr>
+<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ylabel(seqSubPlots(1),'z&nbsp;-&nbsp;direction&nbsp;perpendicular&nbsp;to&nbsp;leaf&nbsp;motion&nbsp;')</td></tr>
+<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;colorbar;</td></tr>
+<tr><td>126</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drawnow</td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>128</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;start&nbsp;sequencer</td></tr>
+<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;L_k&nbsp;&gt;&nbsp;0</td></tr>
+<tr><td>131</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k&nbsp;=&nbsp;k&nbsp;+&nbsp;1;</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Plot&nbsp;residual&nbsp;intensity&nbsp;matrix.</td></tr>
+<tr><td>135</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;visBool</td></tr>
+<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seqSubPlots(2)&nbsp;=&nbsp;subplot(2,2,2,'parent',seqFig);</td></tr>
+<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imagesc(D_k,'parent',seqSubPlots(2));</td></tr>
+<tr><td>138</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(seqSubPlots(2),'CLim',[0&nbsp;L_0],'YDir','normal');</td></tr>
+<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title(seqSubPlots(2),['k&nbsp;=&nbsp;'&nbsp;num2str(k)&nbsp;'&nbsp;-&nbsp;'&nbsp;num2str(numel(unique(D_k)))&nbsp;'&nbsp;intensity&nbsp;levels&nbsp;remaining...']);</td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel(seqSubPlots(2),'x&nbsp;-&nbsp;direction&nbsp;parallel&nbsp;to&nbsp;leaf&nbsp;motion&nbsp;');</td></tr>
+<tr><td>141</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ylabel(seqSubPlots(2),'z&nbsp;-&nbsp;direction&nbsp;perpendicular&nbsp;to&nbsp;leaf&nbsp;motion&nbsp;');</td></tr>
+<tr><td>142</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;colorbar</td></tr>
+<tr><td>143</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drawnow</td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>145</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Rounded&nbsp;off&nbsp;integer.&nbsp;Equation&nbsp;7.</td></tr>
+<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m&nbsp;=&nbsp;floor(log2(L_k));</td></tr>
+<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Convert&nbsp;m=1&nbsp;if&nbsp;is&nbsp;less&nbsp;than&nbsp;1.&nbsp;This&nbsp;happens&nbsp;when&nbsp;L_k&nbsp;belong&nbsp;to&nbsp;]0,2[</td></tr>
+<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;m&nbsp;&lt;&nbsp;1</td></tr>
+<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m&nbsp;=&nbsp;1;</td></tr>
+<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Calculate&nbsp;the&nbsp;delivery&nbsp;intensity&nbsp;unit.&nbsp;Equation&nbsp;6.</td></tr>
+<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d_k&nbsp;=&nbsp;floor(2^(m-1));</td></tr>
+<tr><td>156</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Opening&nbsp;matrix.</td></tr>
+<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;openingMx&nbsp;=&nbsp;D_k&nbsp;&gt;=&nbsp;d_k;</td></tr>
+<tr><td>159</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;opening&nbsp;matrix.</td></tr>
+<tr><td>161</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;visBool</td></tr>
+<tr><td>162</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seqSubPlots(3)&nbsp;=&nbsp;subplot(2,2,3,'parent',seqFig);</td></tr>
+<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imagesc(openingMx,'parent',seqSubPlots(3));</td></tr>
+<tr><td>164</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(seqSubPlots(3),'YDir','normal')</td></tr>
+<tr><td>165</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel(seqSubPlots(3),'x&nbsp;-&nbsp;direction&nbsp;parallel&nbsp;to&nbsp;leaf&nbsp;motion&nbsp;')</td></tr>
+<tr><td>166</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ylabel(seqSubPlots(3),'z&nbsp;-&nbsp;direction&nbsp;perpendicular&nbsp;to&nbsp;leaf&nbsp;motion&nbsp;')</td></tr>
+<tr><td>167</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title(seqSubPlots(3),'Opening&nbsp;matrix');</td></tr>
+<tr><td>168</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drawnow</td></tr>
+<tr><td>169</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>170</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>171</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(mode,'sw')&nbsp;%&nbsp;sliding&nbsp;window&nbsp;technique!</td></tr>
+<tr><td>172</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:dimOfFluenceMxZ</td></tr>
+<tr><td>173</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;openIx&nbsp;=&nbsp;find(openingMx(j,:)&nbsp;==&nbsp;1,1,'first');</td></tr>
+<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(openIx)</td></tr>
+<tr><td>175</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;closeIx&nbsp;=&nbsp;find(openingMx(j,openIx+1:end)&nbsp;==&nbsp;0,1,'first');</td></tr>
+<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(closeIx)</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;openingMx(j,openIx+closeIx:end)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>180</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>181</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>182</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;strcmp(mode,'rl')&nbsp;%&nbsp;reducing&nbsp;levels&nbsp;technique!</td></tr>
+<tr><td>183</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:dimOfFluenceMxZ</td></tr>
+<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[maxVal,maxIx]&nbsp;=&nbsp;max(openingMx(j,:)&nbsp;.*&nbsp;D_k(j,:));</td></tr>
+<tr><td>185</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;maxVal&nbsp;&gt;&nbsp;0</td></tr>
+<tr><td>186</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;closeIx&nbsp;=&nbsp;maxIx&nbsp;+&nbsp;find(openingMx(j,maxIx+1:end)&nbsp;==&nbsp;0,1,'first');</td></tr>
+<tr><td>187</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(closeIx)</td></tr>
+<tr><td>188</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;openingMx(j,closeIx:end)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>189</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;openIx&nbsp;=&nbsp;find(openingMx(j,1:maxIx-1)&nbsp;==&nbsp;0,1,'last');</td></tr>
+<tr><td>191</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(openIx)</td></tr>
+<tr><td>192</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;openingMx(j,1:openIx)&nbsp;=&nbsp;0;</td></tr>
+<tr><td>193</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>194</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>195</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>197</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>199</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>200</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape_k&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;openingMx&nbsp;*&nbsp;d_k;</td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>202</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;visBool</td></tr>
+<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seqSubPlots(4)&nbsp;=&nbsp;subplot(2,2,4,'parent',seqFig);</td></tr>
+<tr><td>204</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imagesc(shape_k,'parent',seqSubPlots(4));</td></tr>
+<tr><td>205</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(seqSubPlots(4),'YDir','normal')</td></tr>
+<tr><td>206</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hold(seqSubPlots(4),'on');</td></tr>
+<tr><td>207</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel(seqSubPlots(4),'x&nbsp;-&nbsp;direction&nbsp;parallel&nbsp;to&nbsp;leaf&nbsp;motion&nbsp;')</td></tr>
+<tr><td>208</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ylabel(seqSubPlots(4),'z&nbsp;-&nbsp;direction&nbsp;perpendicular&nbsp;to&nbsp;leaf&nbsp;motion&nbsp;')</td></tr>
+<tr><td>209</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title(seqSubPlots(4),['beam&nbsp;#&nbsp;'&nbsp;num2str(i)&nbsp;'&nbsp;shape&nbsp;#&nbsp;'&nbsp;num2str(k)&nbsp;'&nbsp;d_k&nbsp;=&nbsp;'&nbsp;num2str(d_k)]);</td></tr>
+<tr><td>210</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:dimOfFluenceMxZ</td></tr>
+<tr><td>211</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;leftLeafIx&nbsp;=&nbsp;find(shape_k(j,:)&gt;0,1,'first');</td></tr>
+<tr><td>212</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rightLeafIx&nbsp;=&nbsp;find(shape_k(j,:)&gt;0,1,'last');</td></tr>
+<tr><td>213</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;leftLeafIx&nbsp;&gt;&nbsp;1</td></tr>
+<tr><td>214</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),[.5&nbsp;leftLeafIx-.5],j-[.5&nbsp;.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>215</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),[.5&nbsp;leftLeafIx-.5],j+[.5&nbsp;.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>216</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),[&nbsp;leftLeafIx-.5&nbsp;leftLeafIx-.5],j+[.5&nbsp;-.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>217</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;rightLeafIx&lt;dimOfFluenceMxX</td></tr>
+<tr><td>219</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),[dimOfFluenceMxX+.5&nbsp;rightLeafIx+.5],j-[.5&nbsp;.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>220</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),[dimOfFluenceMxX+.5&nbsp;rightLeafIx+.5],j+[.5&nbsp;.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>221</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),[&nbsp;rightLeafIx+.5&nbsp;rightLeafIx+.5],j+[.5&nbsp;-.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>222</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>223</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(rightLeafIx)&nbsp;&amp;&amp;&nbsp;isempty&nbsp;(leftLeafIx)</td></tr>
+<tr><td>224</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),[dimOfFluenceMxX+.5&nbsp;.5],j-[.5&nbsp;.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>225</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),[dimOfFluenceMxX+.5&nbsp;.5],j+[.5&nbsp;.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>226</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot(seqSubPlots(4),0.5*dimOfFluenceMxX*[1&nbsp;1]+[0.5],j+[.5&nbsp;-.5]&nbsp;,'w','LineWidth',2)</td></tr>
+<tr><td>227</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>228</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>229</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>230</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;axis(seqSubPlots(4),'tight');</td></tr>
+<tr><td>231</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drawnow</td></tr>
+<tr><td>232</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pause(1);</td></tr>
+<tr><td>233</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;</td></tr>
+<tr><td>234</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>235</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shapes(:,:,k)&nbsp;=&nbsp;shape_k;</td></tr>
+<tr><td>236</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shapesWeight(k)&nbsp;=&nbsp;d_k;</td></tr>
+<tr><td>237</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D_k&nbsp;=&nbsp;D_k&nbsp;-&nbsp;shape_k;</td></tr>
+<tr><td>238</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>239</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;L_k&nbsp;=&nbsp;max(D_k(:));&nbsp;%&nbsp;eq&nbsp;5</td></tr>
+<tr><td>240</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>241</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>242</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>243</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sequencing.beam(i).numOfShapes&nbsp;&nbsp;=&nbsp;k;</td></tr>
+<tr><td>244</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sequencing.beam(i).shapes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;shapes(:,:,1:k);</td></tr>
+<tr><td>245</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sequencing.beam(i).shapesWeight&nbsp;=&nbsp;shapesWeight(1:k)/numOfLevels*calFac;</td></tr>
+<tr><td>246</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sequencing.beam(i).bixelIx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1+offset:numOfRaysPerBeam+offset;</td></tr>
+<tr><td>247</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sequencing.beam(i).fluence&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;D_0;</td></tr>
+<tr><td>248</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>249</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sequencing.w(1+offset:numOfRaysPerBeam+offset,1)&nbsp;=&nbsp;D_0(indInFluenceMx)/numOfLevels*calFac;</td></tr>
+<tr><td>250</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>251</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;offset&nbsp;=&nbsp;offset&nbsp;+&nbsp;numOfRaysPerBeam;</td></tr>
+<tr><td>252</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>253</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>254</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>255</td><td bgcolor="#FF0000">resultGUI.w&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;sequencing.w;</td></tr>
+<tr><td>256</td><td bgcolor="#FF0000">resultGUI.wSequenced&nbsp;=&nbsp;sequencing.w;</td></tr>
+<tr><td>257</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>258</td><td bgcolor="#FF0000">resultGUI.sequencing&nbsp;&nbsp;&nbsp;=&nbsp;sequencing;</td></tr>
+<tr><td>259</td><td bgcolor="#FF0000">resultGUI.apertureInfo&nbsp;=&nbsp;matRad_sequencing2ApertureInfo(sequencing,stf);</td></tr>
+<tr><td>260</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>261</td><td bgcolor="#FF0000">doseSequencedDoseGrid&nbsp;=&nbsp;reshape(dij.physicalDose{1}&nbsp;*&nbsp;sequencing.w,dij.doseGrid.dimensions);</td></tr>
+<tr><td>262</td><td bgcolor="#FFFFFF">%&nbsp;interpolate&nbsp;to&nbsp;ct&nbsp;grid&nbsp;for&nbsp;visualiation&nbsp;&amp;&nbsp;analysis</td></tr>
+<tr><td>263</td><td bgcolor="#FF0000">resultGUI.physicalDose&nbsp;=&nbsp;matRad_interp3(dij.doseGrid.x,dij.doseGrid.y',dij.doseGrid.z,&nbsp;...</td></tr>
+<tr><td>264</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseSequencedDoseGrid,&nbsp;...</td></tr>
+<tr><td>265</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.ctGrid.x,dij.ctGrid.y',dij.ctGrid.z);</td></tr>
+<tr><td>266</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>267</td><td bgcolor="#FFFFFF">%&nbsp;if&nbsp;weights&nbsp;exists&nbsp;from&nbsp;an&nbsp;former&nbsp;DAO&nbsp;remove&nbsp;it</td></tr>
+<tr><td>268</td><td bgcolor="#FF0000">if&nbsp;isfield(resultGUI,'wDao')</td></tr>
+<tr><td>269</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;resultGUI&nbsp;=&nbsp;rmfield(resultGUI,'wDao');</td></tr>
+<tr><td>270</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>271</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>272</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>273</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>274</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

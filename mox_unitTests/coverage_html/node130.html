@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\optimization\@matRad_OptimizationProblem\matRad_objectiveGradient.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\optimization\@matRad_OptimizationProblem\matRad_objectiveGradient.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;weightGradient&nbsp;=&nbsp;matRad_objectiveGradient(optiProb,w,dij,cst)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;IPOPT&nbsp;callback:&nbsp;gradient&nbsp;function&nbsp;for&nbsp;inverse&nbsp;planning&nbsp;</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;supporting&nbsp;mean&nbsp;dose&nbsp;objectives,&nbsp;EUD&nbsp;objectives,&nbsp;squared&nbsp;overdosage,&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;squared&nbsp;underdosage,&nbsp;squared&nbsp;deviation&nbsp;and&nbsp;DVH&nbsp;objectives</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;g&nbsp;=&nbsp;matRad_gradFuncWrapper(optiProb,w,dij,cst)</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;optiProb:&nbsp;option&nbsp;struct&nbsp;defining&nbsp;the&nbsp;type&nbsp;of&nbsp;optimization</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;w:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixel&nbsp;weight&nbsp;vector</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dose&nbsp;influence&nbsp;matrix</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;g:&nbsp;gradient&nbsp;of&nbsp;objective&nbsp;function</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[1]&nbsp;http://www.sciencedirect.com/science/article/pii/S0958394701000577</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[2]&nbsp;http://www.sciencedirect.com/science/article/pii/S0360301601025858</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2016&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;get&nbsp;current&nbsp;dose&nbsp;/&nbsp;effect&nbsp;/&nbsp;RBExDose&nbsp;vector</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%d&nbsp;=&nbsp;matRad_backProjection(w,dij,optiProb);</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">optiProb.BP&nbsp;=&nbsp;optiProb.BP.compute(dij,w);</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">d&nbsp;=&nbsp;optiProb.BP.GetResult();</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">%&nbsp;Initializes&nbsp;dose&nbsp;gradient</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">doseGradient{1}&nbsp;=&nbsp;zeros(dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;compute&nbsp;objective&nbsp;function&nbsp;for&nbsp;every&nbsp;VOI.</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">for&nbsp;&nbsp;i&nbsp;=&nbsp;1:size(cst,1)&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Only&nbsp;take&nbsp;OAR&nbsp;or&nbsp;target&nbsp;VOI.</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(cst{i,4}{1})&nbsp;&amp;&amp;&nbsp;(&nbsp;isequal(cst{i,3},'OAR')&nbsp;||&nbsp;isequal(cst{i,3},'TARGET')&nbsp;)</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;loop&nbsp;over&nbsp;the&nbsp;number&nbsp;of&nbsp;constraints&nbsp;and&nbsp;objectives&nbsp;for&nbsp;the&nbsp;current&nbsp;VOI</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:numel(cst{i,6})</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Get&nbsp;current&nbsp;optimization&nbsp;function</td></tr>
+<tr><td>55</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;objective&nbsp;=&nbsp;cst{i,6}{j};</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;only&nbsp;perform&nbsp;gradient&nbsp;computations&nbsp;for&nbsp;objectives</td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isa(objective,'DoseObjectives.matRad_DoseObjective')</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;if&nbsp;we&nbsp;have&nbsp;effect&nbsp;optimization,&nbsp;temporarily&nbsp;replace&nbsp;doses&nbsp;with&nbsp;effect</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(~isequal(objective.name,&nbsp;'Mean&nbsp;Dose')&nbsp;&amp;&amp;&nbsp;~isequal(objective.name,&nbsp;'EUD'))&nbsp;&amp;&amp;...</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(isa(optiProb.BP,'matRad_EffectProjection')&nbsp;&amp;&amp;&nbsp;~isa(optiProb.BP,'matRad_VariableRBEProjection'))&nbsp;</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doses&nbsp;=&nbsp;objective.getDoseParameters();</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;effect&nbsp;=&nbsp;cst{i,5}.alphaX*doses&nbsp;+&nbsp;cst{i,5}.betaX*doses.^2;</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;objective&nbsp;=&nbsp;objective.setDoseParameters(effect);</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%dose&nbsp;in&nbsp;VOI</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d_i&nbsp;=&nbsp;d{1}(cst{i,4}{1});</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%add&nbsp;to&nbsp;dose&nbsp;gradient</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseGradient{1}(cst{i,4}{1})&nbsp;=&nbsp;doseGradient{1}(cst{i,4}{1})&nbsp;+&nbsp;objective.computeDoseObjectiveGradient(d_i);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF">%project&nbsp;to&nbsp;weight&nbsp;gradient</td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">optiProb.BP&nbsp;=&nbsp;optiProb.BP.computeGradient(dij,doseGradient,w);</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">g&nbsp;=&nbsp;optiProb.BP.GetGradient();</td></tr>
+<tr><td>83</td><td bgcolor="#FF0000">weightGradient&nbsp;=&nbsp;g{1};</td></tr>
+<tr><td>84</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

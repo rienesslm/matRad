@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\examples\matRad_example3_photonsDAO.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\examples\matRad_example3_photonsDAO.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">%%&nbsp;Example:&nbsp;Photon&nbsp;Treatment&nbsp;Plan&nbsp;with&nbsp;Direct&nbsp;aperture&nbsp;optimization</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2017&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;In&nbsp;this&nbsp;example&nbsp;we&nbsp;will&nbsp;show&nbsp;</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;(i)&nbsp;how&nbsp;to&nbsp;load&nbsp;patient&nbsp;data&nbsp;into&nbsp;matRad</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;(ii)&nbsp;how&nbsp;to&nbsp;setup&nbsp;a&nbsp;photon&nbsp;dose&nbsp;calculation&nbsp;and&nbsp;</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;(iii)&nbsp;how&nbsp;to&nbsp;inversely&nbsp;optimize&nbsp;directly&nbsp;from&nbsp;command&nbsp;window&nbsp;in&nbsp;MatLab.</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;(iv)&nbsp;how&nbsp;to&nbsp;apply&nbsp;a&nbsp;sequencing&nbsp;algorithm</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;(v)&nbsp;how&nbsp;to&nbsp;run&nbsp;a&nbsp;direct&nbsp;aperture&nbsp;optimization</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;(iv)&nbsp;how&nbsp;to&nbsp;visually&nbsp;and&nbsp;quantitatively&nbsp;evaluate&nbsp;the&nbsp;result</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%%&nbsp;Patient&nbsp;Data&nbsp;Import</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;Let's&nbsp;begin&nbsp;with&nbsp;a&nbsp;clear&nbsp;Matlab&nbsp;environment&nbsp;and&nbsp;import&nbsp;the&nbsp;head&nbsp;&amp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;neck&nbsp;patient&nbsp;into&nbsp;your&nbsp;workspace.</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>29</td><td bgcolor="#FF0000">matRad_rc;&nbsp;%If&nbsp;this&nbsp;throws&nbsp;an&nbsp;error,&nbsp;run&nbsp;it&nbsp;from&nbsp;the&nbsp;parent&nbsp;directory&nbsp;first&nbsp;to&nbsp;set&nbsp;the&nbsp;paths</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>31</td><td bgcolor="#FF0000">load('HEAD_AND_NECK.mat');</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%%&nbsp;Treatment&nbsp;Plan</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;next&nbsp;step&nbsp;is&nbsp;to&nbsp;define&nbsp;your&nbsp;treatment&nbsp;plan&nbsp;labeled&nbsp;as&nbsp;'pln'.&nbsp;This&nbsp;</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;structure&nbsp;requires&nbsp;input&nbsp;from&nbsp;the&nbsp;treatment&nbsp;planner&nbsp;and&nbsp;defines&nbsp;</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;the&nbsp;most&nbsp;important&nbsp;cornerstones&nbsp;of&nbsp;your&nbsp;treatment&nbsp;plan.</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>38</td><td bgcolor="#FF0000">pln.radiationMode&nbsp;&nbsp;&nbsp;=&nbsp;'photons';&nbsp;&nbsp;&nbsp;%&nbsp;either&nbsp;photons&nbsp;/&nbsp;protons&nbsp;/&nbsp;carbon</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">pln.machine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'Generic';</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">pln.numOfFractions&nbsp;&nbsp;=&nbsp;30;</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">pln.propOpt.bioOptimization&nbsp;=&nbsp;'none';&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">pln.propStf.gantryAngles&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[0:72:359];</td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">pln.propStf.couchAngles&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[0&nbsp;0&nbsp;0&nbsp;0&nbsp;0];</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">pln.propStf.bixelWidth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;5;</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">pln.propStf.numOfBeams&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;numel(pln.propStf.gantryAngles);</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">pln.propStf.isoCenter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ones(pln.propStf.numOfBeams,1)&nbsp;*&nbsp;matRad_getIsoCenter(cst,ct,0);</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">%&nbsp;dose&nbsp;calculation&nbsp;settings</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.x&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.y&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">pln.propDoseCalc.doseGrid.resolution.z&nbsp;=&nbsp;3;&nbsp;%&nbsp;[mm]</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">%&nbsp;We&nbsp;can&nbsp;also&nbsp;use&nbsp;other&nbsp;solver&nbsp;for&nbsp;optimization&nbsp;than&nbsp;IPOPT.&nbsp;matRad&nbsp;</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">%&nbsp;currently&nbsp;supports&nbsp;fmincon&nbsp;from&nbsp;the&nbsp;MATLAB&nbsp;Optimization&nbsp;Toolbox.&nbsp;First&nbsp;we</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;if&nbsp;the&nbsp;fmincon-Solver&nbsp;is&nbsp;available,&nbsp;and&nbsp;if&nbsp;it&nbsp;es,&nbsp;we&nbsp;set&nbsp;in&nbsp;in&nbsp;the</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">%&nbsp;pln.propOpt.optimizer&nbsp;vairable.&nbsp;Otherwise&nbsp;wie&nbsp;set&nbsp;to&nbsp;the&nbsp;default</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">%&nbsp;optimizer&nbsp;'IPOPT'</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">if&nbsp;matRad_OptimizerFmincon.IsAvailable()</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propOpt.optimizer&nbsp;=&nbsp;'fmincon';&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>61</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propOpt.optimizer&nbsp;=&nbsp;'IPOPT';</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF">%&nbsp;Enable&nbsp;sequencing&nbsp;and&nbsp;direct&nbsp;aperture&nbsp;optimization&nbsp;(DAO).</td></tr>
+<tr><td>67</td><td bgcolor="#FF0000">pln.propOpt.runSequencing&nbsp;=&nbsp;1;</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">pln.propOpt.runDAO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">%%&nbsp;Generate&nbsp;Beam&nbsp;Geometry&nbsp;STF</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">stf&nbsp;=&nbsp;matRad_generateStf(ct,cst,pln);</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">%%&nbsp;Dose&nbsp;Calculation</td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF">%&nbsp;Lets&nbsp;generate&nbsp;dosimetric&nbsp;information&nbsp;by&nbsp;pre-computing&nbsp;dose&nbsp;influence&nbsp;</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">%&nbsp;matrices&nbsp;for&nbsp;unit&nbsp;beamlet&nbsp;intensities.&nbsp;Having&nbsp;dose&nbsp;influences&nbsp;available&nbsp;</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF">%&nbsp;allows&nbsp;for&nbsp;subsequent&nbsp;inverse&nbsp;optimization.</td></tr>
+<tr><td>77</td><td bgcolor="#FF0000">dij&nbsp;=&nbsp;matRad_calcPhotonDose(ct,stf,pln,cst);</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF">%%&nbsp;Inverse&nbsp;Planning&nbsp;for&nbsp;IMRT</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;goal&nbsp;of&nbsp;the&nbsp;fluence&nbsp;optimization&nbsp;is&nbsp;to&nbsp;find&nbsp;a&nbsp;set&nbsp;of&nbsp;beamlet&nbsp;weights&nbsp;</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF">%&nbsp;which&nbsp;yield&nbsp;the&nbsp;best&nbsp;possible&nbsp;dose&nbsp;distribution&nbsp;according&nbsp;to&nbsp;the&nbsp;</td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">%&nbsp;predefined&nbsp;clinical&nbsp;objectives&nbsp;and&nbsp;constraints&nbsp;underlying&nbsp;the&nbsp;radiation&nbsp;</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">%&nbsp;treatment.&nbsp;Once&nbsp;the&nbsp;optimization&nbsp;has&nbsp;finished,&nbsp;trigger&nbsp;once&nbsp;the&nbsp;GUI&nbsp;to</td></tr>
+<tr><td>84</td><td bgcolor="#FFFFFF">%&nbsp;visualize&nbsp;the&nbsp;optimized&nbsp;dose&nbsp;cubes.</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">resultGUI&nbsp;=&nbsp;matRad_fluenceOptimization(dij,cst,pln);</td></tr>
+<tr><td>86</td><td bgcolor="#FF0000">matRadGUI;</td></tr>
+<tr><td>87</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>88</td><td bgcolor="#FFFFFF">%%&nbsp;Sequencing</td></tr>
+<tr><td>89</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;is&nbsp;a&nbsp;multileaf&nbsp;collimator&nbsp;leaf&nbsp;sequencing&nbsp;algorithm&nbsp;that&nbsp;is&nbsp;used&nbsp;in&nbsp;</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">%&nbsp;order&nbsp;to&nbsp;modulate&nbsp;the&nbsp;intensity&nbsp;of&nbsp;the&nbsp;beams&nbsp;with&nbsp;multiple&nbsp;static&nbsp;</td></tr>
+<tr><td>91</td><td bgcolor="#FFFFFF">%&nbsp;segments,&nbsp;so&nbsp;that&nbsp;translates&nbsp;each&nbsp;intensity&nbsp;map&nbsp;into&nbsp;a&nbsp;set&nbsp;of&nbsp;deliverable&nbsp;</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">%&nbsp;aperture&nbsp;shapes.</td></tr>
+<tr><td>93</td><td bgcolor="#FF0000">resultGUI&nbsp;=&nbsp;matRad_siochiLeafSequencing(resultGUI,stf,dij,5);</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">%%&nbsp;DAO&nbsp;-&nbsp;Direct&nbsp;Aperture&nbsp;Optimization</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;Direct&nbsp;Aperture&nbsp;Optimization&nbsp;is&nbsp;an&nbsp;optimization&nbsp;approach&nbsp;where&nbsp;we&nbsp;</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF">%&nbsp;directly&nbsp;optimize&nbsp;aperture&nbsp;shapes&nbsp;and&nbsp;weights.</td></tr>
+<tr><td>98</td><td bgcolor="#FF0000">resultGUI&nbsp;=&nbsp;matRad_directApertureOptimization(dij,cst,resultGUI.apertureInfo,resultGUI,pln);</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF">%%&nbsp;Aperture&nbsp;visualization</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">%&nbsp;Use&nbsp;a&nbsp;matrad&nbsp;function&nbsp;to&nbsp;visualize&nbsp;the&nbsp;resulting&nbsp;aperture&nbsp;shapes</td></tr>
+<tr><td>102</td><td bgcolor="#FF0000">matRad_visApertureInfo(resultGUI.apertureInfo);</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF">%%&nbsp;Indicator&nbsp;Calculation&nbsp;and&nbsp;display&nbsp;of&nbsp;DVH&nbsp;and&nbsp;QI</td></tr>
+<tr><td>105</td><td bgcolor="#FF0000">[dvh,qi]&nbsp;=&nbsp;matRad_indicatorWrapper(cst,pln,resultGUI);</td></tr>
+<tr><td>106</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

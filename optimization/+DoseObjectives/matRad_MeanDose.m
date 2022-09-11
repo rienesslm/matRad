@@ -22,6 +22,7 @@ classdef matRad_MeanDose < DoseObjectives.matRad_DoseObjective
         name = 'Mean Dose';
         parameterNames = {'d^{ref}'};
         parameterTypes = {'dose'};
+        maxDerivativeError = 0;
         %parameterNames = {};
         %parameterIsDose = [];
     end

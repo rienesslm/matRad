@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_readNRRD.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_readNRRD.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[cube,&nbsp;metadata]&nbsp;=&nbsp;matRad_readNRRD(filename)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;NRRD&nbsp;reader</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[cube,&nbsp;metadata]&nbsp;=&nbsp;matRad_readNRRD(filename)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;filename:&nbsp;&nbsp;&nbsp;full&nbsp;path&nbsp;to&nbsp;nrrd&nbsp;file</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cube:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;read&nbsp;cube</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;metadata:&nbsp;&nbsp;&nbsp;metadata&nbsp;from&nbsp;header&nbsp;information</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[1]&nbsp;http://teem.sourceforge.net/nrrd/format.html5</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;Open&nbsp;file.</td></tr>
+<tr><td>31</td><td bgcolor="#FF0000">hFile&nbsp;=&nbsp;fopen(filename,&nbsp;'r');</td></tr>
+<tr><td>32</td><td bgcolor="#FF0000">if&nbsp;hFile&nbsp;&lt;=&nbsp;0</td></tr>
+<tr><td>33</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;open&nbsp;NRRD&nbsp;file!');</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>35</td><td bgcolor="#FF0000">cleaner&nbsp;=&nbsp;onCleanup(@()&nbsp;fclose(hFile));</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%%&nbsp;Determine&nbsp;NRRD&nbsp;Version</td></tr>
+<tr><td>38</td><td bgcolor="#FF0000">nrrdLine&nbsp;=&nbsp;fgetl(hFile);</td></tr>
+<tr><td>39</td><td bgcolor="#FF0000">regTokens&nbsp;=&nbsp;regexp(nrrdLine,'NRRD00(?:\.)?0([1-5])','tokens');</td></tr>
+<tr><td>40</td><td bgcolor="#FF0000">if&nbsp;isempty(regTokens)</td></tr>
+<tr><td>41</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Invalid&nbsp;Header&nbsp;line!&nbsp;Could&nbsp;not&nbsp;identify&nbsp;NRRD&nbsp;version!');</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">nrrdVersion&nbsp;=&nbsp;str2num(regTokens{1}{1});</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">if&nbsp;nrrdVersion&nbsp;&gt;&nbsp;5</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('NRRD&nbsp;version&nbsp;&gt;&nbsp;5&nbsp;not&nbsp;supported!');</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">%%&nbsp;Read&nbsp;header</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">nrrdMetaData.fields&nbsp;=&nbsp;cell(0,2);</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">nrrdMetaData.keys&nbsp;=&nbsp;cell(0,2);</td></tr>
+<tr><td>52</td><td bgcolor="#FF0000">nrrdMetaData.comments&nbsp;=&nbsp;cell(0);</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">currentLine&nbsp;=&nbsp;fgetl(hFile);</td></tr>
+<tr><td>55</td><td bgcolor="#FF0000">while&nbsp;~isempty(currentLine)&nbsp;&amp;&amp;&nbsp;ischar(currentLine)&nbsp;%NRRD&nbsp;separates&nbsp;data&nbsp;from&nbsp;header&nbsp;by&nbsp;an&nbsp;empty&nbsp;line</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Check&nbsp;for&nbsp;comment</td></tr>
+<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isequal(currentLine(1),'#')</td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nrrdMetaData.comments{end+1}&nbsp;=&nbsp;currentLine;</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Parse&nbsp;the&nbsp;line</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lineContent&nbsp;=&nbsp;regexp(currentLine,&nbsp;'(.+):(=|\s)(.+)',&nbsp;'tokens');</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(lineContent)</td></tr>
+<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Could&nbsp;not&nbsp;parse&nbsp;line:&nbsp;"'&nbsp;lineContent&nbsp;'"']);</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;isequal(lineContent{1}{2},'&nbsp;')&nbsp;%space&nbsp;after&nbsp;colon&nbsp;refers&nbsp;to&nbsp;"field"</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nrrdMetaData.fields{end+1,1}&nbsp;=&nbsp;lineContent{1}{1};&nbsp;%Fieldname</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nrrdMetaData.fields{end,2}&nbsp;=&nbsp;lineContent{1}{3};&nbsp;%Information</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;isequal(lineContent{1}{2},'=')&nbsp;%=&nbsp;after&nbsp;colon&nbsp;refers&nbsp;to&nbsp;key-value&nbsp;pair</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nrrdMetaData.keys{end+1,1}&nbsp;=&nbsp;lineContent{1}{1};&nbsp;%Key</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nrrdMetaData.keys{end,2}&nbsp;=&nbsp;lineContent{1}{3};&nbsp;%Value</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Could&nbsp;not&nbsp;parse&nbsp;line:&nbsp;"'&nbsp;lineContent&nbsp;'"']);</td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;currentLine&nbsp;=&nbsp;fgetl(hFile);</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF">%%&nbsp;Interpret&nbsp;Headers</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">%check&nbsp;for&nbsp;the&nbsp;always&nbsp;required&nbsp;data&nbsp;type&nbsp;(and&nbsp;endian&nbsp;if&nbsp;required)</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">doSwapBytes&nbsp;=&nbsp;false;&nbsp;%If&nbsp;endian&nbsp;differs</td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">typeFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'type'));</td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">if&nbsp;~isempty(typeFieldIx)</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;getMATLABdataType(nrrdMetaData.fields{typeFieldIx,2});</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%if&nbsp;size&nbsp;of&nbsp;the&nbsp;datatype&nbsp;is&nbsp;&gt;&nbsp;1&nbsp;byte,&nbsp;we&nbsp;need&nbsp;endian&nbsp;information</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isequal(datatype(end),'8')</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endianFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),'endian'));</td></tr>
+<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(endianFieldIx)</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isequal(nrrdMetaData.fields{endianFieldIx,2},'little')&nbsp;&amp;&amp;&nbsp;~isequal(nrrdMetaData.fields{endianFieldIx,2},'big')</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error(['Datatype&nbsp;is&nbsp;'&nbsp;datatype&nbsp;',&nbsp;thus&nbsp;endian&nbsp;information&nbsp;is&nbsp;required&nbsp;but&nbsp;could&nbsp;not&nbsp;be&nbsp;interpreted!']);</td></tr>
+<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end;</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Now&nbsp;we&nbsp;compare&nbsp;the&nbsp;file&nbsp;endian&nbsp;to&nbsp;the&nbsp;system&nbsp;endian</td></tr>
+<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%First&nbsp;acquire&nbsp;system&nbsp;endian</td></tr>
+<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[~,~,endian]&nbsp;=&nbsp;computer();</td></tr>
+<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isequal(endian,'B')</td></tr>
+<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endian&nbsp;=&nbsp;'big';</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end;</td></tr>
+<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isequal(endian,'L')</td></tr>
+<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endian&nbsp;=&nbsp;'little';</td></tr>
+<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end;</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%now&nbsp;compare&nbsp;to&nbsp;file&nbsp;endian&nbsp;and&nbsp;set&nbsp;flag&nbsp;if&nbsp;appropriate</td></tr>
+<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isequal(endian,nrrdMetaData.fields{endianFieldIx,2})</td></tr>
+<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doSwapBytes&nbsp;=&nbsp;true;</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>103</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error(['Datatype&nbsp;is&nbsp;'&nbsp;datatype&nbsp;',&nbsp;thus&nbsp;endian&nbsp;information&nbsp;is&nbsp;required&nbsp;but&nbsp;could&nbsp;not&nbsp;be&nbsp;found!']);</td></tr>
+<tr><td>105</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>106</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.datatype&nbsp;=&nbsp;datatype;</td></tr>
+<tr><td>108</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>109</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;find&nbsp;required&nbsp;"type"&nbsp;field!');</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>112</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">%Check&nbsp;for&nbsp;the&nbsp;always&nbsp;required&nbsp;image&nbsp;dimension</td></tr>
+<tr><td>114</td><td bgcolor="#FF0000">dimFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'dimension'));&nbsp;</td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">if&nbsp;~isempty(dimFieldIx)</td></tr>
+<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[metadata.dimension,success]&nbsp;=&nbsp;str2num(nrrdMetaData.fields{dimFieldIx,2});</td></tr>
+<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~success</td></tr>
+<tr><td>118</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;read&nbsp;required&nbsp;dimension&nbsp;field');</td></tr>
+<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>121</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;find&nbsp;required&nbsp;"dimension"&nbsp;field!');</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>123</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF">%Check&nbsp;for&nbsp;size&nbsp;/&nbsp;dim&nbsp;length</td></tr>
+<tr><td>125</td><td bgcolor="#FF0000">sizeFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'sizes'));&nbsp;</td></tr>
+<tr><td>126</td><td bgcolor="#FF0000">if&nbsp;~isempty(sizeFieldIx)</td></tr>
+<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sizes&nbsp;=&nbsp;textscan(nrrdMetaData.fields{sizeFieldIx,2},'%d');</td></tr>
+<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(sizes{1})&nbsp;~=&nbsp;metadata.dimension&nbsp;||&nbsp;~all(sizes{1}&nbsp;&gt;&nbsp;0)&nbsp;</td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Incorrect&nbsp;size&nbsp;definition!');</td></tr>
+<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.cubeDim&nbsp;=&nbsp;sizes{1}';</td></tr>
+<tr><td>132</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;find&nbsp;required&nbsp;"dimension"&nbsp;field!');</td></tr>
+<tr><td>134</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>136</td><td bgcolor="#FFFFFF">%Check&nbsp;for&nbsp;resolution</td></tr>
+<tr><td>137</td><td bgcolor="#FFFFFF">%Here&nbsp;we&nbsp;need&nbsp;either&nbsp;spacings&nbsp;ore&nbsp;space&nbsp;directions</td></tr>
+<tr><td>138</td><td bgcolor="#FF0000">spacingFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'spacings'));</td></tr>
+<tr><td>139</td><td bgcolor="#FF0000">spaceDirFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'space&nbsp;directions'));</td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">if&nbsp;~isempty(spacingFieldIx)</td></tr>
+<tr><td>141</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;resolutions&nbsp;=&nbsp;textscan(nrrdMetaData.fields{spacingFieldIx,2},'%f');</td></tr>
+<tr><td>142</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(resolutions{1})&nbsp;~=&nbsp;metadata.dimension</td></tr>
+<tr><td>143</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Incorrect&nbsp;spacings&nbsp;definition');</td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.resolution&nbsp;=&nbsp;resolutions{1}';&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>147</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;have&nbsp;default&nbsp;permutation&nbsp;here&nbsp;(required&nbsp;for&nbsp;mapping&nbsp;to&nbsp;MATLAB</td></tr>
+<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%default&nbsp;order&nbsp;2&nbsp;1&nbsp;3)</td></tr>
+<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.axisPermutation&nbsp;=&nbsp;[1&nbsp;2&nbsp;3];</td></tr>
+<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>151</td><td bgcolor="#FFFFFF">elseif&nbsp;~isempty(spaceDirFieldIx)</td></tr>
+<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%space&nbsp;directions&nbsp;are&nbsp;written&nbsp;in&nbsp;vector&nbsp;format</td></tr>
+<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%first&nbsp;create&nbsp;the&nbsp;scanning&nbsp;string</td></tr>
+<tr><td>154</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vectorstring&nbsp;=&nbsp;'(';</td></tr>
+<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;c=1:metadata.dimension</td></tr>
+<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vectorstring&nbsp;=&nbsp;[vectorstring&nbsp;'%f,'];</td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vectorstring(end)&nbsp;=&nbsp;')';</td></tr>
+<tr><td>159</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Get&nbsp;the&nbsp;vectors</td></tr>
+<tr><td>160</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vectors&nbsp;=&nbsp;textscan(nrrdMetaData.fields{spaceDirFieldIx,2},vectorstring);</td></tr>
+<tr><td>161</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>162</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%At&nbsp;the&nbsp;moment&nbsp;we&nbsp;only&nbsp;support&nbsp;cartesian&nbsp;basis&nbsp;vectors</td></tr>
+<tr><td>163</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%this&nbsp;gives&nbsp;us&nbsp;the&nbsp;permutation&nbsp;to&nbsp;align&nbsp;with&nbsp;the&nbsp;MATLAB&nbsp;default</td></tr>
+<tr><td>164</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%ordering&nbsp;of&nbsp;2&nbsp;1&nbsp;3</td></tr>
+<tr><td>165</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;c=1:metadata.dimension</td></tr>
+<tr><td>166</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%check&nbsp;if&nbsp;cartesian&nbsp;basis&nbsp;vector&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>167</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currentAxis&nbsp;=&nbsp;find(vectors{c});</td></tr>
+<tr><td>168</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>169</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(find(vectors{c}))&nbsp;~=&nbsp;1</td></tr>
+<tr><td>170</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Sorry!&nbsp;We&nbsp;currently&nbsp;only&nbsp;support&nbsp;spaces&nbsp;with&nbsp;cartesian&nbsp;basis!');&nbsp;</td></tr>
+<tr><td>171</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>172</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metadata.axisPermutation(c)&nbsp;=&nbsp;currentAxis*sign(vectors{c}(currentAxis));</td></tr>
+<tr><td>173</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metadata.resolution(c)&nbsp;=&nbsp;vectors{c}(currentAxis);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>174</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>175</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>176</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;warning('No&nbsp;Resolution&nbsp;Information&nbsp;available');</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>180</td><td bgcolor="#FFFFFF">%find&nbsp;the&nbsp;origin&nbsp;if&nbsp;we&nbsp;have&nbsp;one</td></tr>
+<tr><td>181</td><td bgcolor="#FF0000">originFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'space&nbsp;origin'));</td></tr>
+<tr><td>182</td><td bgcolor="#FF0000">if&nbsp;~isempty(originFieldIx)</td></tr>
+<tr><td>183</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%first&nbsp;create&nbsp;the&nbsp;scanning&nbsp;string</td></tr>
+<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vectorstring&nbsp;=&nbsp;'(';</td></tr>
+<tr><td>185</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;c=1:metadata.dimension</td></tr>
+<tr><td>186</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vectorstring&nbsp;=&nbsp;[vectorstring&nbsp;'%f,'];</td></tr>
+<tr><td>187</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>188</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;originVector&nbsp;=&nbsp;textscan(nrrdMetaData.fields{originFieldIx,2},vectorstring);</td></tr>
+<tr><td>189</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;c=1:metadata.dimension</td></tr>
+<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metadata.imageOrigin(c)&nbsp;=&nbsp;originVector{c};</td></tr>
+<tr><td>191</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>192</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%metadata.imageOrigin&nbsp;=&nbsp;transpose(metadata.imageOrigin);</td></tr>
+<tr><td>193</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>194</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>195</td><td bgcolor="#FFFFFF">%Coordinate&nbsp;system&nbsp;-&nbsp;optional</td></tr>
+<tr><td>196</td><td bgcolor="#FF0000">originFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'space'));</td></tr>
+<tr><td>197</td><td bgcolor="#FF0000">if&nbsp;~isempty(originFieldIx)</td></tr>
+<tr><td>198</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metadata.coordinateSystem&nbsp;=&nbsp;nrrdMetaData.fields{originFieldIx,2};</td></tr>
+<tr><td>199</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>200</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF">%Check&nbsp;for&nbsp;separate&nbsp;file</td></tr>
+<tr><td>202</td><td bgcolor="#FF0000">data_fileFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'data&nbsp;file'));</td></tr>
+<tr><td>203</td><td bgcolor="#FF0000">datafileFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'datafile'));</td></tr>
+<tr><td>204</td><td bgcolor="#FF0000">if&nbsp;~isempty(data_fileFieldIx)&nbsp;||&nbsp;~isempty(datafileFieldIx)</td></tr>
+<tr><td>205</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Sorry!&nbsp;We&nbsp;currently&nbsp;do&nbsp;not&nbsp;support&nbsp;detached&nbsp;data&nbsp;files!');</td></tr>
+<tr><td>206</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Proposed&nbsp;workflow:</td></tr>
+<tr><td>207</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%check&nbsp;for&nbsp;data&nbsp;file&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>208</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%close&nbsp;file</td></tr>
+<tr><td>209</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%replace&nbsp;file&nbsp;handle&nbsp;with&nbsp;data&nbsp;file</td></tr>
+<tr><td>210</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%continue&nbsp;without&nbsp;the&nbsp;read&nbsp;part&nbsp;knowing&nbsp;its&nbsp;a&nbsp;new&nbsp;file</td></tr>
+<tr><td>211</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>212</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>213</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>214</td><td bgcolor="#FFFFFF">%%&nbsp;Read&nbsp;Data</td></tr>
+<tr><td>215</td><td bgcolor="#FFFFFF">%Check&nbsp;for&nbsp;encoding</td></tr>
+<tr><td>216</td><td bgcolor="#FF0000">encodingFieldIx&nbsp;=&nbsp;find(ismember(nrrdMetaData.fields(:,1),&nbsp;'encoding'));</td></tr>
+<tr><td>217</td><td bgcolor="#FF0000">if&nbsp;isempty(encodingFieldIx)</td></tr>
+<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;find&nbsp;required&nbsp;"encoding"&nbsp;field!');</td></tr>
+<tr><td>219</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>220</td><td bgcolor="#FF0000">switch&nbsp;nrrdMetaData.fields{encodingFieldIx,2}</td></tr>
+<tr><td>221</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'raw'</td></tr>
+<tr><td>222</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;=&nbsp;fread(hFile,prod(metadata.cubeDim),&nbsp;metadata.datatype);</td></tr>
+<tr><td>223</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'txt','text','ascii'}</td></tr>
+<tr><td>224</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;=&nbsp;cast(fscanf(hFile,'%f'),metadata.datatype);</td></tr>
+<tr><td>225</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'hex'</td></tr>
+<tr><td>226</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Sorry:&nbsp;NRRD&nbsp;hex&nbsp;file&nbsp;not&nbsp;yet&nbsp;supported!');</td></tr>
+<tr><td>227</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'gz','gzip'}</td></tr>
+<tr><td>228</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;compressedByteArray&nbsp;=&nbsp;fread(hFile,&nbsp;inf,&nbsp;'uint8');</td></tr>
+<tr><td>229</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>230</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;javaUnpackSuccessful&nbsp;=&nbsp;false;</td></tr>
+<tr><td>231</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>232</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(javachk('jvm'))</td></tr>
+<tr><td>233</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Unzip&nbsp;with&nbsp;java</td></tr>
+<tr><td>234</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
+<tr><td>235</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;javaByteStream&nbsp;=&nbsp;java.io.ByteArrayInputStream(compressedByteArray);</td></tr>
+<tr><td>236</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gzipStream&nbsp;=&nbsp;java.util.zip.GZIPInputStream(javaByteStream);</td></tr>
+<tr><td>237</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;javaByteOutputStream&nbsp;=&nbsp;java.io.ByteArrayOutputStream();</td></tr>
+<tr><td>238</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;org.apache.commons.io.IOUtils.copy(gzipStream,javaByteOutputStream);</td></tr>
+<tr><td>239</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gzipStream.close();</td></tr>
+<tr><td>240</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;=&nbsp;typecast(javaByteOutputStream.toByteArray(),metadata.datatype)';</td></tr>
+<tr><td>241</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;javaByteStream.close();</td></tr>
+<tr><td>242</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;javaByteOutputStream.close();</td></tr>
+<tr><td>243</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;javaUnpackSuccessful&nbsp;=&nbsp;true;</td></tr>
+<tr><td>244</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;catch</td></tr>
+<tr><td>245</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning('Java&nbsp;unpacking&nbsp;failed...&nbsp;using&nbsp;temporary&nbsp;files!');</td></tr>
+<tr><td>246</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>247</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>248</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~javaUnpackSuccessful</td></tr>
+<tr><td>249</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Copy&nbsp;content&nbsp;to&nbsp;temporary&nbsp;file</td></tr>
+<tr><td>250</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpName&nbsp;=&nbsp;tempname();</td></tr>
+<tr><td>251</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpFile&nbsp;=&nbsp;[tmpName&nbsp;'.gz'];</td></tr>
+<tr><td>252</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hFileTmp&nbsp;=&nbsp;fopen(tmpFile,&nbsp;'wb');</td></tr>
+<tr><td>253</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>254</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;hFileTmp&nbsp;&lt;=&nbsp;0</td></tr>
+<tr><td>255</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;open&nbsp;temporary&nbsp;file&nbsp;for&nbsp;GZIP!');</td></tr>
+<tr><td>256</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>257</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>258</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fwrite(hFileTmp,&nbsp;compressedByteArray,&nbsp;'uint8');</td></tr>
+<tr><td>259</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fclose(hFileTmp);</td></tr>
+<tr><td>260</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>261</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Unzip&nbsp;with&nbsp;gzip</td></tr>
+<tr><td>262</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gunzip(tmpFile);</td></tr>
+<tr><td>263</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>264</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Read&nbsp;the&nbsp;uncompressed&nbsp;file</td></tr>
+<tr><td>265</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hFileTmp&nbsp;=&nbsp;fopen(tmpName,&nbsp;'rb');</td></tr>
+<tr><td>266</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;hFileTmp&nbsp;&lt;=&nbsp;0</td></tr>
+<tr><td>267</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;open&nbsp;unpacked&nbsp;file!');</td></tr>
+<tr><td>268</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>269</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cleanTmpFile&nbsp;=&nbsp;onCleanup(@()&nbsp;fclose(hFileTmp));</td></tr>
+<tr><td>270</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>271</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;=&nbsp;fread(hFileTmp,&nbsp;prod(metadata.cubeDim),&nbsp;metadata.datatype);</td></tr>
+<tr><td>272</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>273</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'bz2','bzip2'}</td></tr>
+<tr><td>274</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Sorry:&nbsp;bzip&nbsp;compression&nbsp;not&nbsp;yet&nbsp;supported!');</td></tr>
+<tr><td>275</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;otherwise&nbsp;</td></tr>
+<tr><td>276</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error(['Undefined&nbsp;NRRD&nbsp;encoding&nbsp;scheme:&nbsp;'&nbsp;nrrdMetaData.encoding]);</td></tr>
+<tr><td>277</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>278</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>279</td><td bgcolor="#FFFFFF">%maybe&nbsp;we&nbsp;need&nbsp;to&nbsp;correct&nbsp;the&nbsp;byte&nbsp;ordering&nbsp;(endian)</td></tr>
+<tr><td>280</td><td bgcolor="#FF0000">if&nbsp;doSwapBytes</td></tr>
+<tr><td>281</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;swapbytes(cube);</td></tr>
+<tr><td>282</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>283</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>284</td><td bgcolor="#FF0000">if&nbsp;numel(metadata.cubeDim)&nbsp;&gt;&nbsp;1</td></tr>
+<tr><td>285</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>286</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%first&nbsp;we&nbsp;shape&nbsp;the&nbsp;data&nbsp;into&nbsp;a&nbsp;cube</td></tr>
+<tr><td>287</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;=&nbsp;reshape(cube,metadata.cubeDim);</td></tr>
+<tr><td>288</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>289</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%now&nbsp;we&nbsp;have&nbsp;to&nbsp;do&nbsp;the&nbsp;permutations,&nbsp;2&nbsp;1&nbsp;3&nbsp;...&nbsp;is&nbsp;the&nbsp;MATLAB&nbsp;default</td></tr>
+<tr><td>290</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;create&nbsp;a&nbsp;transform&nbsp;matrix&nbsp;that&nbsp;transforms&nbsp;a&nbsp;permutation&nbsp;to&nbsp;MATLAB</td></tr>
+<tr><td>291</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%default</td></tr>
+<tr><td>292</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;permutationTransformMatrix&nbsp;=&nbsp;diag(ones(metadata.dimension,1));</td></tr>
+<tr><td>293</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;permutationTransformMatrix(1:2,1:2)&nbsp;=&nbsp;flip(permutationTransformMatrix(1:2,1:2));</td></tr>
+<tr><td>294</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>295</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;applyPermutation&nbsp;=&nbsp;permutationTransformMatrix*metadata.axisPermutation';</td></tr>
+<tr><td>296</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>297</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;=&nbsp;permute(cube,applyPermutation);</td></tr>
+<tr><td>298</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>299</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>300</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>301</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>302</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>303</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>304</td><td bgcolor="#FFFFFF">%This&nbsp;function&nbsp;wraps&nbsp;datatype&nbsp;definitions&nbsp;to&nbsp;the&nbsp;one&nbsp;used&nbsp;by&nbsp;MATLAB</td></tr>
+<tr><td>305</td><td bgcolor="#FFFFFF">function&nbsp;datatype&nbsp;=&nbsp;getMATLABdataType(typestring)</td></tr>
+<tr><td>306</td><td bgcolor="#FFFFFF">%The&nbsp;typedefinitions&nbsp;are&nbsp;taken&nbsp;directly&nbsp;from&nbsp;Section&nbsp;5&nbsp;of&nbsp;the&nbsp;NRRD</td></tr>
+<tr><td>307</td><td bgcolor="#FFFFFF">%definition</td></tr>
+<tr><td>308</td><td bgcolor="#FF0000">switch&nbsp;typestring</td></tr>
+<tr><td>309</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'signed&nbsp;char','int8','int8_t'}</td></tr>
+<tr><td>310</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'int8';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>311</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'uchar','unsigned&nbsp;char','uint8','uint8_t'}</td></tr>
+<tr><td>312</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'uint8';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>313</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'short','short&nbsp;int','signed&nbsp;short','signed&nbsp;short&nbsp;int','int16','int16_t'}</td></tr>
+<tr><td>314</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'int16';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>315</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'ushort','unsigned&nbsp;short','unsigned&nbsp;short&nbsp;int','uint16','uint16_t'}</td></tr>
+<tr><td>316</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'uint16';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>317</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'int','signed&nbsp;int','int32','int32_t'}</td></tr>
+<tr><td>318</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'int32';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>319</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'uint','unsigned&nbsp;int','uint32','uint32_t'}</td></tr>
+<tr><td>320</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'uint32';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>321</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'longlong','long&nbsp;long','long&nbsp;long&nbsp;int','signed&nbsp;long&nbsp;long','signed&nbsp;long&nbsp;long&nbsp;int','int64','int64_t'}</td></tr>
+<tr><td>322</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'int64';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>323</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'ulonglong',&nbsp;'unsigned&nbsp;long&nbsp;long',&nbsp;'unsigned&nbsp;long&nbsp;long&nbsp;int','uint64','uint64_t'}</td></tr>
+<tr><td>324</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'uint64';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>325</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'float'</td></tr>
+<tr><td>326</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'single';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>327</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'double'</td></tr>
+<tr><td>328</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;datatype&nbsp;=&nbsp;'double';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>329</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;otherwise</td></tr>
+<tr><td>330</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;identify&nbsp;datatype&nbsp;for&nbsp;NRRD&nbsp;data');</td></tr>
+<tr><td>331</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>332</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>333</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>334</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>335</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

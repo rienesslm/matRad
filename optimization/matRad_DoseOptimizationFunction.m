@@ -20,6 +20,7 @@ classdef (Abstract) matRad_DoseOptimizationFunction
         name                %Display name of the Objective. Needs to be implemented in sub-classes.
         parameterNames      %Cell array of Display names of the parameters. Needs to be implemented in sub-classes.
         parameterTypes      %Cell array of parameter types. Valid types are 'dose', 'numeric', or a cell list of string options. Needs to be implemented in sub-classes.
+        maxDerivativeError  %Specifies the relative accuracy of the derivation. For all except min_DVH and max_DVH the derivative error is 0.
     end
     
     properties (Abstract, Access = public)

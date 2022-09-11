@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_fluenceOptimization.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_fluenceOptimization.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[resultGUI,optimizer]&nbsp;=&nbsp;matRad_fluenceOptimization(dij,cst,pln)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;inverse&nbsp;planning&nbsp;wrapper&nbsp;function</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[resultGUI,optimizer]&nbsp;=&nbsp;matRad_fluenceOptimization(dij,cst,pln)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;dij&nbsp;struct</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;pln&nbsp;struct</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resultGUI:&nbsp;&nbsp;struct&nbsp;containing&nbsp;optimized&nbsp;fluence&nbsp;vector,&nbsp;dose,&nbsp;and&nbsp;(for</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;biological&nbsp;optimization)&nbsp;RBE-weighted&nbsp;dose&nbsp;etc.</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;optimizer:&nbsp;&nbsp;Used&nbsp;Optimizer&nbsp;Object</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2016&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>33</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;issue&nbsp;warning&nbsp;if&nbsp;biological&nbsp;optimization&nbsp;impossible</td></tr>
+<tr><td>36</td><td bgcolor="#FF0000">if&nbsp;sum(strcmp(pln.propOpt.bioOptimization,{'LEMIV_effect','LEMIV_RBExD'}))&gt;0&nbsp;&amp;&amp;&nbsp;(~isfield(dij,'mAlphaDose')&nbsp;||&nbsp;~isfield(dij,'mSqrtBetaDose'))&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
+<tr><td>37</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;warndlg('Alpha&nbsp;and&nbsp;beta&nbsp;matrices&nbsp;for&nbsp;effect&nbsp;based&nbsp;and&nbsp;RBE&nbsp;optimization&nbsp;not&nbsp;available&nbsp;-&nbsp;physical&nbsp;optimization&nbsp;is&nbsp;carried&nbsp;out&nbsp;instead.');</td></tr>
+<tr><td>38</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propOpt.bioOptimization&nbsp;=&nbsp;'none';</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF">%&nbsp;consider&nbsp;VOI&nbsp;priorities</td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">cst&nbsp;&nbsp;=&nbsp;matRad_setOverlapPriorities(cst);</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;&amp;&nbsp;adjust&nbsp;objectives&nbsp;and&nbsp;constraints&nbsp;internally&nbsp;for&nbsp;fractionation&nbsp;</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:size(cst,1)</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Compatibility&nbsp;Layer&nbsp;for&nbsp;old&nbsp;objective&nbsp;format</td></tr>
+<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isstruct(cst{i,6})</td></tr>
+<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cst{i,6}&nbsp;=&nbsp;arrayfun(@matRad_DoseOptimizationFunction.convertOldOptimizationStruct,cst{i,6},'UniformOutput',false);</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:numel(cst{i,6})</td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj&nbsp;=&nbsp;cst{i,6}{j};&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%In&nbsp;case&nbsp;it&nbsp;is&nbsp;a&nbsp;default&nbsp;saved&nbsp;struct,&nbsp;convert&nbsp;to&nbsp;object</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Also&nbsp;intrinsically&nbsp;checks&nbsp;that&nbsp;we&nbsp;have&nbsp;a&nbsp;valid&nbsp;optimization</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%objective&nbsp;or&nbsp;constraint&nbsp;function&nbsp;in&nbsp;the&nbsp;end</td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isa(obj,'matRad_DoseOptimizationFunction')</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
+<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj&nbsp;=&nbsp;matRad_DoseOptimizationFunction.createInstanceFromStruct(obj);</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;catch</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('cst{%d,6}{%d}&nbsp;is&nbsp;not&nbsp;a&nbsp;valid&nbsp;Objective/constraint!&nbsp;Remove&nbsp;or&nbsp;Replace&nbsp;and&nbsp;try&nbsp;again!',i,j);</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj&nbsp;=&nbsp;obj.setDoseParameters(obj.getDoseParameters()/pln.numOfFractions);</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cst{i,6}{j}&nbsp;=&nbsp;obj;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>72</td><td bgcolor="#FFFFFF">%&nbsp;resizing&nbsp;cst&nbsp;to&nbsp;dose&nbsp;cube&nbsp;resolution&nbsp;</td></tr>
+<tr><td>73</td><td bgcolor="#FF0000">cst&nbsp;=&nbsp;matRad_resizeCstToGrid(cst,dij.ctGrid.x,dij.ctGrid.y,dij.ctGrid.z,...</td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.x,dij.doseGrid.y,dij.doseGrid.z);</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>76</td><td bgcolor="#FFFFFF">%&nbsp;find&nbsp;target&nbsp;indices&nbsp;and&nbsp;described&nbsp;dose(s)&nbsp;for&nbsp;weight&nbsp;vector</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF">%&nbsp;initialization</td></tr>
+<tr><td>78</td><td bgcolor="#FF0000">V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">doseTarget&nbsp;=&nbsp;[];</td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">ixTarget&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:size(cst,1)</td></tr>
+<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isequal(cst{i,3},'TARGET')&nbsp;&amp;&amp;&nbsp;~isempty(cst{i,6})</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;V&nbsp;=&nbsp;[V;cst{i,4}{1}];</td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Iterate&nbsp;through&nbsp;objectives/constraints</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fDoses&nbsp;=&nbsp;[];</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;fObjCell&nbsp;=&nbsp;cst{i,6}</td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dParams&nbsp;=&nbsp;fObjCell{1}.getDoseParameters();</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Don't&nbsp;care&nbsp;for&nbsp;Inf&nbsp;constraints</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dParams&nbsp;=&nbsp;dParams(isfinite(dParams));</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Add&nbsp;do&nbsp;dose&nbsp;list</td></tr>
+<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fDoses&nbsp;=&nbsp;[fDoses&nbsp;dParams];</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseTarget&nbsp;=&nbsp;[doseTarget&nbsp;fDoses];</td></tr>
+<tr><td>98</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ixTarget&nbsp;&nbsp;&nbsp;=&nbsp;[ixTarget&nbsp;i*ones(1,length(fDoses))];</td></tr>
+<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>100</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>101</td><td bgcolor="#FF0000">[doseTarget,i]&nbsp;=&nbsp;max(doseTarget);</td></tr>
+<tr><td>102</td><td bgcolor="#FF0000">ixTarget&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ixTarget(i);</td></tr>
+<tr><td>103</td><td bgcolor="#FF0000">wOnes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ones(dij.totalNumOfBixels,1);</td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>105</td><td bgcolor="#FFFFFF">%&nbsp;modified&nbsp;settings&nbsp;for&nbsp;photon&nbsp;dao</td></tr>
+<tr><td>106</td><td bgcolor="#FF0000">if&nbsp;pln.propOpt.runDAO&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'photons')</td></tr>
+<tr><td>107</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;options.ipopt.max_iter&nbsp;=&nbsp;50;</td></tr>
+<tr><td>108</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;options.ipopt.acceptable_obj_change_tol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;7e-3;&nbsp;%&nbsp;(Acc6),&nbsp;Solved&nbsp;To&nbsp;Acceptable&nbsp;Level&nbsp;if&nbsp;(Acc1),...,(Acc6)&nbsp;fullfiled</td></tr>
+<tr><td>109</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>110</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;initial&nbsp;beam&nbsp;intensities&nbsp;wInit</td></tr>
+<tr><td>112</td><td bgcolor="#FF0000">if&nbsp;&nbsp;strcmp(pln.propOpt.bioOptimization,'const_RBExD')&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'protons')</td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;if&nbsp;a&nbsp;constant&nbsp;RBE&nbsp;is&nbsp;defined&nbsp;-&nbsp;if&nbsp;not&nbsp;use&nbsp;1.1</td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isfield(dij,'RBE')</td></tr>
+<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.RBE&nbsp;=&nbsp;1.1;</td></tr>
+<tr><td>117</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>118</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;bixelWeight&nbsp;=&nbsp;&nbsp;(doseTarget)/(dij.RBE&nbsp;*&nbsp;mean(dij.physicalDose{1}(V,:)*wOnes));&nbsp;</td></tr>
+<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;wInit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;wOnes&nbsp;*&nbsp;bixelWeight;</td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">elseif&nbsp;(strcmp(pln.propOpt.bioOptimization,'LEMIV_effect')&nbsp;||&nbsp;strcmp(pln.propOpt.bioOptimization,'LEMIV_RBExD'))&nbsp;...&nbsp;</td></tr>
+<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
+<tr><td>123</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;retrieve&nbsp;photon&nbsp;LQM&nbsp;parameter</td></tr>
+<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[ax,bx]&nbsp;=&nbsp;matRad_getPhotonLQMParameters(cst,dij.doseGrid.numOfVoxels,1);</td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isequal(dij.ax(dij.ax~=0),ax(dij.ax~=0))&nbsp;||&nbsp;...</td></tr>
+<tr><td>128</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~isequal(dij.bx(dij.bx~=0),bx(dij.bx~=0))</td></tr>
+<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Inconsistent&nbsp;biological&nbsp;parameter&nbsp;-&nbsp;please&nbsp;recalculate&nbsp;dose&nbsp;influence&nbsp;matrix!\n');</td></tr>
+<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>131</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:size(cst,1)</td></tr>
+<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:size(cst{i,6},2)</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;if&nbsp;prescribed&nbsp;doses&nbsp;are&nbsp;in&nbsp;a&nbsp;valid&nbsp;domain</td></tr>
+<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;any(cst{i,6}{j}.getDoseParameters()&nbsp;&gt;&nbsp;5)&nbsp;&amp;&amp;&nbsp;isequal(cst{i,3},'TARGET')</td></tr>
+<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Reference&nbsp;dose&nbsp;&gt;&nbsp;10&nbsp;Gy[RBE]&nbsp;for&nbsp;target.&nbsp;Biological&nbsp;optimization&nbsp;outside&nbsp;the&nbsp;valid&nbsp;domain&nbsp;of&nbsp;the&nbsp;base&nbsp;data.&nbsp;Reduce&nbsp;dose&nbsp;prescription&nbsp;or&nbsp;use&nbsp;more&nbsp;fractions.\n');</td></tr>
+<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>139</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>140</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>143</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.ixDose&nbsp;&nbsp;=&nbsp;dij.bx~=0;&nbsp;</td></tr>
+<tr><td>144</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isequal(pln.propOpt.bioOptimization,'LEMIV_effect')</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;effectTarget&nbsp;=&nbsp;cst{ixTarget,5}.alphaX&nbsp;*&nbsp;doseTarget&nbsp;+&nbsp;cst{ixTarget,5}.betaX&nbsp;*&nbsp;doseTarget^2;</td></tr>
+<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;(sum(dij.mAlphaDose{1}(V,:)*wOnes))&nbsp;/&nbsp;(sum((dij.mSqrtBetaDose{1}(V,:)&nbsp;*&nbsp;wOnes).^2));</td></tr>
+<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;-(effectTarget&nbsp;*&nbsp;length(V))&nbsp;/&nbsp;(sum((dij.mSqrtBetaDose{1}(V,:)&nbsp;*&nbsp;wOnes).^2));</td></tr>
+<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wInit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;-(p/2)&nbsp;+&nbsp;sqrt((p^2)/4&nbsp;-q)&nbsp;*&nbsp;wOnes;</td></tr>
+<tr><td>151</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;isequal(pln.propOpt.bioOptimization,'LEMIV_RBExD')</td></tr>
+<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%pre-calculations</td></tr>
+<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.gamma&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;zeros(dij.doseGrid.numOfVoxels,1);&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.gamma(dij.ixDose)&nbsp;=&nbsp;dij.ax(dij.ixDose)./(2*dij.bx(dij.ixDose));&nbsp;</td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>158</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;current&nbsp;in&nbsp;target</td></tr>
+<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CurrEffectTarget&nbsp;=&nbsp;(dij.mAlphaDose{1}(V,:)*wOnes&nbsp;+&nbsp;(dij.mSqrtBetaDose{1}(V,:)*wOnes).^2);</td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;ensure&nbsp;a&nbsp;underestimated&nbsp;biological&nbsp;effective&nbsp;dose&nbsp;</td></tr>
+<tr><td>161</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TolEstBio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1.2;</td></tr>
+<tr><td>162</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;maximal&nbsp;RBE&nbsp;in&nbsp;target</td></tr>
+<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxCurrRBE&nbsp;=&nbsp;max(-cst{ixTarget,5}.alphaX&nbsp;+&nbsp;sqrt(cst{ixTarget,5}.alphaX^2&nbsp;+&nbsp;...</td></tr>
+<tr><td>164</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4*cst{ixTarget,5}.betaX.*CurrEffectTarget)./(2*cst{ixTarget,5}.betaX*(dij.physicalDose{1}(V,:)*wOnes)));</td></tr>
+<tr><td>165</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wInit&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;((doseTarget)/(TolEstBio*maxCurrRBE*max(dij.physicalDose{1}(V,:)*wOnes)))*&nbsp;wOnes;</td></tr>
+<tr><td>166</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>167</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>168</td><td bgcolor="#FFFFFF">else&nbsp;</td></tr>
+<tr><td>169</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;bixelWeight&nbsp;=&nbsp;&nbsp;(doseTarget)/(mean(dij.physicalDose{1}(V,:)*wOnes));&nbsp;</td></tr>
+<tr><td>170</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;wInit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;wOnes&nbsp;*&nbsp;bixelWeight;</td></tr>
+<tr><td>171</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propOpt.bioOptimization&nbsp;=&nbsp;'none';</td></tr>
+<tr><td>172</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>173</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>174</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;optimization&nbsp;options</td></tr>
+<tr><td>175</td><td bgcolor="#FF0000">options.radMod&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;pln.radiationMode;</td></tr>
+<tr><td>176</td><td bgcolor="#FF0000">options.bioOpt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;pln.propOpt.bioOptimization;</td></tr>
+<tr><td>177</td><td bgcolor="#FF0000">options.ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[pln.radiationMode&nbsp;'_'&nbsp;pln.propOpt.bioOptimization];</td></tr>
+<tr><td>178</td><td bgcolor="#FF0000">options.numOfScenarios&nbsp;&nbsp;=&nbsp;dij.numOfScenarios;</td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>180</td><td bgcolor="#FFFFFF">%Select&nbsp;Projection</td></tr>
+<tr><td>181</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>182</td><td bgcolor="#FF0000">switch&nbsp;pln.propOpt.bioOptimization</td></tr>
+<tr><td>183</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'LEMIV_effect'</td></tr>
+<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backProjection&nbsp;=&nbsp;matRad_EffectProjection;</td></tr>
+<tr><td>185</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'const_RBExD'</td></tr>
+<tr><td>186</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backProjection&nbsp;=&nbsp;matRad_ConstantRBEProjection;</td></tr>
+<tr><td>187</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'LEMIV_RBExD'</td></tr>
+<tr><td>188</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backProjection&nbsp;=&nbsp;matRad_VariableRBEProjection;</td></tr>
+<tr><td>189</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'none'</td></tr>
+<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backProjection&nbsp;=&nbsp;matRad_DoseProjection;</td></tr>
+<tr><td>191</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;otherwise</td></tr>
+<tr><td>192</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Did&nbsp;not&nbsp;recognize&nbsp;bioloigcal&nbsp;setting&nbsp;'''&nbsp;pln.probOpt.bioOptimization&nbsp;'''!\nUsing&nbsp;physical&nbsp;dose&nbsp;optimization!']);</td></tr>
+<tr><td>193</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backProjection&nbsp;=&nbsp;matRad_DoseProjection;</td></tr>
+<tr><td>194</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>195</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>197</td><td bgcolor="#FFFFFF">%backProjection&nbsp;=&nbsp;matRad_DoseProjection();</td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>199</td><td bgcolor="#FF0000">optiProb&nbsp;=&nbsp;matRad_OptimizationProblem(backProjection);</td></tr>
+<tr><td>200</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF">%optimizer&nbsp;=&nbsp;matRad_OptimizerIPOPT;</td></tr>
+<tr><td>202</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>203</td><td bgcolor="#FF0000">if&nbsp;~isfield(pln.propOpt,'optimizer')</td></tr>
+<tr><td>204</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propOpt.optimizer&nbsp;=&nbsp;'IPOPT';</td></tr>
+<tr><td>205</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>206</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>207</td><td bgcolor="#FF0000">switch&nbsp;pln.propOpt.optimizer</td></tr>
+<tr><td>208</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'IPOPT'</td></tr>
+<tr><td>209</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optimizer&nbsp;=&nbsp;matRad_OptimizerIPOPT;</td></tr>
+<tr><td>210</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'fmincon'</td></tr>
+<tr><td>211</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optimizer&nbsp;=&nbsp;matRad_OptimizerFmincon;</td></tr>
+<tr><td>212</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;otherwise</td></tr>
+<tr><td>213</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning(['Optimizer&nbsp;'''&nbsp;pln.propOpt.optimizer&nbsp;'''&nbsp;not&nbsp;known!&nbsp;Fallback&nbsp;to&nbsp;IPOPT!']);</td></tr>
+<tr><td>214</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optimizer&nbsp;=&nbsp;matRad_OptimizerIPOPT;</td></tr>
+<tr><td>215</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>216</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>217</td><td bgcolor="#FFFFFF">%optimizer&nbsp;=&nbsp;matRad_OptimizerFmincon;</td></tr>
+<tr><td>218</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>219</td><td bgcolor="#FF0000">optimizer&nbsp;=&nbsp;optimizer.optimize(wInit,optiProb,dij,cst);</td></tr>
+<tr><td>220</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>221</td><td bgcolor="#FF0000">wOpt&nbsp;=&nbsp;optimizer.wResult;</td></tr>
+<tr><td>222</td><td bgcolor="#FF0000">info&nbsp;=&nbsp;optimizer.resultInfo;</td></tr>
+<tr><td>223</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>224</td><td bgcolor="#FF0000">resultGUI&nbsp;=&nbsp;matRad_calcCubes(wOpt,dij);</td></tr>
+<tr><td>225</td><td bgcolor="#FF0000">resultGUI.wUnsequenced&nbsp;=&nbsp;wOpt;</td></tr>
+<tr><td>226</td><td bgcolor="#FF0000">resultGUI.usedOptimizer&nbsp;=&nbsp;optimizer;</td></tr>
+<tr><td>227</td><td bgcolor="#FF0000">resultGUI.info&nbsp;=&nbsp;info;</td></tr>
+<tr><td>228</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>229</td><td bgcolor="#FFFFFF">%&nbsp;unblock&nbsp;mex&nbsp;files</td></tr>
+<tr><td>230</td><td bgcolor="#FF0000">clear&nbsp;mex</td></tr>
+<tr><td>231</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

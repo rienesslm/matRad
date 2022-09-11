@@ -22,6 +22,7 @@ classdef matRad_SquaredOverdosing < DoseObjectives.matRad_DoseObjective
         name = 'Squared Overdosing';
         parameterNames = {'d^{max}'};
         parameterTypes = {'dose'};
+        maxDerivativeError = 0;
     end
     
     properties

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_getRotationMatrix.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_getRotationMatrix.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;rotMat&nbsp;=&nbsp;matRad_getRotationMatrix(gantryAngle,couchAngle,system)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;return&nbsp;the&nbsp;rotation&nbsp;/&nbsp;transformation&nbsp;matrix&nbsp;</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;for&nbsp;gantry&nbsp;and/or&nbsp;couch&nbsp;rotation.&nbsp;The&nbsp;Rotation&nbsp;matrix&nbsp;stands&nbsp;for&nbsp;a&nbsp;(1)</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;counter-clockwise,&nbsp;(2)&nbsp;active&nbsp;rotation&nbsp;in&nbsp;the&nbsp;patient&nbsp;coordinate&nbsp;system</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;that&nbsp;is&nbsp;performed&nbsp;on&nbsp;a&nbsp;(4)&nbsp;column&nbsp;vector&nbsp;(by&nbsp;premultiplying&nbsp;the&nbsp;matrix).&nbsp;</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;Per&nbsp;change&nbsp;of&nbsp;one&nbsp;of&nbsp;these&nbsp;directions&nbsp;a&nbsp;matrix&nbsp;transpose&nbsp;of&nbsp;the&nbsp;returned&nbsp;</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;matrix&nbsp;is&nbsp;required.</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;rotMat&nbsp;=&nbsp;matRad_getRotationMatrix(gantryAngle,couchAngle,type,system)</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;gantryAngle:&nbsp;&nbsp;&nbsp;&nbsp;beam/gantry&nbsp;angle</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;couchAngle:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;couch&nbsp;angle&nbsp;</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;system:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional&nbsp;coordinate&nbsp;system&nbsp;the&nbsp;transformation&nbsp;matrix&nbsp;is</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;requested&nbsp;for.&nbsp;So&nbsp;far,&nbsp;only&nbsp;the&nbsp;default&nbsp;option&nbsp;'LPS'&nbsp;is</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;supported&nbsp;(right&nbsp;handed&nbsp;system).</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;rotMat:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3x3&nbsp;matrix&nbsp;that&nbsp;performs&nbsp;an&nbsp;active&nbsp;rotation&nbsp;around&nbsp;the&nbsp;</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;patient&nbsp;system&nbsp;origin&nbsp;via&nbsp;rotMat&nbsp;*&nbsp;x</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;https://en.wikipedia.org/wiki/Rotation_matrix&nbsp;(2017,&nbsp;Mar&nbsp;1)</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF">%%&nbsp;Parse&nbsp;arguments</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">%We&nbsp;need&nbsp;at&nbsp;least&nbsp;two&nbsp;and&nbsp;max&nbsp;3&nbsp;input&nbsp;arguments</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">narginchk(2,3);</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;Coordinate&nbsp;System&nbsp;(only&nbsp;LPS&nbsp;so&nbsp;far)</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;3</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;system&nbsp;=&nbsp;'LPS';</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF">%%&nbsp;Set&nbsp;Up&nbsp;requested&nbsp;Rotation&nbsp;Matrix</td></tr>
+<tr><td>51</td><td bgcolor="#FF0000">switch&nbsp;system</td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'LPS'</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%The&nbsp;LPS&nbsp;system&nbsp;is&nbsp;right-handed,&nbsp;gantry&nbsp;rotates&nbsp;counter-clockwise&nbsp;</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%around&nbsp;z&nbsp;and&nbsp;couch&nbsp;rotates&nbsp;counter-clockwise&nbsp;around&nbsp;y</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%active,&nbsp;counter-clockwise&nbsp;rotation&nbsp;Matrix&nbsp;for&nbsp;Gantry&nbsp;around&nbsp;z&nbsp;</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%with&nbsp;pre-multiplication&nbsp;of&nbsp;the&nbsp;matrix&nbsp;(R*x)</td></tr>
+<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Note:&nbsp;Gantry&nbsp;rotation&nbsp;is&nbsp;physically&nbsp;an&nbsp;active&nbsp;rotation&nbsp;of&nbsp;a&nbsp;beam&nbsp;</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%vector&nbsp;around&nbsp;the&nbsp;target&nbsp;/&nbsp;isocenterin&nbsp;the&nbsp;patient&nbsp;coordinate</td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%system</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R_Gantry&nbsp;=&nbsp;[cosd(gantryAngle)&nbsp;&nbsp;-sind(gantryAngle)&nbsp;&nbsp;0;&nbsp;...</td></tr>
+<tr><td>62</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sind(gantryAngle)&nbsp;&nbsp;&nbsp;&nbsp;cosd(gantryAngle)&nbsp;&nbsp;0;&nbsp;...</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1];</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>65</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%active,&nbsp;counter-clockwise&nbsp;rotation&nbsp;for&nbsp;couch&nbsp;around&nbsp;y</td></tr>
+<tr><td>66</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%with&nbsp;pre-multiplication&nbsp;of&nbsp;the&nbsp;matrix&nbsp;(R*x)</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Note:&nbsp;Couch&nbsp;rotation&nbsp;is&nbsp;physically&nbsp;a&nbsp;passive&nbsp;rotation&nbsp;of&nbsp;the&nbsp;</td></tr>
+<tr><td>68</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%patient&nbsp;system&nbsp;around&nbsp;the&nbsp;beam&nbsp;target&nbsp;point&nbsp;/&nbsp;isocenter</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R_Couch&nbsp;=&nbsp;[cosd(couchAngle)&nbsp;0&nbsp;sind(couchAngle);&nbsp;...</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;1&nbsp;0;&nbsp;...</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-sind(couchAngle)&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;cosd(couchAngle)];</td></tr>
+<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;otherwise</td></tr>
+<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('matRad&nbsp;only&nbsp;supports&nbsp;LPS&nbsp;system&nbsp;so&nbsp;far');</td></tr>
+<tr><td>74</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>75</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">rotMat&nbsp;=&nbsp;R_Couch*R_Gantry;</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

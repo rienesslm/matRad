@@ -22,6 +22,7 @@ classdef matRad_MinDVH < DoseObjectives.matRad_DoseObjective
         name = 'Min DVH';
         parameterNames = {'d', 'V^{min}'};
         parameterTypes = {'dose','numeric'};
+        maxDerivativeError = 1e-3;
     end
     
     properties

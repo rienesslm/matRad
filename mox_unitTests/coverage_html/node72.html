@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcSigmaRashi.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcSigmaRashi.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;sigmaRashi&nbsp;=&nbsp;matRad_calcSigmaRashi(energy,rangeShifter,SSD)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;calculation&nbsp;of&nbsp;additional&nbsp;beam&nbsp;broadening&nbsp;due&nbsp;to&nbsp;the&nbsp;use&nbsp;of&nbsp;range&nbsp;shifters&nbsp;</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;(only&nbsp;for&nbsp;protons)</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;sigmaRashi&nbsp;=&nbsp;matRad_calcSigmaRashi(energy,rangeShifter,SSD)</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;energy:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initial&nbsp;particle&nbsp;energy</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;rangeShifter:&nbsp;structure&nbsp;defining&nbsp;range&nbsp;shifter&nbsp;geometry</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;SSD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source&nbsp;to&nbsp;surface&nbsp;distance</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;sigmaRashi:&nbsp;&nbsp;&nbsp;sigma&nbsp;of&nbsp;range&nbsp;shifter&nbsp;(to&nbsp;be&nbsp;added&nbsp;^2)&nbsp;in&nbsp;mm</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;https://www.ncbi.nlm.nih.gov/pubmed/12375823</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;https://www.ncbi.nlm.nih.gov/pubmed/12701891</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;distance&nbsp;of&nbsp;range&nbsp;shifter&nbsp;to&nbsp;patient&nbsp;surface</td></tr>
+<tr><td>34</td><td bgcolor="#FF0000">rashiDist&nbsp;=&nbsp;SSD&nbsp;-&nbsp;rangeShifter.sourceRashiDistance;</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;convert&nbsp;to&nbsp;mm</td></tr>
+<tr><td>37</td><td bgcolor="#FF0000">zS&nbsp;=&nbsp;rashiDist&nbsp;/&nbsp;10;&nbsp;%&nbsp;[cm]&nbsp;(after&nbsp;division)</td></tr>
+<tr><td>38</td><td bgcolor="#FF0000">t&nbsp;&nbsp;=&nbsp;rangeShifter.eqThickness&nbsp;/&nbsp;10;&nbsp;%&nbsp;[cm]&nbsp;(after&nbsp;division)</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;--&gt;&nbsp;everything&nbsp;here&nbsp;is&nbsp;in&nbsp;[cm]</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>42</td><td bgcolor="#FF0000">a1&nbsp;=&nbsp;0.21;&nbsp;%&nbsp;[1]</td></tr>
+<tr><td>43</td><td bgcolor="#FF0000">a2&nbsp;=&nbsp;0.77;&nbsp;%&nbsp;[1]</td></tr>
+<tr><td>44</td><td bgcolor="#FF0000">c0&nbsp;=&nbsp;0.0191027;&nbsp;%&nbsp;[cm]</td></tr>
+<tr><td>45</td><td bgcolor="#FF0000">c1&nbsp;=&nbsp;0.0204539;&nbsp;%&nbsp;[1]</td></tr>
+<tr><td>46</td><td bgcolor="#FF0000">alpha&nbsp;=&nbsp;0.0022;&nbsp;%&nbsp;[cm&nbsp;MeV&nbsp;^&nbsp;(-p)]&nbsp;%</td></tr>
+<tr><td>47</td><td bgcolor="#FF0000">p&nbsp;=&nbsp;1.77;&nbsp;%&nbsp;[1]&nbsp;%&nbsp;Exponent&nbsp;of&nbsp;range-energy&nbsp;relation</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">%&nbsp;convert&nbsp;energy&nbsp;to&nbsp;range</td></tr>
+<tr><td>50</td><td bgcolor="#FF0000">R&nbsp;=&nbsp;alpha&nbsp;*&nbsp;(energy&nbsp;^&nbsp;p);</td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;if&nbsp;valid&nbsp;computation&nbsp;possible&nbsp;or&nbsp;range&nbsp;shifter&nbsp;to&nbsp;thick</td></tr>
+<tr><td>53</td><td bgcolor="#FF0000">if&nbsp;t&nbsp;/&nbsp;R&nbsp;&gt;=&nbsp;0.95</td></tr>
+<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Computation&nbsp;of&nbsp;range&nbsp;shifter&nbsp;sigma&nbsp;invalid.');</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF">%&nbsp;Improved&nbsp;HONG's&nbsp;Formula</td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">s&nbsp;=&nbsp;t&nbsp;/&nbsp;R;</td></tr>
+<tr><td>59</td><td bgcolor="#FF0000">sigmaT&nbsp;=&nbsp;(a1&nbsp;*&nbsp;s&nbsp;+&nbsp;a2&nbsp;*&nbsp;s&nbsp;^&nbsp;2)&nbsp;*&nbsp;(c0&nbsp;+&nbsp;c1&nbsp;*&nbsp;R);</td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">PSPpmma&nbsp;=&nbsp;1.165;</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">PrSFpmma&nbsp;=&nbsp;0.816;</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">%&nbsp;PSP_air&nbsp;=&nbsp;0.00107;</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF">%&nbsp;PrSF_air&nbsp;=&nbsp;991;</td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">C&nbsp;=&nbsp;13.6;&nbsp;%&nbsp;MeV</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">L&nbsp;=&nbsp;36.1;&nbsp;%&nbsp;cm</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">F1part1&nbsp;=&nbsp;(2&nbsp;*&nbsp;C&nbsp;^&nbsp;2&nbsp;*&nbsp;alpha&nbsp;^&nbsp;(2&nbsp;/&nbsp;p))&nbsp;/&nbsp;(4&nbsp;*&nbsp;L&nbsp;*&nbsp;(2&nbsp;/&nbsp;p&nbsp;-&nbsp;1));</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">F1part2&nbsp;=&nbsp;(((1&nbsp;-&nbsp;s)&nbsp;^&nbsp;(2&nbsp;-&nbsp;2&nbsp;/&nbsp;p)&nbsp;-&nbsp;1)&nbsp;/&nbsp;(2&nbsp;/&nbsp;p&nbsp;-&nbsp;2)&nbsp;-&nbsp;s);</td></tr>
+<tr><td>70</td><td bgcolor="#FF0000">F1part3&nbsp;=&nbsp;R&nbsp;^&nbsp;(2&nbsp;-&nbsp;2&nbsp;/&nbsp;p);</td></tr>
+<tr><td>71</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>72</td><td bgcolor="#FF0000">F1&nbsp;=&nbsp;F1part1&nbsp;*&nbsp;F1part2&nbsp;*&nbsp;F1part3;</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">F2part1&nbsp;=&nbsp;(C&nbsp;^&nbsp;2&nbsp;*&nbsp;alpha&nbsp;^&nbsp;(2&nbsp;/&nbsp;p))&nbsp;/&nbsp;(4&nbsp;*&nbsp;L&nbsp;*&nbsp;(2&nbsp;/&nbsp;p&nbsp;-&nbsp;1));</td></tr>
+<tr><td>75</td><td bgcolor="#FF0000">F2part2&nbsp;=&nbsp;(((1&nbsp;-&nbsp;s)&nbsp;^&nbsp;(1&nbsp;-&nbsp;2&nbsp;/&nbsp;p)&nbsp;-&nbsp;1))&nbsp;/&nbsp;1;</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">F2part3&nbsp;=&nbsp;R&nbsp;^&nbsp;(1&nbsp;-&nbsp;2&nbsp;/&nbsp;p);</td></tr>
+<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>78</td><td bgcolor="#FF0000">F2&nbsp;=&nbsp;F2part1&nbsp;*&nbsp;F2part2&nbsp;*&nbsp;F2part3;</td></tr>
+<tr><td>79</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>80</td><td bgcolor="#FF0000">sigmaProjSq&nbsp;=&nbsp;PrSFpmma&nbsp;^&nbsp;2&nbsp;*&nbsp;(sigmaT&nbsp;^&nbsp;2&nbsp;+&nbsp;F1&nbsp;.*&nbsp;zS&nbsp;*&nbsp;PSPpmma&nbsp;+&nbsp;F2&nbsp;*&nbsp;(zS&nbsp;*&nbsp;PSPpmma)&nbsp;.^&nbsp;2);&nbsp;%&nbsp;[cm&nbsp;^&nbsp;2]</td></tr>
+<tr><td>81</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>82</td><td bgcolor="#FFFFFF">%&nbsp;&lt;--&nbsp;below&nbsp;in&nbsp;[mm]</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">sigmaRashi&nbsp;=&nbsp;10&nbsp;*&nbsp;sqrt(sigmaProjSq);&nbsp;%&nbsp;[mm]&nbsp;(after&nbsp;factor&nbsp;10)</td></tr>
+<tr><td>85</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF"></td></tr>
+</table></p></body></html>

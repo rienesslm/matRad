@@ -24,6 +24,7 @@ classdef matRad_SquaredDeviation < DoseObjectives.matRad_DoseObjective
         name = 'Squared Deviation';
         parameterNames = {'d^{ref}'};
         parameterTypes = {'dose'};
+        maxDerivativeError = 0;
     end
     
     properties

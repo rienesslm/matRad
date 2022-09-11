@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\mox_unitTests\test_matRad_interp1.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\mox_unitTests\test_matRad_interp1.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;test_suite=test_matRad_interp1</td></tr>
+<tr><td>2</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;%&nbsp;assignment&nbsp;of&nbsp;'localfunctions'&nbsp;is&nbsp;necessary&nbsp;in&nbsp;Matlab&nbsp;&gt;=&nbsp;2016</td></tr>
+<tr><td>3</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test_functions=localfunctions();</td></tr>
+<tr><td>4</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;catch&nbsp;%&nbsp;no&nbsp;problem;&nbsp;early&nbsp;Matlab&nbsp;versions&nbsp;can&nbsp;use&nbsp;initTestSuite&nbsp;fine</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>6</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;initTestSuite;</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">function&nbsp;testInterp1Extrapolation()</td></tr>
+<tr><td>9</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xi&nbsp;=&nbsp;[100,&nbsp;150,&nbsp;200,&nbsp;250,&nbsp;300,&nbsp;400,&nbsp;500];</td></tr>
+<tr><td>10</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yi&nbsp;=&nbsp;[2506.7,&nbsp;2582.8,&nbsp;2658.1,&nbsp;2733.7,&nbsp;2810.4,&nbsp;2967.9,&nbsp;3131.6]';</td></tr>
+<tr><td>11</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;=&nbsp;650;</td></tr>
+<tr><td>12</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_interp1_solution&nbsp;=&nbsp;matRad_interp1(xi,&nbsp;yi,&nbsp;x);</td></tr>
+<tr><td>13</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;interp1_solution&nbsp;=&nbsp;interp1(xi,&nbsp;yi,&nbsp;x);</td></tr>
+<tr><td>14</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertEqual(matRad_interp1_solution,interp1_solution)</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">function&nbsp;testInterp1Interpolation()</td></tr>
+<tr><td>17</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xi&nbsp;=&nbsp;[100,&nbsp;150,&nbsp;200,&nbsp;250,&nbsp;300,&nbsp;400,&nbsp;500];</td></tr>
+<tr><td>18</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yi&nbsp;=&nbsp;[2506.7,&nbsp;2582.8,&nbsp;2658.1,&nbsp;2733.7,&nbsp;2810.4,&nbsp;2967.9,&nbsp;3131.6]';&nbsp;%Has&nbsp;to&nbsp;be&nbsp;tranposed.&nbsp;(?)</td></tr>
+<tr><td>19</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;=&nbsp;222;</td></tr>
+<tr><td>20</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_interp1_solution&nbsp;=&nbsp;matRad_interp1(xi,&nbsp;yi,&nbsp;x);</td></tr>
+<tr><td>21</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;interp1_solution&nbsp;=&nbsp;interp1(xi,&nbsp;yi,&nbsp;x);</td></tr>
+<tr><td>22</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertEqual(matRad_interp1_solution,interp1_solution)</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">function&nbsp;testFalseInput()</td></tr>
+<tr><td>25</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xi&nbsp;=&nbsp;[100,&nbsp;150,&nbsp;200,&nbsp;300,&nbsp;400,&nbsp;500];&nbsp;%&nbsp;xi.length&nbsp;&lt;&nbsp;yi.length&nbsp;=&gt;&nbsp;false&nbsp;input</td></tr>
+<tr><td>26</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yi&nbsp;=&nbsp;[2506.7,&nbsp;2582.8,&nbsp;2658.1,&nbsp;2733.7,&nbsp;2810.4,&nbsp;2967.9,&nbsp;3131.6]';</td></tr>
+<tr><td>27</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;=&nbsp;2680.78;</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%assertExceptionThrown(@()matRad_interp1(xi,&nbsp;yi,&nbsp;x));&nbsp;%Problem:&nbsp;Doesn't&nbsp;throw&nbsp;exception&nbsp;when&nbsp;parameter&nbsp;isn't&nbsp;valid.</td></tr>
+<tr><td>29</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;assertExceptionThrown(@()interp1(xi,&nbsp;yi,&nbsp;x));</td></tr>
+</table></p></body></html>

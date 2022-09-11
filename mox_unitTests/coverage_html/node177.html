@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\tools\matRad_compareDose.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\tools\matRad_compareDose.m</h1><p style="font-family:'Courier New'"><table>
+<tr><th>Line</th><th>Code</th></tr>
+<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[gammaCube,gammaPassRate,hfig]&nbsp;=&nbsp;matRad_compareDose(cube1,&nbsp;cube2,&nbsp;ct,&nbsp;cst,enable&nbsp;,&nbsp;contours,&nbsp;pln,&nbsp;criteria,&nbsp;n,localglobal)</td></tr>
+<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;Comparison&nbsp;of&nbsp;two&nbsp;dose&nbsp;cubes&nbsp;in&nbsp;terms&nbsp;of&nbsp;gamma&nbsp;index,&nbsp;absolute&nbsp;and&nbsp;visual&nbsp;difference</td></tr>
+<tr><td>3</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
+<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[gammaCube,gammaPassRate,hfig]&nbsp;=&nbsp;matRad_compareDose(cube1,&nbsp;cube2,&nbsp;ct,&nbsp;cst)</td></tr>
+<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[gammaCube,gammaPassRate,hfig]&nbsp;=&nbsp;matRad_compareDose(cube1,&nbsp;cube2,&nbsp;ct,&nbsp;cst,enable&nbsp;,&nbsp;contours,&nbsp;pln,&nbsp;criteria,&nbsp;n,localglobal)</td></tr>
+<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
+<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cube1:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dose&nbsp;cube&nbsp;1&nbsp;as&nbsp;an&nbsp;M&nbsp;x&nbsp;N&nbsp;x&nbsp;O&nbsp;array</td></tr>
+<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cube2:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dose&nbsp;cube&nbsp;2&nbsp;as&nbsp;an&nbsp;M&nbsp;x&nbsp;N&nbsp;x&nbsp;O&nbsp;array</td></tr>
+<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;struct&nbsp;with&nbsp;ct&nbsp;cube</td></tr>
+<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;of&nbsp;interesting&nbsp;volumes&nbsp;inside&nbsp;the&nbsp;patient&nbsp;as&nbsp;matRad</td></tr>
+<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;struct&nbsp;(optional,&nbsp;does&nbsp;not&nbsp;calculate&nbsp;gamma&nbsp;and&nbsp;DVH)</td></tr>
+<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;enable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(optional)&nbsp;specify&nbsp;if&nbsp;all&nbsp;sections&nbsp;are&nbsp;evaluated</td></tr>
+<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;boolean&nbsp;3x1&nbsp;array</td></tr>
+<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1&nbsp;0&nbsp;0]:&nbsp;evaluate&nbsp;only&nbsp;basic&nbsp;plots</td></tr>
+<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0&nbsp;1&nbsp;0]:&nbsp;evaluate&nbsp;only&nbsp;line&nbsp;profiles</td></tr>
+<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0&nbsp;0&nbsp;1]:&nbsp;evaluate&nbsp;only&nbsp;DVH</td></tr>
+<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;contours&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(optional)&nbsp;specify&nbsp;if&nbsp;contours&nbsp;are&nbsp;plotted,</td></tr>
+<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'on'&nbsp;or&nbsp;'off'</td></tr>
+<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(optional)&nbsp;specify&nbsp;BioModel&nbsp;for&nbsp;DVH&nbsp;plot</td></tr>
+<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;criteria:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(optional)[1x2]&nbsp;vector&nbsp;specifying&nbsp;the&nbsp;distance&nbsp;to&nbsp;agreement</td></tr>
+<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;criterion;&nbsp;first&nbsp;element&nbsp;is&nbsp;percentage&nbsp;difference,</td></tr>
+<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second&nbsp;element&nbsp;is&nbsp;distance&nbsp;[mm],&nbsp;default&nbsp;[3&nbsp;3]</td></tr>
+<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;n:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(optional)&nbsp;number&nbsp;of&nbsp;interpolations.&nbsp;there&nbsp;will&nbsp;be&nbsp;2^n-1</td></tr>
+<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interpolation&nbsp;points.&nbsp;The&nbsp;maximum&nbsp;suggested&nbsp;value&nbsp;is&nbsp;3.</td></tr>
+<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;n=0</td></tr>
+<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;localglobal:&nbsp;&nbsp;&nbsp;(optional)&nbsp;parameter&nbsp;to&nbsp;choose&nbsp;between&nbsp;'global'&nbsp;and&nbsp;'local'</td></tr>
+<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;normalization&nbsp;</td></tr>
+<tr><td>30</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>31</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
+<tr><td>33</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;gammaCube:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;of&nbsp;gamma&nbsp;index&nbsp;calculation</td></tr>
+<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;gammaPassRate:&nbsp;&nbsp;rate&nbsp;of&nbsp;voxels&nbsp;passing&nbsp;the&nbsp;specified&nbsp;gamma&nbsp;criterion</td></tr>
+<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evaluated&nbsp;for&nbsp;every&nbsp;structure&nbsp;listed&nbsp;in&nbsp;'cst'.</td></tr>
+<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;that&nbsp;only&nbsp;voxels&nbsp;exceeding&nbsp;the&nbsp;dose&nbsp;threshold&nbsp;are</td></tr>
+<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;considered.</td></tr>
+<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;hfig:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;handle&nbsp;struct&nbsp;for&nbsp;all&nbsp;3&nbsp;figures&nbsp;and&nbsp;subplots,</td></tr>
+<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;indexed&nbsp;by&nbsp;plane&nbsp;names</td></tr>
+<tr><td>41</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>42</td><td bgcolor="#FFFFFF">%&nbsp;References&nbsp;gamma&nbsp;analysis:</td></tr>
+<tr><td>43</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[1]&nbsp;&nbsp;http://www.ncbi.nlm.nih.gov/pubmed/9608475</td></tr>
+<tr><td>44</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>46</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>47</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.</td></tr>
+<tr><td>48</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>49</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license</td></tr>
+<tr><td>50</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this</td></tr>
+<tr><td>51</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part</td></tr>
+<tr><td>52</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,</td></tr>
+<tr><td>53</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the</td></tr>
+<tr><td>54</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
+<tr><td>55</td><td bgcolor="#FFFFFF">%</td></tr>
+<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
+<tr><td>57</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>58</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
+<tr><td>59</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>60</td><td bgcolor="#FFFFFF">%%&nbsp;check&nbsp;if&nbsp;cubes&nbsp;consistent</td></tr>
+<tr><td>61</td><td bgcolor="#FF0000">if&nbsp;~isequal(size(cube1),size(cube2))</td></tr>
+<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('dose&nbsp;cubes&nbsp;must&nbsp;be&nbsp;the&nbsp;same&nbsp;size\n');</td></tr>
+<tr><td>63</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>64</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>65</td><td bgcolor="#FF0000">if&nbsp;~exist('localglobal','var')</td></tr>
+<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;localglobal&nbsp;=&nbsp;'global';</td></tr>
+<tr><td>67</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>68</td><td bgcolor="#FF0000">if&nbsp;~exist('n','var')</td></tr>
+<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;n&nbsp;=&nbsp;0;</td></tr>
+<tr><td>70</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>71</td><td bgcolor="#FF0000">if&nbsp;~exist('criteria','var')</td></tr>
+<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;criteria&nbsp;=&nbsp;[3&nbsp;3];</td></tr>
+<tr><td>73</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>74</td><td bgcolor="#FF0000">if&nbsp;~exist('cst','var')&nbsp;||&nbsp;isempty(cst)</td></tr>
+<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cst&nbsp;=&nbsp;[];</td></tr>
+<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;skip&nbsp;=&nbsp;1;</td></tr>
+<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('cst&nbsp;not&nbsp;specified,&nbsp;skipping&nbsp;DVH,&nbsp;isocenter&nbsp;in&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;doseCube');</td></tr>
+<tr><td>78</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;skip&nbsp;=&nbsp;0;</td></tr>
+<tr><td>80</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>81</td><td bgcolor="#FF0000">if&nbsp;~exist('pln','var')&nbsp;||&nbsp;isempty(pln)</td></tr>
+<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln&nbsp;=&nbsp;[];</td></tr>
+<tr><td>83</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>84</td><td bgcolor="#FF0000">if&nbsp;~exist('contours','var')&nbsp;||&nbsp;isempty(contours)</td></tr>
+<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;contours&nbsp;=&nbsp;true;</td></tr>
+<tr><td>86</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>87</td><td bgcolor="#FF0000">if&nbsp;exist('contours','var')&nbsp;||&nbsp;~isempty(contours)</td></tr>
+<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(contours,'on')</td></tr>
+<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contours&nbsp;=&nbsp;true;</td></tr>
+<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contours&nbsp;=&nbsp;false;</td></tr>
+<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>93</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>94</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>95</td><td bgcolor="#FF0000">if&nbsp;(~exist('enable','var')&nbsp;||&nbsp;isempty(enable))&nbsp;||&nbsp;strcmp(enable,'all')</td></tr>
+<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;enable&nbsp;=&nbsp;[1&nbsp;1&nbsp;1];</td></tr>
+<tr><td>97</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>98</td><td bgcolor="#FF0000">if&nbsp;enable(1)==0</td></tr>
+<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;gammaCube&nbsp;=&nbsp;[];</td></tr>
+<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;gammaPassRate&nbsp;=&nbsp;[];</td></tr>
+<tr><td>101</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>102</td><td bgcolor="#FFFFFF">%&nbsp;Load&nbsp;colormap&nbsp;for&nbsp;difference</td></tr>
+<tr><td>103</td><td bgcolor="#FF0000">diffCMap&nbsp;=&nbsp;matRad_getColormap('diffMap');</td></tr>
+<tr><td>104</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>105</td><td bgcolor="#FFFFFF">%%&nbsp;Calculate&nbsp;iso-center&nbsp;slices&nbsp;and&nbsp;resolution</td></tr>
+<tr><td>106</td><td bgcolor="#FF0000">if&nbsp;isempty(cst)</td></tr>
+<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[~,s(1)]&nbsp;=&nbsp;max(sum(sum(cube1,1),3));</td></tr>
+<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[~,s(2)]&nbsp;=&nbsp;max(sum(sum(cube1,2),3));</td></tr>
+<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[~,s(3)]&nbsp;=&nbsp;max(sum(sum(cube1,1),2));</td></tr>
+<tr><td>110</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isoCenter&nbsp;=&nbsp;[ct.resolution.y*s(1)&nbsp;ct.resolution.x*s(2)&nbsp;ct.resolution.z*s(3)];</td></tr>
+<tr><td>111</td><td bgcolor="#FFFFFF">else</td></tr>
+<tr><td>112</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isoCenter&nbsp;=&nbsp;matRad_getIsoCenter(cst,ct,0);</td></tr>
+<tr><td>113</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>114</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>115</td><td bgcolor="#FF0000">resolution&nbsp;=&nbsp;[ct.resolution.x&nbsp;ct.resolution.y&nbsp;ct.resolution.z];</td></tr>
+<tr><td>116</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>117</td><td bgcolor="#FF0000">slicename&nbsp;=&nbsp;{round(isoCenter(2)./resolution(2)),round(isoCenter(1)./resolution(1)),round(isoCenter(3)./resolution(3))};</td></tr>
+<tr><td>118</td><td bgcolor="#FF0000">doseWindow&nbsp;=&nbsp;[0&nbsp;max([cube1(:);&nbsp;cube2(:)])];</td></tr>
+<tr><td>119</td><td bgcolor="#FF0000">planename&nbsp;=&nbsp;{'coronal','sagittal','axial'};</td></tr>
+<tr><td>120</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>121</td><td bgcolor="#FFFFFF">%%&nbsp;Integral&nbsp;Energy&nbsp;Output</td></tr>
+<tr><td>122</td><td bgcolor="#FF0000">intEnergy1&nbsp;=&nbsp;matRad_calcIntEnergy(cube1,ct,pln);</td></tr>
+<tr><td>123</td><td bgcolor="#FF0000">intEnergy2&nbsp;=&nbsp;matRad_calcIntEnergy(cube2,ct,pln);</td></tr>
+<tr><td>124</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>125</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('Integral&nbsp;energy&nbsp;comparison:&nbsp;Cube&nbsp;1&nbsp;=&nbsp;%1.4g&nbsp;MeV,&nbsp;Cube&nbsp;2&nbsp;=&nbsp;%1.4g&nbsp;MeV,&nbsp;difference&nbsp;=&nbsp;%1.4g&nbsp;Mev\n',intEnergy1,intEnergy2,intEnergy1-intEnergy2);</td></tr>
+<tr><td>126</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>127</td><td bgcolor="#FFFFFF">%%&nbsp;Colorwash&nbsp;images</td></tr>
+<tr><td>128</td><td bgcolor="#FF0000">if&nbsp;enable(1)&nbsp;==&nbsp;1</td></tr>
+<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Get&nbsp;the&nbsp;gamma&nbsp;cube</td></tr>
+<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('Calculating&nbsp;gamma&nbsp;index&nbsp;cube...\n');</td></tr>
+<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;exist('criteria','var')</td></tr>
+<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;relDoseThreshold&nbsp;=&nbsp;criteria(1);&nbsp;%&nbsp;in&nbsp;[%]</td></tr>
+<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist2AgreeMm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;criteria(2);&nbsp;%&nbsp;in&nbsp;[mm]</td></tr>
+<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist2AgreeMm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;3;&nbsp;%&nbsp;in&nbsp;[mm]</td></tr>
+<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;relDoseThreshold&nbsp;=&nbsp;3;&nbsp;%&nbsp;in&nbsp;[%]</td></tr>
+<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>139</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[gammaCube,gammaPassRate]&nbsp;=&nbsp;matRad_gammaIndex(cube1,cube2,resolution,criteria,[],n,localglobal,cst);</td></tr>
+<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Calculate&nbsp;absolute&nbsp;difference&nbsp;cube&nbsp;and&nbsp;dose&nbsp;windows&nbsp;for&nbsp;plots</td></tr>
+<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;differenceCube&nbsp;&nbsp;=&nbsp;cube1-cube2;</td></tr>
+<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseDiffWindow&nbsp;&nbsp;=&nbsp;[-max(differenceCube(:))&nbsp;max(differenceCube(:))];</td></tr>
+<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%doseGammaWindow&nbsp;=&nbsp;[0&nbsp;max(gammaCube(:))];</td></tr>
+<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseGammaWindow&nbsp;=&nbsp;[0&nbsp;2];&nbsp;%We&nbsp;choose&nbsp;2&nbsp;as&nbsp;maximum&nbsp;value&nbsp;since&nbsp;the&nbsp;gamma&nbsp;colormap&nbsp;has&nbsp;a&nbsp;sharp&nbsp;cut&nbsp;in&nbsp;the&nbsp;middle</td></tr>
+<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;everything</td></tr>
+<tr><td>151</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;dose&nbsp;slices</td></tr>
+<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;contours&nbsp;==&nbsp;false</td></tr>
+<tr><td>153</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cstHandle&nbsp;=&nbsp;[];</td></tr>
+<tr><td>154</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cstHandle&nbsp;=&nbsp;cst;</td></tr>
+<tr><td>156</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;plane&nbsp;=&nbsp;1:3</td></tr>
+<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disp(['Plotting&nbsp;',planename{plane},'&nbsp;plane...']);</td></tr>
+<tr><td>160</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>161</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Initialize&nbsp;Figure</td></tr>
+<tr><td>162</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('fig')&nbsp;=&nbsp;figure('Renderer',&nbsp;'painters',&nbsp;'Position',&nbsp;[10&nbsp;50&nbsp;800&nbsp;800]);</td></tr>
+<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(gcf,'Color',[1&nbsp;1&nbsp;1]);</td></tr>
+<tr><td>164</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;Dose&nbsp;1</td></tr>
+<tr><td>166</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube1').Axes&nbsp;=&nbsp;subplot(2,2,1);</td></tr>
+<tr><td>167</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[hfig.(planename{plane}).('cube1').CMap,...</td></tr>
+<tr><td>168</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube1').Dose,...</td></tr>
+<tr><td>169</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube1').Ct,...</td></tr>
+<tr><td>170</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube1').Contour,...</td></tr>
+<tr><td>171</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube1').IsoDose]&nbsp;=&nbsp;...</td></tr>
+<tr><td>172</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_plotSliceWrapper(gca,ct,cstHandle,1,cube1,plane,slicename{plane},[],[],colorcube,jet,doseWindow,[],100);</td></tr>
+<tr><td>173</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>174</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;Dose&nbsp;2</td></tr>
+<tr><td>175</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube2').Axes&nbsp;=&nbsp;subplot(2,2,2);</td></tr>
+<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[hfig.(planename{plane}).('cube2').CMap,...</td></tr>
+<tr><td>177</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube2').Dose,...</td></tr>
+<tr><td>178</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube2').Ct,...</td></tr>
+<tr><td>179</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube2').Contour,...</td></tr>
+<tr><td>180</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('cube2').IsoDose]&nbsp;=&nbsp;...</td></tr>
+<tr><td>181</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_plotSliceWrapper(gca,ct,cstHandle,1,cube2,plane,slicename{plane},[],[],colorcube,jet,doseWindow,[],100);</td></tr>
+<tr><td>182</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>183</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;absolute&nbsp;difference</td></tr>
+<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('diff').Axes&nbsp;=&nbsp;subplot(2,2,3);</td></tr>
+<tr><td>185</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[hfig.(planename{plane}).('diff').CMap,...</td></tr>
+<tr><td>186</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('diff').Dose,...</td></tr>
+<tr><td>187</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('diff').Ct,...</td></tr>
+<tr><td>188</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('diff').Contour,...</td></tr>
+<tr><td>189</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('diff').IsoDose]&nbsp;=&nbsp;...</td></tr>
+<tr><td>190</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_plotSliceWrapper(gca,ct,cstHandle,1,differenceCube,plane,slicename{plane},[],[],colorcube,diffCMap,doseDiffWindow,[],100);</td></tr>
+<tr><td>191</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>192</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;gamma&nbsp;analysis</td></tr>
+<tr><td>193</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('gamma').Axes&nbsp;=&nbsp;subplot(2,2,4);</td></tr>
+<tr><td>194</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gammaCMap&nbsp;=&nbsp;matRad_getColormap('gammaIndex');</td></tr>
+<tr><td>195</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[hfig.(planename{plane}).('gamma').CMap,...</td></tr>
+<tr><td>196</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('gamma').Dose,...</td></tr>
+<tr><td>197</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('gamma').Ct,...</td></tr>
+<tr><td>198</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('gamma').Contour,...</td></tr>
+<tr><td>199</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hfig.(planename{plane}).('gamma').IsoDose]=...</td></tr>
+<tr><td>200</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_plotSliceWrapper(gca,ct,cstHandle,1,gammaCube,plane,slicename{plane},[],[],colorcube,gammaCMap,doseGammaWindow,[],100);</td></tr>
+<tr><td>201</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>202</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Adjusting&nbsp;axes</td></tr>
+<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_plotAxisLabels(hfig.(planename{plane}).('cube1').Axes,ct,plane,slicename{plane},[],100);</td></tr>
+<tr><td>204</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(get(hfig.(planename{plane}).('cube1').Axes,&nbsp;'title'),&nbsp;'string',&nbsp;'Dose&nbsp;1');</td></tr>
+<tr><td>205</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_plotAxisLabels(hfig.(planename{plane}).('cube2').Axes,ct,plane,slicename{plane},[],100);</td></tr>
+<tr><td>206</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(get(hfig.(planename{plane}).('cube2').Axes,&nbsp;'title'),&nbsp;'string',&nbsp;'Dose&nbsp;2');</td></tr>
+<tr><td>207</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_plotAxisLabels(hfig.(planename{plane}).('diff').Axes,ct,plane,slicename{plane},[],100);</td></tr>
+<tr><td>208</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(get(hfig.(planename{plane}).('diff').Axes,&nbsp;'title'),&nbsp;'string',&nbsp;'Absolute&nbsp;difference');</td></tr>
+<tr><td>209</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_plotAxisLabels(hfig.(planename{plane}).('gamma').Axes,ct,plane,slicename{plane},[],100);</td></tr>
+<tr><td>210</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(get(hfig.(planename{plane}).('gamma').Axes,&nbsp;'title'),&nbsp;'string',&nbsp;{[num2str(gammaPassRate{1,2},5)&nbsp;'%&nbsp;of&nbsp;points&nbsp;&gt;&nbsp;'&nbsp;num2str(relDoseThreshold)&nbsp;'%&nbsp;pass&nbsp;gamma&nbsp;criterion&nbsp;('&nbsp;num2str(relDoseThreshold)&nbsp;'%&nbsp;/&nbsp;'&nbsp;num2str(dist2AgreeMm)&nbsp;'mm)'];&nbsp;['with&nbsp;'&nbsp;num2str(2^n-1)&nbsp;'&nbsp;interpolation&nbsp;points']});</td></tr>
+<tr><td>211</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>212</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>213</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>214</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>215</td><td bgcolor="#FFFFFF">%%&nbsp;Plot&nbsp;profiles&nbsp;through&nbsp;isoCenter</td></tr>
+<tr><td>216</td><td bgcolor="#FF0000">centerAtIsocenter&nbsp;=&nbsp;false;</td></tr>
+<tr><td>217</td><td bgcolor="#FF0000">if&nbsp;enable(2)&nbsp;==&nbsp;1</td></tr>
+<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('Plotting&nbsp;profiles...\n');</td></tr>
+<tr><td>219</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fontsize&nbsp;=&nbsp;12;</td></tr>
+<tr><td>220</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;profilex{1}&nbsp;=&nbsp;squeeze(cube1(slicename{1},:,slicename{3}));</td></tr>
+<tr><td>221</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;profiley{1}&nbsp;=&nbsp;squeeze(cube1(:,slicename{2},slicename{3}));</td></tr>
+<tr><td>222</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;profilez{1}&nbsp;=&nbsp;squeeze(cube1(slicename{1},slicename{2},:));</td></tr>
+<tr><td>223</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>224</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;profilex{2}&nbsp;=&nbsp;squeeze(cube2(slicename{1},:,slicename{3}));</td></tr>
+<tr><td>225</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;profiley{2}&nbsp;=&nbsp;squeeze(cube2(:,slicename{2},slicename{3}));</td></tr>
+<tr><td>226</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;profilez{2}&nbsp;=&nbsp;squeeze(cube2(slicename{1},slicename{2},:));</td></tr>
+<tr><td>227</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>228</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;posX&nbsp;=&nbsp;resolution(1)*(1:length(profilex{1}));</td></tr>
+<tr><td>229</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;posY&nbsp;=&nbsp;resolution(2)*(1:length(profiley{1}));</td></tr>
+<tr><td>230</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;posZ&nbsp;=&nbsp;resolution(3)*(1:length(profilez{1}));</td></tr>
+<tr><td>231</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;centerAtIsocenter</td></tr>
+<tr><td>232</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;posX&nbsp;=&nbsp;posX&nbsp;-&nbsp;isoCenter(1);</td></tr>
+<tr><td>233</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;posY&nbsp;=&nbsp;posY&nbsp;-&nbsp;isoCenter(2);</td></tr>
+<tr><td>234</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;posZ&nbsp;=&nbsp;posZ&nbsp;-&nbsp;isoCenter(3);</td></tr>
+<tr><td>235</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>236</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>237</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;exist('pln','var')&nbsp;&amp;&amp;&nbsp;~isempty(pln)</td></tr>
+<tr><td>238</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(pln.propOpt.bioOptimization,'none')</td></tr>
+<tr><td>239</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yLabelString&nbsp;=&nbsp;'Dose&nbsp;[Gy]';</td></tr>
+<tr><td>240</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>241</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yLabelString&nbsp;=&nbsp;'RBE&nbsp;x&nbsp;Dose&nbsp;[Gy(RBE)]';</td></tr>
+<tr><td>242</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>243</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
+<tr><td>244</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yLabelString&nbsp;=&nbsp;'Dose&nbsp;[Gy]';</td></tr>
+<tr><td>245</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
+<tr><td>246</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>247</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hfig.profiles.fig&nbsp;=&nbsp;figure('Renderer',&nbsp;'painters',&nbsp;'Position',&nbsp;[10&nbsp;50&nbsp;800&nbsp;800]);</td></tr>
+<tr><td>248</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(gcf,'Color',[1&nbsp;1&nbsp;1]);</td></tr>
+<tr><td>249</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>250</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hfig.profiles.x&nbsp;=&nbsp;subplot(2,2,1);</td></tr>
+<tr><td>251</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;plot(posX,profilex{1},'r')</td></tr>
+<tr><td>252</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on</td></tr>
+<tr><td>253</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;plot(posX,profilex{2},'r--')</td></tr>
+<tr><td>254</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xlabel('X&nbsp;[mm]','FontSize',fontsize)</td></tr>
+<tr><td>255</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ylabel(yLabelString,'FontSize',fontsize);</td></tr>
+<tr><td>256</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;title('x-Profiles');</td></tr>
+<tr><td>257</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;legend({'Dose&nbsp;1','Dose&nbsp;2'},'Location','southeast')</td></tr>
+<tr><td>258</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;legend&nbsp;boxoff</td></tr>
+<tr><td>259</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>260</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hfig.profiles.y&nbsp;=&nbsp;subplot(2,2,2);</td></tr>
+<tr><td>261</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;plot(posY,profiley{1},'r')</td></tr>
+<tr><td>262</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on</td></tr>
+<tr><td>263</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;plot(posY,profiley{2},'r--')</td></tr>
+<tr><td>264</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xlabel('Y&nbsp;[mm]','FontSize',fontsize)</td></tr>
+<tr><td>265</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ylabel(yLabelString,'FontSize',fontsize);</td></tr>
+<tr><td>266</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;title('y-Profiles');</td></tr>
+<tr><td>267</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;legend({'Dose&nbsp;1','Dose&nbsp;2'},'Location','southeast')</td></tr>
+<tr><td>268</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;legend&nbsp;boxoff</td></tr>
+<tr><td>269</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>270</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hfig.profiles.z&nbsp;=&nbsp;subplot(2,2,3);</td></tr>
+<tr><td>271</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;plot(posZ,profilez{1},'r')</td></tr>
+<tr><td>272</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on</td></tr>
+<tr><td>273</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;plot(posZ,profilez{2},'r--')</td></tr>
+<tr><td>274</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xlabel('Z&nbsp;[mm]','FontSize',fontsize)</td></tr>
+<tr><td>275</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ylabel(yLabelString,'FontSize',fontsize);</td></tr>
+<tr><td>276</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;title('z-Profiles');</td></tr>
+<tr><td>277</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;legend({'Dose&nbsp;1','Dose&nbsp;2'},'Location','southeast')</td></tr>
+<tr><td>278</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;legend&nbsp;boxoff</td></tr>
+<tr><td>279</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>280</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hfig.profiles.fig,'name',['Profiles:,&nbsp;x=',num2str(slicename{1}),'mm,&nbsp;y=',num2str(slicename{2}),'mm,&nbsp;z=',num2str(slicename{3}),'mm']);</td></tr>
+<tr><td>281</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>282</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>283</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>284</td><td bgcolor="#FFFFFF">%%&nbsp;Calculate&nbsp;and&nbsp;plot&nbsp;DVH</td></tr>
+<tr><td>285</td><td bgcolor="#FF0000">if&nbsp;enable(3)&nbsp;==&nbsp;1&nbsp;&amp;&amp;&nbsp;~isempty(cst)</td></tr>
+<tr><td>286</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('Calculating&nbsp;DVH...\n');</td></tr>
+<tr><td>287</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dvh1&nbsp;=&nbsp;matRad_calcDVH(cst,cube1);</td></tr>
+<tr><td>288</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dvh2&nbsp;=&nbsp;matRad_calcDVH(cst,cube2);</td></tr>
+<tr><td>289</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dvhWindow&nbsp;=&nbsp;max([dvh1(1).doseGrid&nbsp;dvh2(1).doseGrid]);</td></tr>
+<tr><td>290</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;DVH</td></tr>
+<tr><td>291</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;disp('Plotting&nbsp;DVH...');</td></tr>
+<tr><td>292</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td>293</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hfig.dvh.fig&nbsp;=&nbsp;figure('Renderer',&nbsp;'painters',&nbsp;'Position',&nbsp;[10&nbsp;100&nbsp;1000&nbsp;700]);</td></tr>
+<tr><td>294</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(gcf,'Color',[1&nbsp;1&nbsp;1]);</td></tr>
+<tr><td>295</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_showDVH(dvh1,cst,pln);</td></tr>
+<tr><td>296</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on</td></tr>
+<tr><td>297</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_showDVH(dvh2,cst,pln,2);</td></tr>
+<tr><td>298</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xlim([0&nbsp;dvhWindow*1.2])</td></tr>
+<tr><td>299</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;title('Dose&nbsp;Volume&nbsp;Histrogram,&nbsp;Dose&nbsp;1:&nbsp;solid,&nbsp;Dose&nbsp;2:&nbsp;dashed')</td></tr>
+<tr><td>300</td><td bgcolor="#FFFFFF">end</td></tr>
+<tr><td>301</td><td bgcolor="#FFFFFF">%%</td></tr>
+<tr><td>302</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('Done!\n');</td></tr>
+<tr><td>303</td><td bgcolor="#FFFFFF"></td></tr>
+<tr><td>304</td><td bgcolor="#FFFFFF">end</td></tr>
+</table></p></body></html>
