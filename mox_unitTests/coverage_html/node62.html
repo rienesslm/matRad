@@ -1,113 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcGeoDists.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcGeoDists.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FF0000">function&nbsp;[ix,rad_distancesSq,isoLatDistsX,isoLatDistsZ]&nbsp;=&nbsp;...</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_calcGeoDists(rot_coords_bev,&nbsp;...</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sourcePoint_bev,&nbsp;...</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_bev,&nbsp;...</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAD,&nbsp;...</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radDepthIx,&nbsp;...</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lateralCutOff)</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;calculation&nbsp;of&nbsp;lateral&nbsp;distances&nbsp;from&nbsp;central&nbsp;ray&nbsp;</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;used&nbsp;for&nbsp;dose&nbsp;calcultion</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[ix,rad_distancesSq,isoLatDistsX,isoLatDistsZ]&nbsp;=&nbsp;...</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_calcGeoDists(rot_coords_bev,&nbsp;...</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sourcePoint_bev,&nbsp;...</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_bev,&nbsp;...</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAD,&nbsp;...</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radDepthIx,&nbsp;...</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lateralCutOff)</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;rot_coords_bev:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coordinates&nbsp;in&nbsp;bev&nbsp;of&nbsp;the&nbsp;voxels&nbsp;with&nbsp;index&nbsp;V,</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where&nbsp;also&nbsp;ray&nbsp;tracing&nbsp;results&nbsp;are&nbsp;availabe&nbsp;</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;sourcePoint_bev:&nbsp;&nbsp;&nbsp;&nbsp;source&nbsp;point&nbsp;in&nbsp;voxel&nbsp;coordinates&nbsp;in&nbsp;beam's&nbsp;eye&nbsp;view</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;targetPoint_bev:&nbsp;&nbsp;&nbsp;&nbsp;target&nbsp;point&nbsp;in&nbsp;voxel&nbsp;coordinated&nbsp;in&nbsp;beam's&nbsp;eye&nbsp;view</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;SAD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source-to-axis&nbsp;distance</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;radDepthIx:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sub&nbsp;set&nbsp;of&nbsp;voxels&nbsp;for&nbsp;which&nbsp;radiological&nbsp;depth</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;calculations&nbsp;are&nbsp;available</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;lateralCutOff:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lateral&nbsp;cutoff&nbsp;specifying&nbsp;the&nbsp;neighbourhood&nbsp;for</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;dose&nbsp;calculations&nbsp;will&nbsp;actually&nbsp;be&nbsp;performed</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ix:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;indices&nbsp;of&nbsp;voxels&nbsp;where&nbsp;we&nbsp;want&nbsp;to&nbsp;compute&nbsp;dose</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;influence&nbsp;data</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;rad_distancesSq:&nbsp;&nbsp;&nbsp;&nbsp;squared&nbsp;radial&nbsp;distance&nbsp;to&nbsp;the&nbsp;central&nbsp;ray&nbsp;(where&nbsp;the</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;actual&nbsp;computation&nbsp;of&nbsp;the&nbsp;radiological&nbsp;depth&nbsp;takes&nbsp;place)</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLatDistsX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lateral&nbsp;x-distance&nbsp;to&nbsp;the&nbsp;central&nbsp;ray&nbsp;projected&nbsp;to</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iso&nbsp;center&nbsp;plane</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLatDistsZ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lateral&nbsp;z-distance&nbsp;to&nbsp;the&nbsp;central&nbsp;ray&nbsp;projected&nbsp;to</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iso&nbsp;center&nbsp;plane</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>53</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>57</td><td bgcolor="#FFFFFF">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">%&nbsp;ROTATE&nbsp;A&nbsp;SINGLE&nbsp;BEAMLET&nbsp;AND&nbsp;ALIGN&nbsp;WITH&nbsp;BEAMLET&nbsp;WHO&nbsp;PASSES&nbsp;THROUGH</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF">%&nbsp;ISOCENTER</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">%&nbsp;Put&nbsp;[0&nbsp;0&nbsp;0]&nbsp;position&nbsp;in&nbsp;the&nbsp;source&nbsp;point&nbsp;for&nbsp;beamlet&nbsp;who&nbsp;passes&nbsp;through</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">%&nbsp;isocenter</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">a&nbsp;=&nbsp;-sourcePoint_bev';</td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF">%&nbsp;Normalize&nbsp;the&nbsp;vector</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">a&nbsp;=&nbsp;a/norm(a);</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF">%&nbsp;Put&nbsp;[0&nbsp;0&nbsp;0]&nbsp;position&nbsp;in&nbsp;the&nbsp;source&nbsp;point&nbsp;for&nbsp;a&nbsp;single&nbsp;beamlet</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">b&nbsp;=&nbsp;(targetPoint_bev&nbsp;-&nbsp;sourcePoint_bev)';</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF">%&nbsp;Normalize&nbsp;the&nbsp;vector</td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">b&nbsp;=&nbsp;b/norm(b);</td></tr>
-<tr><td>73</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>74</td><td bgcolor="#FFFFFF">%&nbsp;Define&nbsp;function&nbsp;for&nbsp;obtain&nbsp;rotation&nbsp;matrix.</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">if&nbsp;all(a==b)&nbsp;%&nbsp;rotation&nbsp;matrix&nbsp;corresponds&nbsp;to&nbsp;eye&nbsp;matrix&nbsp;if&nbsp;the&nbsp;vectors&nbsp;are&nbsp;the&nbsp;same</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rot_coords_temp&nbsp;=&nbsp;rot_coords_bev;</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Define&nbsp;rotation&nbsp;matrix</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ssc&nbsp;=&nbsp;@(v)&nbsp;[0&nbsp;-v(3)&nbsp;v(2);&nbsp;v(3)&nbsp;0&nbsp;-v(1);&nbsp;-v(2)&nbsp;v(1)&nbsp;0];</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;R&nbsp;&nbsp;&nbsp;=&nbsp;eye(3)&nbsp;+&nbsp;ssc(cross(a,b))&nbsp;+&nbsp;ssc(cross(a,b))^2*(1-dot(a,b))/(norm(cross(a,b))^2);</td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Rotate&nbsp;every&nbsp;CT&nbsp;voxel&nbsp;</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rot_coords_temp&nbsp;=&nbsp;rot_coords_bev*R;</td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF">%&nbsp;Put&nbsp;[0&nbsp;0&nbsp;0]&nbsp;position&nbsp;CT&nbsp;in&nbsp;center&nbsp;of&nbsp;the&nbsp;beamlet.</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">latDistsX&nbsp;=&nbsp;rot_coords_temp(:,1)&nbsp;+&nbsp;sourcePoint_bev(1);</td></tr>
-<tr><td>88</td><td bgcolor="#FF0000">latDistsZ&nbsp;=&nbsp;rot_coords_temp(:,3)&nbsp;+&nbsp;sourcePoint_bev(3);</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;of&nbsp;radial&nbsp;distance&nbsp;exceeds&nbsp;lateral&nbsp;cutoff&nbsp;(projected&nbsp;to&nbsp;iso&nbsp;center)</td></tr>
-<tr><td>91</td><td bgcolor="#FF0000">rad_distancesSq&nbsp;=&nbsp;latDistsX.^2&nbsp;+&nbsp;latDistsZ.^2;</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">subsetMask&nbsp;=&nbsp;rad_distancesSq&nbsp;./&nbsp;rot_coords_temp(:,2).^2&nbsp;&lt;=&nbsp;lateralCutOff^2&nbsp;/SAD^2;</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">%&nbsp;return&nbsp;index&nbsp;list&nbsp;within&nbsp;considered&nbsp;voxels</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">ix&nbsp;=&nbsp;radDepthIx(subsetMask);</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF">%&nbsp;return&nbsp;radial&nbsp;distances&nbsp;squared</td></tr>
-<tr><td>98</td><td bgcolor="#FF0000">if&nbsp;nargout&nbsp;&gt;&nbsp;1</td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rad_distancesSq&nbsp;=&nbsp;rad_distancesSq(subsetMask);</td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>101</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">%&nbsp;return&nbsp;x&nbsp;&amp;&nbsp;z&nbsp;distance</td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">if&nbsp;nargout&nbsp;&gt;&nbsp;2</td></tr>
-<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;isoLatDistsX&nbsp;=&nbsp;latDistsX(subsetMask)./rot_coords_temp(subsetMask,2)*SAD;</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;isoLatDistsZ&nbsp;=&nbsp;latDistsZ(subsetMask)./rot_coords_temp(subsetMask,2)*SAD;&nbsp;</td></tr>
-<tr><td>106</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

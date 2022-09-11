@@ -1,97 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_addMargin.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_addMargin.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;mVOIEnlarged&nbsp;=&nbsp;matRad_addMargin(mVOI,cst,vResolution,vMargin,bDiaElem)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;add&nbsp;margin&nbsp;function</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;mVOIEnlarged&nbsp;=&nbsp;matRad_addMargin(mVOI,cst,vResolution,vMargin,bDiaElem)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;mVOI:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image&nbsp;stack&nbsp;in&nbsp;dimensions&nbsp;of&nbsp;X&nbsp;x&nbsp;Y&nbsp;x&nbsp;Z&nbsp;holding&nbsp;ones&nbsp;for</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object&nbsp;and&nbsp;zeros&nbsp;otherwise&nbsp;</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;vResolution&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;resolution</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;vMargin:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;margin&nbsp;in&nbsp;mm&nbsp;</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;bDiaElem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;true&nbsp;26-connectivity&nbsp;is&nbsp;used&nbsp;otherwise&nbsp;6-connectivity</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;mVOIEnlarged:&nbsp;&nbsp;&nbsp;enlarged&nbsp;VOI</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>34</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;==&nbsp;4</td></tr>
-<tr><td>35</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;bDiaElem&nbsp;=&nbsp;false;</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">elseif&nbsp;nargin&nbsp;&lt;&nbsp;4</td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('not&nbsp;enough&nbsp;input&nbsp;parameters&nbsp;specified&nbsp;for&nbsp;matRad_addMargin');</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;generate&nbsp;voi&nbsp;cube&nbsp;for&nbsp;patient&nbsp;surface/patient&nbsp;skin</td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">idx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[cst{:,4}];</td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">voiSurfaceIdx&nbsp;&nbsp;&nbsp;=&nbsp;unique(vertcat(idx{:}));</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%&nbsp;get&nbsp;number&nbsp;of&nbsp;voxels&nbsp;which&nbsp;should&nbsp;be&nbsp;added&nbsp;in&nbsp;each&nbsp;dimension</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">voxelMargins&nbsp;=&nbsp;round([vMargin.x&nbsp;vMargin.y&nbsp;vMargin.z]./[vResolution.x&nbsp;vResolution.y&nbsp;vResolution.z]);</td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">mVOIEnlarged&nbsp;=&nbsp;mVOI;</td></tr>
-<tr><td>47</td><td bgcolor="#FF0000">newIdx&nbsp;=&nbsp;[];</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">[yUpperLim,xUpperLim,zUpperLim]&nbsp;=&nbsp;size(mVOI);</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">for&nbsp;cnt&nbsp;=&nbsp;1:max(voxelMargins)</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;for&nbsp;multiple&nbsp;loops&nbsp;consider&nbsp;just&nbsp;added&nbsp;margin</td></tr>
-<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;newIdx&nbsp;=&nbsp;setdiff(find(mVOIEnlarged),newIdx);</td></tr>
-<tr><td>55</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[yCoord,&nbsp;xCoord,&nbsp;zCoord]&nbsp;=&nbsp;ind2sub(size(mVOIEnlarged),newIdx);</td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>57</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;indices&nbsp;on&nbsp;border&nbsp;and&nbsp;take&nbsp;out</td></tr>
-<tr><td>58</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;borderIx&nbsp;=&nbsp;xCoord==1&nbsp;|&nbsp;xCoord==xUpperLim&nbsp;|&nbsp;...</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yCoord==1&nbsp;|&nbsp;yCoord==yUpperLim&nbsp;|&nbsp;...</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zCoord==1&nbsp;|&nbsp;zCoord==zUpperLim;</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xCoord(borderIx)&nbsp;=&nbsp;[];</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yCoord(borderIx)&nbsp;=&nbsp;[];</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zCoord(borderIx)&nbsp;=&nbsp;[];</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dx&nbsp;=&nbsp;voxelMargins(1)&gt;=cnt;</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dy&nbsp;=&nbsp;voxelMargins(2)&gt;=cnt;</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dz&nbsp;=&nbsp;voxelMargins(3)&gt;=cnt;</td></tr>
-<tr><td>69</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;-1:1</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;-1:1</td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;-1:1</td></tr>
-<tr><td>73</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(abs(i)+abs(j)+abs(k)&nbsp;==&nbsp;0)&nbsp;||&nbsp;(~bDiaElem&nbsp;&amp;&amp;&nbsp;abs(i)+abs(j)+abs(k)&nbsp;&gt;&nbsp;1)&nbsp;%&nbsp;skip&nbsp;if&nbsp;diagonal&nbsp;elements&nbsp;not&nbsp;wanted&nbsp;or&nbsp;zero&nbsp;offset</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>78</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newIx&nbsp;=&nbsp;(yCoord+i*dy)&nbsp;+&nbsp;(xCoord+j*dx-1)*size(mVOIEnlarged,1)&nbsp;+&nbsp;...</td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(zCoord+k*dz-1)*size(mVOIEnlarged,1)*size(mVOIEnlarged,2);</td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;if&nbsp;new&nbsp;indices&nbsp;are&nbsp;part&nbsp;of&nbsp;voiSurfaceIdx</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bWithinPatient&nbsp;=&nbsp;ismember(newIx,voiSurfaceIdx);</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mVOIEnlarged(newIx(bWithinPatient))&nbsp;=&nbsp;1;</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

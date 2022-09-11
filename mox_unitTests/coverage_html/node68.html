@@ -1,320 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcPhotonDose.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcPhotonDose.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;dij&nbsp;=&nbsp;matRad_calcPhotonDose(ct,stf,pln,cst,calcDoseDirect)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;photon&nbsp;dose&nbsp;calculation&nbsp;wrapper</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij&nbsp;=&nbsp;matRad_calcPhotonDose(ct,stf,pln,cst,calcDoseDirect)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;cube</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;steering&nbsp;information&nbsp;struct</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;plan&nbsp;meta&nbsp;information&nbsp;struct</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;calcDoseDirect:&nbsp;boolian&nbsp;switch&nbsp;to&nbsp;bypass&nbsp;dose&nbsp;influence&nbsp;matrix</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;computation&nbsp;and&nbsp;directly&nbsp;calculate&nbsp;dose;&nbsp;only&nbsp;makes</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sense&nbsp;in&nbsp;combination&nbsp;with&nbsp;matRad_calcDoseDirect.m</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dij:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;dij&nbsp;struct</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[1]&nbsp;http://www.ncbi.nlm.nih.gov/pubmed/8497215</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>36</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;initialize</td></tr>
-<tr><td>39</td><td bgcolor="#FF0000">matRad_calcDoseInit;</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">[env,&nbsp;~]&nbsp;=&nbsp;matRad_getEnvironment();</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">switch&nbsp;env</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'MATLAB'</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rng('default');</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'OCTAVE'</td></tr>
-<tr><td>47</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rand('seed',0)</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">%&nbsp;issue&nbsp;warning&nbsp;if&nbsp;biological&nbsp;optimization&nbsp;not&nbsp;possible</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">if&nbsp;sum(strcmp(pln.propOpt.bioOptimization,{'effect','RBExD'}))&gt;0</td></tr>
-<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;warndlg('Effect&nbsp;based&nbsp;and&nbsp;RBE&nbsp;optimization&nbsp;not&nbsp;available&nbsp;for&nbsp;photons&nbsp;-&nbsp;physical&nbsp;optimization&nbsp;is&nbsp;carried&nbsp;out&nbsp;instead.');</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.bioOptimization&nbsp;=&nbsp;'none';</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;initialize&nbsp;waitbar</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">figureWait&nbsp;=&nbsp;waitbar(0,'calculate&nbsp;dose&nbsp;influence&nbsp;matrix&nbsp;for&nbsp;photons...');</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">%&nbsp;show&nbsp;busy&nbsp;state</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">set(figureWait,'pointer','watch');</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;lateral&nbsp;cutoff&nbsp;value</td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">if&nbsp;~isfield(pln,'propDoseCalc')&nbsp;||&nbsp;~isfield(pln.propDoseCalc,'geometricCutOff')</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propDoseCalc.geometricCutOff&nbsp;=&nbsp;&nbsp;matRad_cfg.propDoseCalc.defaultGeometricCutOff;&nbsp;%&nbsp;[mm]</td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">lateralCutoff&nbsp;=&nbsp;pln.propDoseCalc.geometricCutOff;</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">if&nbsp;~isfield(pln,'propDoseCalc')&nbsp;||&nbsp;~isfield(pln.propDoseCalc,'kernelCutOff')</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propDoseCalc.kernelCutOff&nbsp;=&nbsp;&nbsp;matRad_cfg.propDoseCalc.defaultKernelCutOff;&nbsp;%&nbsp;[mm]</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;kernel&nbsp;cutoff&nbsp;value&nbsp;(determines&nbsp;how&nbsp;much&nbsp;of&nbsp;the&nbsp;kernel&nbsp;is&nbsp;used.&nbsp;This</td></tr>
-<tr><td>73</td><td bgcolor="#FFFFFF">%&nbsp;value&nbsp;is&nbsp;separated&nbsp;from&nbsp;lateralCutOff&nbsp;to&nbsp;obtain&nbsp;accurate&nbsp;large&nbsp;open&nbsp;fields)</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">kernelCutoff&nbsp;=&nbsp;pln.propDoseCalc.kernelCutOff;</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">if&nbsp;kernelCutoff&nbsp;&lt;&nbsp;lateralCutoff</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('Kernel&nbsp;Cut-Off&nbsp;''%f&nbsp;mm''&nbsp;cannot&nbsp;be&nbsp;smaller&nbsp;than&nbsp;geometric&nbsp;lateral&nbsp;cutoff&nbsp;''%f&nbsp;mm''.&nbsp;Using&nbsp;''%f&nbsp;mm''!',kernelCutoff,lateralCutoff,lateralCutoff);</td></tr>
-<tr><td>78</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernelCutoff&nbsp;=&nbsp;lateralCutoff;</td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF">%&nbsp;toggle&nbsp;custom&nbsp;primary&nbsp;fluence&nbsp;on/off.&nbsp;if&nbsp;0&nbsp;we&nbsp;assume&nbsp;a&nbsp;homogeneous</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF">%&nbsp;primary&nbsp;fluence,&nbsp;if&nbsp;1&nbsp;we&nbsp;use&nbsp;measured&nbsp;radially&nbsp;symmetric&nbsp;data</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">if&nbsp;~isfield(pln,'propDoseCalc')&nbsp;||&nbsp;~isfield(pln.propDoseCalc,'useCustomPrimaryPhotonFluence')</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;useCustomPrimFluenceBool&nbsp;=&nbsp;matRad_cfg.propDoseCalc.defaultUseCustomPrimaryPhotonFluence;</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;useCustomPrimFluenceBool&nbsp;=&nbsp;pln.propDoseCalc.useCustomPrimaryPhotonFluence;</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">%&nbsp;0&nbsp;if&nbsp;field&nbsp;calc&nbsp;is&nbsp;bixel&nbsp;based,&nbsp;1&nbsp;if&nbsp;dose&nbsp;calc&nbsp;is&nbsp;field&nbsp;based</td></tr>
-<tr><td>91</td><td bgcolor="#FF0000">isFieldBasedDoseCalc&nbsp;=&nbsp;strcmp(num2str(pln.propStf.bixelWidth),'field');</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF">%%&nbsp;kernel&nbsp;convolution</td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;up&nbsp;convolution&nbsp;grid</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">if&nbsp;isFieldBasedDoseCalc</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;data&nbsp;from&nbsp;DICOM&nbsp;import</td></tr>
-<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;intConvResolution&nbsp;=&nbsp;pln.propStf.collimation.convResolution;&nbsp;</td></tr>
-<tr><td>98</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fieldWidth&nbsp;=&nbsp;pln.propStf.collimation.fieldWidth;</td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;intConvResolution&nbsp;=&nbsp;.5;&nbsp;%&nbsp;[mm]</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fieldWidth&nbsp;=&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;field&nbsp;size&nbsp;and&nbsp;distances</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">fieldLimit&nbsp;=&nbsp;ceil(fieldWidth/(2*intConvResolution));</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">[F_X,F_Z]&nbsp;=&nbsp;meshgrid(-fieldLimit*intConvResolution:&nbsp;...</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intConvResolution:&nbsp;...</td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fieldLimit-1)*intConvResolution);&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">%&nbsp;gaussian&nbsp;filter&nbsp;to&nbsp;model&nbsp;penumbra&nbsp;from&nbsp;(measured)&nbsp;machine&nbsp;output&nbsp;/&nbsp;see</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">%&nbsp;diploma&nbsp;thesis&nbsp;siggel&nbsp;4.1.2&nbsp;-&gt;&nbsp;https://github.com/e0404/matRad/wiki/Dose-influence-matrix-calculation</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">if&nbsp;isfield(machine.data,'penumbraFWHMatIso')</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;penumbraFWHM&nbsp;=&nbsp;machine.data.penumbraFWHMatIso;</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;penumbraFWHM&nbsp;=&nbsp;5;</td></tr>
-<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('photon&nbsp;machine&nbsp;file&nbsp;does&nbsp;not&nbsp;contain&nbsp;measured&nbsp;penumbra&nbsp;width&nbsp;in&nbsp;machine.data.penumbraFWHMatIso.&nbsp;Assuming&nbsp;5&nbsp;mm.');</td></tr>
-<tr><td>117</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">sigmaGauss&nbsp;=&nbsp;penumbraFWHM&nbsp;/&nbsp;sqrt(8*log(2));&nbsp;%&nbsp;[mm]&nbsp;</td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">%&nbsp;use&nbsp;5&nbsp;times&nbsp;sigma&nbsp;as&nbsp;the&nbsp;limits&nbsp;for&nbsp;the&nbsp;gaussian&nbsp;convolution</td></tr>
-<tr><td>121</td><td bgcolor="#FF0000">gaussLimit&nbsp;=&nbsp;ceil(5*sigmaGauss/intConvResolution);</td></tr>
-<tr><td>122</td><td bgcolor="#FF0000">[gaussFilterX,gaussFilterZ]&nbsp;=&nbsp;meshgrid(-gaussLimit*intConvResolution:&nbsp;...</td></tr>
-<tr><td>123</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intConvResolution:&nbsp;...</td></tr>
-<tr><td>124</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(gaussLimit-1)*intConvResolution);&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>125</td><td bgcolor="#FF0000">gaussFilter&nbsp;=&nbsp;&nbsp;1/(2*pi*sigmaGauss^2/intConvResolution^2)&nbsp;*&nbsp;exp(-(gaussFilterX.^2+gaussFilterZ.^2)/(2*sigmaGauss^2)&nbsp;);</td></tr>
-<tr><td>126</td><td bgcolor="#FF0000">gaussConvSize&nbsp;=&nbsp;2*(fieldLimit&nbsp;+&nbsp;gaussLimit);</td></tr>
-<tr><td>127</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>128</td><td bgcolor="#FF0000">if&nbsp;~isFieldBasedDoseCalc&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Create&nbsp;fluence&nbsp;matrix</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;=&nbsp;ones(floor(fieldWidth/intConvResolution));</td></tr>
-<tr><td>131</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~useCustomPrimFluenceBool</td></tr>
-<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;gaussian&nbsp;convolution&nbsp;of&nbsp;field&nbsp;to&nbsp;model&nbsp;penumbra</td></tr>
-<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;=&nbsp;real(ifft2(fft2(F,gaussConvSize,gaussConvSize).*fft2(gaussFilter,gaussConvSize,gaussConvSize)));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>136</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>137</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">%&nbsp;get&nbsp;kernel&nbsp;size&nbsp;and&nbsp;distances</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">if&nbsp;kernelCutoff&nbsp;&gt;&nbsp;machine.data.kernelPos(end)</td></tr>
-<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernelCutoff&nbsp;=&nbsp;machine.data.kernelPos(end);</td></tr>
-<tr><td>141</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>143</td><td bgcolor="#FF0000">kernelLimit&nbsp;=&nbsp;ceil(kernelCutoff/intConvResolution);</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">[kernelX,&nbsp;kernelZ]&nbsp;=&nbsp;meshgrid(-kernelLimit*intConvResolution:&nbsp;...</td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intConvResolution:&nbsp;...</td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(kernelLimit-1)*intConvResolution);</td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>148</td><td bgcolor="#FFFFFF">%&nbsp;precalculate&nbsp;convolved&nbsp;kernel&nbsp;size&nbsp;and&nbsp;distances</td></tr>
-<tr><td>149</td><td bgcolor="#FF0000">kernelConvLimit&nbsp;=&nbsp;fieldLimit&nbsp;+&nbsp;gaussLimit&nbsp;+&nbsp;kernelLimit;</td></tr>
-<tr><td>150</td><td bgcolor="#FF0000">[convMx_X,&nbsp;convMx_Z]&nbsp;=&nbsp;meshgrid(-kernelConvLimit*intConvResolution:&nbsp;...</td></tr>
-<tr><td>151</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intConvResolution:&nbsp;...</td></tr>
-<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(kernelConvLimit-1)*intConvResolution);</td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;also&nbsp;the&nbsp;total&nbsp;size&nbsp;and&nbsp;distance&nbsp;as&nbsp;we&nbsp;need&nbsp;this&nbsp;during&nbsp;convolution&nbsp;extensively</td></tr>
-<tr><td>154</td><td bgcolor="#FF0000">kernelConvSize&nbsp;=&nbsp;2*kernelConvLimit;</td></tr>
-<tr><td>155</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>156</td><td bgcolor="#FFFFFF">%&nbsp;define&nbsp;an&nbsp;effective&nbsp;lateral&nbsp;cutoff&nbsp;where&nbsp;dose&nbsp;will&nbsp;be&nbsp;calculated.&nbsp;note</td></tr>
-<tr><td>157</td><td bgcolor="#FFFFFF">%&nbsp;that&nbsp;storage&nbsp;within&nbsp;the&nbsp;influence&nbsp;matrix&nbsp;may&nbsp;be&nbsp;subject&nbsp;to&nbsp;sampling</td></tr>
-<tr><td>158</td><td bgcolor="#FF0000">effectiveLateralCutoff&nbsp;=&nbsp;lateralCutoff&nbsp;+&nbsp;fieldWidth/sqrt(2);</td></tr>
-<tr><td>159</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>160</td><td bgcolor="#FF0000">counter&nbsp;=&nbsp;0;</td></tr>
-<tr><td>161</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('matRad:&nbsp;Photon&nbsp;dose&nbsp;calculation...\n');</td></tr>
-<tr><td>162</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>163</td><td bgcolor="#FFFFFF">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>164</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:dij.numOfBeams&nbsp;%&nbsp;loop&nbsp;over&nbsp;all&nbsp;beams</td></tr>
-<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>166</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_calcDoseInitBeam;</td></tr>
-<tr><td>167</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>168</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;index&nbsp;of&nbsp;central&nbsp;ray&nbsp;or&nbsp;closest&nbsp;to&nbsp;the&nbsp;central&nbsp;ray</td></tr>
-<tr><td>169</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[~,center]&nbsp;=&nbsp;min(sum(reshape([stf(i).ray.rayPos_bev],3,[]).^2));</td></tr>
-<tr><td>170</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>171</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;correct&nbsp;kernel&nbsp;for&nbsp;given&nbsp;SSD&nbsp;at&nbsp;central&nbsp;ray&nbsp;(nearest&nbsp;neighbor&nbsp;approximation)</td></tr>
-<tr><td>172</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[~,currSSDIx]&nbsp;=&nbsp;min(abs([machine.data.kernel.SSD]-stf(i).ray(center).SSD));</td></tr>
-<tr><td>173</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Display&nbsp;console&nbsp;message.</td></tr>
-<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('\tSSD&nbsp;=&nbsp;%g&nbsp;mm&nbsp;...\n',machine.data.kernel(currSSDIx).SSD);</td></tr>
-<tr><td>175</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernelPos&nbsp;=&nbsp;machine.data.kernelPos;</td></tr>
-<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernel1&nbsp;=&nbsp;machine.data.kernel(currSSDIx).kernel1;</td></tr>
-<tr><td>178</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernel2&nbsp;=&nbsp;machine.data.kernel(currSSDIx).kernel2;</td></tr>
-<tr><td>179</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernel3&nbsp;=&nbsp;machine.data.kernel(currSSDIx).kernel3;</td></tr>
-<tr><td>180</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>181</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Evaluate&nbsp;kernels&nbsp;for&nbsp;all&nbsp;distances,&nbsp;interpolate&nbsp;between&nbsp;values</td></tr>
-<tr><td>182</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernel1Mx&nbsp;=&nbsp;interp1(kernelPos,kernel1,sqrt(kernelX.^2+kernelZ.^2),'linear',0);</td></tr>
-<tr><td>183</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernel2Mx&nbsp;=&nbsp;interp1(kernelPos,kernel2,sqrt(kernelX.^2+kernelZ.^2),'linear',0);</td></tr>
-<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;kernel3Mx&nbsp;=&nbsp;interp1(kernelPos,kernel3,sqrt(kernelX.^2+kernelZ.^2),'linear',0);</td></tr>
-<tr><td>185</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>186</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;convolution&nbsp;here&nbsp;if&nbsp;no&nbsp;custom&nbsp;primary&nbsp;fluence&nbsp;and&nbsp;no&nbsp;field&nbsp;based&nbsp;dose&nbsp;calc</td></tr>
-<tr><td>187</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~useCustomPrimFluenceBool&nbsp;&amp;&amp;&nbsp;~isFieldBasedDoseCalc</td></tr>
-<tr><td>188</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>189</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Display&nbsp;console&nbsp;message.</td></tr>
-<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('\tUniform&nbsp;primary&nbsp;photon&nbsp;fluence&nbsp;-&gt;&nbsp;pre-compute&nbsp;kernel&nbsp;convolution...\n');&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>191</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>192</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;2D&nbsp;convolution&nbsp;of&nbsp;Fluence&nbsp;and&nbsp;Kernels&nbsp;in&nbsp;fourier&nbsp;domain</td></tr>
-<tr><td>193</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;convMx1&nbsp;=&nbsp;real(ifft2(fft2(F,kernelConvSize,kernelConvSize).*&nbsp;fft2(kernel1Mx,kernelConvSize,kernelConvSize)));</td></tr>
-<tr><td>194</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;convMx2&nbsp;=&nbsp;real(ifft2(fft2(F,kernelConvSize,kernelConvSize).*&nbsp;fft2(kernel2Mx,kernelConvSize,kernelConvSize)));</td></tr>
-<tr><td>195</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;convMx3&nbsp;=&nbsp;real(ifft2(fft2(F,kernelConvSize,kernelConvSize).*&nbsp;fft2(kernel3Mx,kernelConvSize,kernelConvSize)));</td></tr>
-<tr><td>196</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>197</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Creates&nbsp;an&nbsp;interpolant&nbsp;for&nbsp;kernes&nbsp;from&nbsp;vectors&nbsp;position&nbsp;X&nbsp;and&nbsp;Z</td></tr>
-<tr><td>198</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(env,'MATLAB')</td></tr>
-<tr><td>199</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel1&nbsp;=&nbsp;griddedInterpolant(convMx_X',convMx_Z',convMx1','linear','none');</td></tr>
-<tr><td>200</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel2&nbsp;=&nbsp;griddedInterpolant(convMx_X',convMx_Z',convMx2','linear','none');</td></tr>
-<tr><td>201</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel3&nbsp;=&nbsp;griddedInterpolant(convMx_X',convMx_Z',convMx3','linear','none');</td></tr>
-<tr><td>202</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel1&nbsp;=&nbsp;@(x,y)interp2(convMx_X(1,:),convMx_Z(:,1),convMx1,x,y,'linear',NaN);</td></tr>
-<tr><td>204</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel2&nbsp;=&nbsp;@(x,y)interp2(convMx_X(1,:),convMx_Z(:,1),convMx2,x,y,'linear',NaN);</td></tr>
-<tr><td>205</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel3&nbsp;=&nbsp;@(x,y)interp2(convMx_X(1,:),convMx_Z(:,1),convMx3,x,y,'linear',NaN);</td></tr>
-<tr><td>206</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>207</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>208</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>209</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays&nbsp;%&nbsp;loop&nbsp;over&nbsp;all&nbsp;rays&nbsp;/&nbsp;for&nbsp;photons&nbsp;we&nbsp;only&nbsp;have&nbsp;one&nbsp;bixel&nbsp;per&nbsp;ray!</td></tr>
-<tr><td>210</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>211</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter&nbsp;=&nbsp;counter&nbsp;+&nbsp;1;</td></tr>
-<tr><td>212</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelsPerBeam&nbsp;=&nbsp;bixelsPerBeam&nbsp;+&nbsp;1;</td></tr>
-<tr><td>213</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>214</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;convolution&nbsp;here&nbsp;if&nbsp;custom&nbsp;primary&nbsp;fluence&nbsp;OR&nbsp;field&nbsp;based&nbsp;dose&nbsp;calc</td></tr>
-<tr><td>215</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;useCustomPrimFluenceBool&nbsp;||&nbsp;isFieldBasedDoseCalc</td></tr>
-<tr><td>216</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>217</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;overwrite&nbsp;field&nbsp;opening&nbsp;if&nbsp;necessary</td></tr>
-<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isFieldBasedDoseCalc</td></tr>
-<tr><td>219</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;=&nbsp;stf(i).ray(j).shape;</td></tr>
-<tr><td>220</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>221</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>222</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;prepare&nbsp;primary&nbsp;fluence&nbsp;array</td></tr>
-<tr><td>223</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;primaryFluence&nbsp;=&nbsp;machine.data.primaryFluence;</td></tr>
-<tr><td>224</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;sqrt(&nbsp;(F_X-stf(i).ray(j).rayPos(1)).^2&nbsp;+&nbsp;(F_Z-stf(i).ray(j).rayPos(3)).^2&nbsp;);</td></tr>
-<tr><td>225</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Psi&nbsp;&nbsp;&nbsp;=&nbsp;interp1(primaryFluence(:,1)',primaryFluence(:,2)',r,'linear',0);</td></tr>
-<tr><td>226</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>227</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;apply&nbsp;the&nbsp;primary&nbsp;fluence&nbsp;to&nbsp;the&nbsp;field</td></tr>
-<tr><td>228</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fx&nbsp;=&nbsp;F&nbsp;.*&nbsp;Psi;</td></tr>
-<tr><td>229</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>230</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;convolve&nbsp;with&nbsp;the&nbsp;gaussian</td></tr>
-<tr><td>231</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fx&nbsp;=&nbsp;real(&nbsp;ifft2(fft2(Fx,gaussConvSize,gaussConvSize).*&nbsp;fft2(gaussFilter,gaussConvSize,gaussConvSize))&nbsp;);</td></tr>
-<tr><td>232</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>233</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;2D&nbsp;convolution&nbsp;of&nbsp;Fluence&nbsp;and&nbsp;Kernels&nbsp;in&nbsp;fourier&nbsp;domain</td></tr>
-<tr><td>234</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;convMx1&nbsp;=&nbsp;real(&nbsp;ifft2(fft2(Fx,kernelConvSize,kernelConvSize).*&nbsp;fft2(kernel1Mx,kernelConvSize,kernelConvSize))&nbsp;);</td></tr>
-<tr><td>235</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;convMx2&nbsp;=&nbsp;real(&nbsp;ifft2(fft2(Fx,kernelConvSize,kernelConvSize).*&nbsp;fft2(kernel2Mx,kernelConvSize,kernelConvSize))&nbsp;);</td></tr>
-<tr><td>236</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;convMx3&nbsp;=&nbsp;real(&nbsp;ifft2(fft2(Fx,kernelConvSize,kernelConvSize).*&nbsp;fft2(kernel3Mx,kernelConvSize,kernelConvSize))&nbsp;);</td></tr>
-<tr><td>237</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>238</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Creates&nbsp;an&nbsp;interpolant&nbsp;for&nbsp;kernes&nbsp;from&nbsp;vectors&nbsp;position&nbsp;X&nbsp;and&nbsp;Z</td></tr>
-<tr><td>239</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(env,'MATLAB')</td></tr>
-<tr><td>240</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel1&nbsp;=&nbsp;griddedInterpolant(convMx_X',convMx_Z',convMx1','linear','none');</td></tr>
-<tr><td>241</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel2&nbsp;=&nbsp;griddedInterpolant(convMx_X',convMx_Z',convMx2','linear','none');</td></tr>
-<tr><td>242</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel3&nbsp;=&nbsp;griddedInterpolant(convMx_X',convMx_Z',convMx3','linear','none');</td></tr>
-<tr><td>243</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>244</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel1&nbsp;=&nbsp;@(x,y)interp2(convMx_X(1,:),convMx_Z(:,1),convMx1,x,y,'linear',NaN);</td></tr>
-<tr><td>245</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel2&nbsp;=&nbsp;@(x,y)interp2(convMx_X(1,:),convMx_Z(:,1),convMx2,x,y,'linear',NaN);</td></tr>
-<tr><td>246</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel3&nbsp;=&nbsp;@(x,y)interp2(convMx_X(1,:),convMx_Z(:,1),convMx3,x,y,'linear',NaN);</td></tr>
-<tr><td>247</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>248</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>249</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>250</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>251</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Display&nbsp;progress&nbsp;and&nbsp;update&nbsp;text&nbsp;only&nbsp;200&nbsp;times</td></tr>
-<tr><td>252</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;mod(bixelsPerBeam,max(1,round(stf(i).totalNumOfBixels/200)))&nbsp;==&nbsp;0</td></tr>
-<tr><td>253</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_progress(bixelsPerBeam/max(1,round(stf(i).totalNumOfBixels/200)),...</td></tr>
-<tr><td>254</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;floor(stf(i).totalNumOfBixels/max(1,round(stf(i).totalNumOfBixels/200))));</td></tr>
-<tr><td>255</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>256</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;update&nbsp;waitbar&nbsp;only&nbsp;100&nbsp;times</td></tr>
-<tr><td>257</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;mod(counter,round(dij.totalNumOfBixels/100))&nbsp;==&nbsp;0&nbsp;&amp;&amp;&nbsp;ishandle(figureWait)</td></tr>
-<tr><td>258</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;waitbar(counter/dij.totalNumOfBixels);</td></tr>
-<tr><td>259</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>260</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>261</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;remember&nbsp;beam&nbsp;and&nbsp;bixel&nbsp;number</td></tr>
-<tr><td>262</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~calcDoseDirect</td></tr>
-<tr><td>263</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.beamNum(counter)&nbsp;&nbsp;=&nbsp;i;</td></tr>
-<tr><td>264</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.rayNum(counter)&nbsp;&nbsp;&nbsp;=&nbsp;j;</td></tr>
-<tr><td>265</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.bixelNum(counter)&nbsp;=&nbsp;1;</td></tr>
-<tr><td>266</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>267</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k&nbsp;=&nbsp;1;</td></tr>
-<tr><td>268</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>269</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>270</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Ray&nbsp;tracing&nbsp;for&nbsp;beam&nbsp;i&nbsp;and&nbsp;bixel&nbsp;j</td></tr>
-<tr><td>271</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ix,rad_distancesSq,isoLatDistsX,isoLatDistsZ]&nbsp;=&nbsp;matRad_calcGeoDists(rot_coordsVdoseGrid,&nbsp;...</td></tr>
-<tr><td>272</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).sourcePoint_bev,&nbsp;...</td></tr>
-<tr><td>273</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).targetPoint_bev,&nbsp;...</td></tr>
-<tr><td>274</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.meta.SAD,&nbsp;...</td></tr>
-<tr><td>275</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;find(~isnan(radDepthVdoseGrid{1})),&nbsp;...</td></tr>
-<tr><td>276</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;effectiveLateralCutoff);</td></tr>
-<tr><td>277</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>278</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;empty&nbsp;bixels&nbsp;may&nbsp;happen&nbsp;during&nbsp;recalculation&nbsp;of&nbsp;error</td></tr>
-<tr><td>279</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;scenarios&nbsp;-&gt;&nbsp;skip&nbsp;to&nbsp;next&nbsp;bixel</td></tr>
-<tr><td>280</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(ix)</td></tr>
-<tr><td>281</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
-<tr><td>282</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>283</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>284</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>285</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;photon&nbsp;dose&nbsp;for&nbsp;beam&nbsp;i&nbsp;and&nbsp;bixel&nbsp;j</td></tr>
-<tr><td>286</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelDose&nbsp;=&nbsp;matRad_calcPhotonDoseBixel(machine.meta.SAD,machine.data.m,...</td></tr>
-<tr><td>287</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.data.betas,&nbsp;...</td></tr>
-<tr><td>288</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel1,...</td></tr>
-<tr><td>289</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel2,...</td></tr>
-<tr><td>290</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interp_kernel3,...</td></tr>
-<tr><td>291</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radDepthVdoseGrid{1}(ix),...</td></tr>
-<tr><td>292</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geoDistVdoseGrid{1}(ix),...</td></tr>
-<tr><td>293</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLatDistsX,...</td></tr>
-<tr><td>294</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLatDistsZ);</td></tr>
-<tr><td>295</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>296</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;sample&nbsp;dose&nbsp;only&nbsp;for&nbsp;bixel&nbsp;based&nbsp;dose&nbsp;calculation</td></tr>
-<tr><td>297</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isFieldBasedDoseCalc</td></tr>
-<tr><td>298</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r0&nbsp;&nbsp;&nbsp;=&nbsp;20&nbsp;+&nbsp;stf(i).bixelWidth;&nbsp;&nbsp;&nbsp;%&nbsp;[mm]&nbsp;sample&nbsp;beyond&nbsp;the&nbsp;inner&nbsp;core</td></tr>
-<tr><td>299</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type&nbsp;=&nbsp;'radius';</td></tr>
-<tr><td>300</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ix,bixelDose]&nbsp;=&nbsp;matRad_DijSampling(ix,bixelDose,radDepthVdoseGrid{1}(ix),rad_distancesSq,Type,r0);</td></tr>
-<tr><td>301</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>302</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>303</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;dose&nbsp;for&nbsp;every&nbsp;bixel&nbsp;in&nbsp;cell&nbsp;array</td></tr>
-<tr><td>304</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseTmpContainer{mod(counter-1,numOfBixelsContainer)+1,1}&nbsp;=&nbsp;sparse(VdoseGrid(ix),1,bixelDose,dij.doseGrid.numOfVoxels,1);</td></tr>
-<tr><td>305</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>306</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_calcDoseFillDij;</td></tr>
-<tr><td>307</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>308</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>309</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>310</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>311</td><td bgcolor="#FFFFFF">%Close&nbsp;Waitbar</td></tr>
-<tr><td>312</td><td bgcolor="#FF0000">if&nbsp;ishandle(figureWait)</td></tr>
-<tr><td>313</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;delete(figureWait);</td></tr>
-<tr><td>314</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>315</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>316</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

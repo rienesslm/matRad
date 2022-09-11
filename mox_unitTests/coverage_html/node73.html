@@ -1,208 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_compileStandalone.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_compileStandalone.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;matRad_compileStandalone(varargin)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;Compiles&nbsp;the&nbsp;standalone&nbsp;exectuable&nbsp;&amp;&nbsp;packages&nbsp;installer&nbsp;using&nbsp;Matlab's</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;Compiler&nbsp;Toolbox</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2020&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>22</td><td bgcolor="#FF0000">p&nbsp;=&nbsp;inputParser;</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>24</td><td bgcolor="#FF0000">p.addParameter('isRelease',false,@islogical);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%By&nbsp;default&nbsp;we&nbsp;compile&nbsp;a&nbsp;snapshot&nbsp;of&nbsp;the&nbsp;current&nbsp;branch</td></tr>
-<tr><td>25</td><td bgcolor="#FF0000">p.addParameter('compileWithRT',false,@islogical);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%By&nbsp;default&nbsp;we&nbsp;don't&nbsp;package&nbsp;installers&nbsp;with&nbsp;runtime</td></tr>
-<tr><td>26</td><td bgcolor="#FF0000">p.addParameter('compileWithoutRT',true,@islogical);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%By&nbsp;default&nbsp;we&nbsp;do&nbsp;package&nbsp;installers&nbsp;without&nbsp;runtime</td></tr>
-<tr><td>27</td><td bgcolor="#FF0000">p.addParameter('projectFile','matRad.prj',@(x)&nbsp;exist(x,2));&nbsp;%Default&nbsp;template&nbsp;prj&nbsp;file</td></tr>
-<tr><td>28</td><td bgcolor="#FF0000">p.addParameter('override',false,@islogical);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%If&nbsp;set&nbsp;we&nbsp;do&nbsp;not&nbsp;care&nbsp;for&nbsp;any&nbsp;argumetn&nbsp;but&nbsp;use&nbsp;the&nbsp;bare&nbsp;*.prj&nbsp;file&nbsp;specified</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>30</td><td bgcolor="#FF0000">p.parse(varargin{:});</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>32</td><td bgcolor="#FF0000">isRelease&nbsp;=&nbsp;p.Results.isRelease;</td></tr>
-<tr><td>33</td><td bgcolor="#FF0000">compileWithRT&nbsp;=&nbsp;p.Results.compileWithRT;</td></tr>
-<tr><td>34</td><td bgcolor="#FF0000">compileWithoutRT&nbsp;=&nbsp;p.Results.compileWithoutRT;</td></tr>
-<tr><td>35</td><td bgcolor="#FF0000">projectFile&nbsp;=&nbsp;p.Results.projectFile;</td></tr>
-<tr><td>36</td><td bgcolor="#FF0000">override&nbsp;=&nbsp;p.Results.override;</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>39</td><td bgcolor="#FF0000">if&nbsp;~compileWithRT&nbsp;&amp;&amp;&nbsp;~compileWithoutRT</td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('No&nbsp;target&nbsp;specified!');</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">[~,versionFull]&nbsp;=&nbsp;matRad_version();</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">%Create&nbsp;Standalone&nbsp;with&nbsp;and&nbsp;without&nbsp;runtime</td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">xDoc&nbsp;=&nbsp;xmlread(projectFile);</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">if&nbsp;~override</td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;ismac&nbsp;%&nbsp;Mac&nbsp;platform</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;suffix&nbsp;=&nbsp;'Mac';</td></tr>
-<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;installSuffix&nbsp;=&nbsp;'app';</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('unix').item(0).getFirstChild.setData('true');</td></tr>
-<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('mac').item(0).getFirstChild.setData('true');</td></tr>
-<tr><td>55</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('windows').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('linux').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('arch').item(0).getFirstChild.setData('maci64');</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;isunix&nbsp;%&nbsp;Linux&nbsp;platform</td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;suffix&nbsp;=&nbsp;'Linux';</td></tr>
-<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;installSuffix&nbsp;=&nbsp;'install';</td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('unix').item(0).getFirstChild.setData('true');</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('mac').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('windows').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('linux').item(0).getFirstChild.setData('true');</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('arch').item(0).getFirstChild.setData('glnxa64');</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;ispc&nbsp;%&nbsp;Windows&nbsp;platform</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;suffix&nbsp;=&nbsp;'Win';</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;installSuffix&nbsp;=&nbsp;'exe';</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('unix').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('mac').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('windows').item(0).getFirstChild.setData('true');</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('linux').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('arch').item(0).getFirstChild.setData('Win64');</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Platform&nbsp;not&nbsp;supported')</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Set&nbsp;MATLAB&nbsp;root</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('root').item(0).getFirstChild.setData(matlabroot);</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Replace&nbsp;the&nbsp;file&nbsp;separator&nbsp;in&nbsp;the&nbsp;file&nbsp;tags</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;files&nbsp;=&nbsp;xDoc.getElementsByTagName('file');</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i=0:files.getLength&nbsp;-&nbsp;1</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fileName=strrep(strrep(files.item(i).getFirstChild.getData().toCharArray()','/',filesep),'\',filesep);</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;files.item(i).getFirstChild.setData(fileName);</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%change&nbsp;the&nbsp;file&nbsp;separator&nbsp;in&nbsp;the&nbsp;'location'&nbsp;attribute&nbsp;of&nbsp;the&nbsp;file&nbsp;tag</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%(if&nbsp;it&nbsp;exists)</td></tr>
-<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;hasAttributes(files.item(i))</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;location=strrep(strrep(files.item(i).getAttribute('location').toCharArray()','/',filesep),'\',filesep);</td></tr>
-<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;files.item(i).setAttribute('location',location);</td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Replace&nbsp;the&nbsp;file&nbsp;separator&nbsp;in&nbsp;the&nbsp;attributes&nbsp;and&nbsp;children&nbsp;tags&nbsp;of&nbsp;configuration</td></tr>
-<tr><td>98</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;config&nbsp;=&nbsp;xDoc.getElementsByTagName('configuration');</td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;config.item(0).setAttribute('file',['${PROJECT_ROOT}'&nbsp;filesep&nbsp;projectFile]);</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;config.item(0).setAttribute('location','${PROJECT_ROOT}');</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;config.item(0).setAttribute('preferred-package-location',['${PROJECT_ROOT}'&nbsp;filesep&nbsp;'standalone'&nbsp;filesep&nbsp;'for_redistribution']);</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;tags&nbsp;=&nbsp;config.item(0).getChildNodes;</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i=0:tags.getLength&nbsp;-&nbsp;1</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(tags.item(i).getFirstChild)</td></tr>
-<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fileName=strrep(strrep(tags.item(i).getFirstChild.getData().toCharArray()','/',filesep),'\',filesep);</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tags.item(i).getFirstChild.setData(java.lang.String(fileName));</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Get&nbsp;version&nbsp;and&nbsp;Filenames</td></tr>
-<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%version=&nbsp;replace(xDoc.getElementsByTagName('param.version').item(0).getFirstChild.getData().toCharArray()','.','_');</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vernum&nbsp;=&nbsp;sprintf('%d.%d.%d',versionFull.major,versionFull.minor,versionFull.patch);</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;tmp_verstr&nbsp;=&nbsp;['v'&nbsp;vernum];</td></tr>
-<tr><td>118</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isRelease&nbsp;&amp;&amp;&nbsp;~isempty(versionFull.commitID)&nbsp;&amp;&amp;&nbsp;~isempty(versionFull.branch)</td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;branchinfo&nbsp;=&nbsp;[versionFull.branch&nbsp;'-'&nbsp;versionFull.commitID(1:8)];</td></tr>
-<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmp_verstr&nbsp;=&nbsp;[tmp_verstr&nbsp;'_'&nbsp;branchinfo];</td></tr>
-<tr><td>121</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addDescription&nbsp;=&nbsp;['!!!matRad&nbsp;development&nbsp;version&nbsp;build&nbsp;from&nbsp;branch/commit&nbsp;'&nbsp;branchinfo&nbsp;'!!!'];</td></tr>
-<tr><td>122</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desc&nbsp;=&nbsp;xDoc.getElementsByTagName('param.description').item(0).getFirstChild.getData().toCharArray()';</td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desc&nbsp;=&nbsp;[addDescription&nbsp;'&nbsp;'&nbsp;desc];</td></tr>
-<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('param.description').item(0).getFirstChild.setData(desc);</td></tr>
-<tr><td>125</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>126</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>127</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%The&nbsp;Application&nbsp;compiler&nbsp;only&nbsp;allows&nbsp;major&nbsp;and&nbsp;minor&nbsp;version&nbsp;number</td></tr>
-<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;vernum_appCompiler&nbsp;=&nbsp;sprintf('%d.%d',versionFull.major,versionFull.minor);</td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;filename_webRT&nbsp;=['matRad_installer'&nbsp;suffix&nbsp;'64_'&nbsp;tmp_verstr];</td></tr>
-<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;filename_withRT&nbsp;=['matRad_installer'&nbsp;suffix&nbsp;'64_wRT_'&nbsp;tmp_verstr];</td></tr>
-<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('param.web.mcr.name').item(0).getFirstChild.setData(filename_webRT);</td></tr>
-<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('param.package.mcr.name').item(0).getFirstChild.setData(filename_withRT);</td></tr>
-<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('param.version').item(0).getFirstChild.setData(vernum_appCompiler);</td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>136</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%check&nbsp;if&nbsp;the&nbsp;files&nbsp;exist,&nbsp;and&nbsp;delete&nbsp;them</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfolder(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_withRT&nbsp;'.'&nbsp;installSuffix])</td></tr>
-<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rmdir(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_withRT&nbsp;'.'&nbsp;installSuffix],'s')</td></tr>
-<tr><td>141</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rehash</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfile(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_withRT&nbsp;'.'&nbsp;installSuffix])</td></tr>
-<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_withRT&nbsp;'.'&nbsp;installSuffix]);</td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfolder(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_webRT&nbsp;'.'&nbsp;installSuffix])</td></tr>
-<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rmdir(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_webRT&nbsp;'.'&nbsp;installSuffix],'s')</td></tr>
-<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rehash</td></tr>
-<tr><td>151</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfile(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_webRT&nbsp;'.'&nbsp;installSuffix])</td></tr>
-<tr><td>153</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_webRT&nbsp;'.'&nbsp;installSuffix]);</td></tr>
-<tr><td>154</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>155</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>156</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%compile&nbsp;with&nbsp;runtime</td></tr>
-<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;compileWithRT</td></tr>
-<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('param.web.mcr').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('param.package.mcr').item(0).getFirstChild.setData('true');</td></tr>
-<tr><td>160</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>161</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xmlwrite(projectFile,xDoc);</td></tr>
-<tr><td>162</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;applicationCompiler('-package',projectFile);</td></tr>
-<tr><td>164</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;loop&nbsp;until&nbsp;the&nbsp;file&nbsp;is&nbsp;created</td></tr>
-<tr><td>166</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;waitForCompilation(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_withRT&nbsp;'.'&nbsp;installSuffix],1000);</td></tr>
-<tr><td>167</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>168</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>169</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;compileWithoutRT</td></tr>
-<tr><td>170</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%compile&nbsp;without&nbsp;runtime</td></tr>
-<tr><td>171</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('param.web.mcr').item(0).getFirstChild.setData('true');</td></tr>
-<tr><td>172</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xDoc.getElementsByTagName('param.package.mcr').item(0).getFirstChild.setData('false');</td></tr>
-<tr><td>173</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xmlwrite(projectFile,xDoc);</td></tr>
-<tr><td>175</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;applicationCompiler('-package',projectFile);</td></tr>
-<tr><td>177</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>178</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;loop&nbsp;until&nbsp;the&nbsp;file&nbsp;is&nbsp;created</td></tr>
-<tr><td>179</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;waitForCompilation(['standalone'&nbsp;filesep&nbsp;'for_redistribution'&nbsp;filesep&nbsp;&nbsp;filename_webRT&nbsp;'.'&nbsp;installSuffix],1000);</td></tr>
-<tr><td>180</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>181</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;disp('Done');</td></tr>
-<tr><td>182</td><td bgcolor="#FFFFFF">else&nbsp;%No&nbsp;automatic&nbsp;compilation&nbsp;from&nbsp;template,&nbsp;override&nbsp;with&nbsp;prj&nbsp;file</td></tr>
-<tr><td>183</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;applicationCompiler('-package',projectFile);&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>184</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%No&nbsp;waiting&nbsp;here&nbsp;because&nbsp;we&nbsp;do&nbsp;not&nbsp;know&nbsp;the&nbsp;output&nbsp;file</td></tr>
-<tr><td>185</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>186</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>187</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>188</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>189</td><td bgcolor="#FFFFFF">function&nbsp;waitForCompilation(path,waittime)</td></tr>
-<tr><td>190</td><td bgcolor="#FF0000">tic</td></tr>
-<tr><td>191</td><td bgcolor="#FF0000">worked&nbsp;=&nbsp;false;</td></tr>
-<tr><td>192</td><td bgcolor="#FF0000">while&nbsp;toc&lt;waittime</td></tr>
-<tr><td>193</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pause(2);</td></tr>
-<tr><td>194</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isfolder(path)&nbsp;||&nbsp;isfile(path)</td></tr>
-<tr><td>195</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;worked&nbsp;=&nbsp;true;</td></tr>
-<tr><td>196</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</td></tr>
-<tr><td>197</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>198</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>199</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>200</td><td bgcolor="#FF0000">if&nbsp;worked&nbsp;==&nbsp;false</td></tr>
-<tr><td>201</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Packaging&nbsp;Failed!');</td></tr>
-<tr><td>202</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>203</td><td bgcolor="#FF0000">disp('Packaged&nbsp;compiler&nbsp;without&nbsp;runtime');</td></tr>
-<tr><td>204</td><td bgcolor="#FFFFFF">end</td></tr>
-</table></p></body></html>

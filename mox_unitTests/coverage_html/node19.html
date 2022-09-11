@@ -1,149 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\@matRad_DicomExporter\matRad_exportDicomCt.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\@matRad_DicomExporter\matRad_exportDicomCt.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;obj&nbsp;=&nbsp;matRad_exportDicomCt(obj)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;export&nbsp;ct&nbsp;to&nbsp;dicom.&nbsp;</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;Class&nbsp;method&nbsp;of&nbsp;matRad_DicomExporter</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;matRad_DicomExporter.matRad_exportDicomCt()</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2019&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>25</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>27</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('Exporting&nbsp;DICOM&nbsp;CT...');</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%default&nbsp;meta</td></tr>
-<tr><td>30</td><td bgcolor="#FF0000">meta.PatientName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.PatientName;</td></tr>
-<tr><td>31</td><td bgcolor="#FF0000">meta.PatientID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.PatientID;</td></tr>
-<tr><td>32</td><td bgcolor="#FF0000">meta.PatientBirthDate&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.PatientBirthDate;</td></tr>
-<tr><td>33</td><td bgcolor="#FF0000">meta.PatientSex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.PatientSex;</td></tr>
-<tr><td>34</td><td bgcolor="#FF0000">meta.PatientPosition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.PatientPosition;</td></tr>
-<tr><td>35</td><td bgcolor="#FF0000">meta.StudyID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.StudyID;</td></tr>
-<tr><td>36</td><td bgcolor="#FF0000">meta.StudyDate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.StudyDate;</td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">meta.StudyTime&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.StudyTime;</td></tr>
-<tr><td>38</td><td bgcolor="#FF0000">meta.StudyInstanceUID&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.StudyInstanceUID;</td></tr>
-<tr><td>39</td><td bgcolor="#FF0000">meta.FrameOfReferenceUID&nbsp;=&nbsp;obj.FrameOfReferenceUID;</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">ClassUID&nbsp;=&nbsp;'1.2.840.10008.5.1.4.1.1.2';&nbsp;%CT&nbsp;Image</td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">meta.MediaStorageSOPClassUID&nbsp;=&nbsp;ClassUID;</td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">meta.SOPClassUID&nbsp;=&nbsp;ClassUID;</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%TransferSyntaxUID&nbsp;=&nbsp;'1.2.840.10008.1.2';</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">%meta.TransferSyntaxUID&nbsp;=&nbsp;TransferSyntaxUID;</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">%Identifiers</td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">meta.SOPInstanceUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;dicomuid;</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">meta.MediaStorageSOPInstanceUID&nbsp;=&nbsp;meta.SOPInstanceUID;</td></tr>
-<tr><td>50</td><td bgcolor="#FF0000">meta.SeriesInstanceUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;dicomuid;</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">meta.SeriesNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
-<tr><td>52</td><td bgcolor="#FF0000">meta.InstanceNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
-<tr><td>53</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>55</td><td bgcolor="#FF0000">obj.ctMeta.SeriesInstanceUID&nbsp;=&nbsp;dicomuid;</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">meta.SeriesInstanceUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.ctMeta.SeriesInstanceUID;</td></tr>
-<tr><td>57</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>58</td><td bgcolor="#FF0000">meta.SeriesNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">meta.AcquisitionNumber&nbsp;=&nbsp;1;</td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">meta.InstanceNumber&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">meta.Modality&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'CT';</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">meta.ReferringPhysicianName&nbsp;=&nbsp;obj.dicomName();</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">meta.PatientPosition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;obj.PatientPosition;</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">ct&nbsp;=&nbsp;obj.ct;</td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">nSlices&nbsp;=&nbsp;ct.cubeDim(3);</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF">%Create&nbsp;X&nbsp;Y&nbsp;Z&nbsp;vectors&nbsp;if&nbsp;not&nbsp;present</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">if&nbsp;~any(isfield(ct,{'x','y','z'}))</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%positionOffset&nbsp;=&nbsp;transpose(ct.cubeDim&nbsp;./&nbsp;2);</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;positionOffset&nbsp;=&nbsp;ct.cubeDim&nbsp;./&nbsp;2;</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.x&nbsp;=&nbsp;ct.resolution.x*[0:ct.cubeDim(2)-1]&nbsp;-&nbsp;positionOffset(2);</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.y&nbsp;=&nbsp;ct.resolution.y*[0:ct.cubeDim(1)-1]&nbsp;-&nbsp;positionOffset(1);</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.z&nbsp;=&nbsp;ct.resolution.z*[0:ct.cubeDim(3)-1]&nbsp;-&nbsp;positionOffset(3);</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">obj.ct&nbsp;=&nbsp;ct;</td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF">%Since&nbsp;we&nbsp;are&nbsp;exporting&nbsp;HU&nbsp;directly&nbsp;--&gt;&nbsp;no&nbsp;rescaling&nbsp;in&nbsp;any&nbsp;case</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">meta.SliceThickness&nbsp;=&nbsp;ct.resolution.z;</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">meta.PixelSpacing&nbsp;&nbsp;&nbsp;=&nbsp;[ct.resolution.y;&nbsp;ct.resolution.x];</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">meta.ImageOrientationPatient&nbsp;=&nbsp;[1;0;0;0;1;0];&nbsp;%lps</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">meta.RescaleType&nbsp;=&nbsp;'HU';</td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">if&nbsp;isfield(ct,'z')</td></tr>
-<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;=&nbsp;ct.z;</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>91</td><td bgcolor="#FF0000">ctCube&nbsp;=&nbsp;ct.cubeHU{1};</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">ctMin&nbsp;&nbsp;=&nbsp;min(ctCube(:));</td></tr>
-<tr><td>93</td><td bgcolor="#FF0000">ctCube&nbsp;=&nbsp;ctCube&nbsp;-&nbsp;ctMin;</td></tr>
-<tr><td>94</td><td bgcolor="#FF0000">ctMax&nbsp;&nbsp;=&nbsp;max(ctCube(:));</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">ctCube&nbsp;=&nbsp;ctCube&nbsp;./&nbsp;ctMax;</td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">ctCube&nbsp;=&nbsp;uint16(ctCube*double(uint16(Inf)));</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>98</td><td bgcolor="#FF0000">meta.RescaleIntercept&nbsp;=&nbsp;ctMin;</td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">meta.RescaleSlope&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ctMax&nbsp;/&nbsp;double(uint16(Inf)&nbsp;+&nbsp;1);</td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">meta.ImageType&nbsp;=&nbsp;'DERIVED\PRIMARY\AXIAL';</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">fileName&nbsp;=&nbsp;'ct_slice_';</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">obj.ctSliceMetas&nbsp;&nbsp;&nbsp;=&nbsp;struct([]);</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">obj.ctExportStatus&nbsp;=&nbsp;struct([]);</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>109</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:nSlices</td></tr>
-<tr><td>110</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctSlice&nbsp;=&nbsp;ctCube(:,:,i);</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%ctSlice&nbsp;=&nbsp;permute(ctSlice,[1&nbsp;2]);</td></tr>
-<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;obj.ctSliceMetas&nbsp;=&nbsp;obj.addStruct2StructArray(obj.ctSliceMetas,meta);</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;obj.ctSliceMetas(i).ImagePositionPatient&nbsp;=&nbsp;[ct.x(1);&nbsp;ct.y(1);&nbsp;ct.z(i)];</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;obj.ctSliceMetas(i).SlicePositions&nbsp;=&nbsp;z(i);</td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Create&nbsp;and&nbsp;store&nbsp;unique&nbsp;ID</td></tr>
-<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;obj.ctSliceMetas(i).SOPClassUID&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ClassUID;</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>122</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fullFileName&nbsp;=&nbsp;fullfile(obj.dicomDir,[fileName&nbsp;num2str(i)&nbsp;'.dcm']);</td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;matRad_cfg.isOctave</td></tr>
-<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj.ctSliceMetas(i).SOPInstanceUID&nbsp;=&nbsp;dicomuid;</td></tr>
-<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj.ctSliceMetas(i).MediaStorageSOPInstanceUID&nbsp;=&nbsp;obj.ctSliceMetas(i).SOPInstanceUID;</td></tr>
-<tr><td>126</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dicomwrite(ctSlice,fullFileName,obj.ctSliceMetas(i));</td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status&nbsp;=&nbsp;dicomwrite(ctSlice,fullFileName,obj.ctSliceMetas(i),'ObjectType','CT&nbsp;Image&nbsp;Storage');</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj.ctExportStatus&nbsp;=&nbsp;obj.addStruct2StructArray(obj.ctExportStatus,status);</td></tr>
-<tr><td>131</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>132</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;need&nbsp;to&nbsp;get&nbsp;the&nbsp;info&nbsp;of&nbsp;the&nbsp;file&nbsp;just&nbsp;written&nbsp;because&nbsp;of&nbsp;Matlab's</td></tr>
-<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%hardcoded&nbsp;way&nbsp;of&nbsp;generating&nbsp;InstanceUIDs&nbsp;during&nbsp;writing</td></tr>
-<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpInfo&nbsp;=&nbsp;dicominfo(fullFileName);</td></tr>
-<tr><td>135</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj.ctSliceMetas(i).SOPInstanceUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpInfo.SOPInstanceUID;</td></tr>
-<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj.ctSliceMetas(i).MediaStorageSOPInstanceUID&nbsp;&nbsp;=&nbsp;tmpInfo.MediaStorageSOPInstanceUID;</td></tr>
-<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_progress(i,nSlices);</td></tr>
-<tr><td>140</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>141</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>143</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>144</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

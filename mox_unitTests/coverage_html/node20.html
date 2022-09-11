@@ -1,216 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\@matRad_DicomExporter\matRad_exportDicomRTDoses.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\@matRad_DicomExporter\matRad_exportDicomRTDoses.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;obj&nbsp;=&nbsp;matRad_exportDicomRTDoses(obj)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;exportt&nbsp;resultGUI&nbsp;to&nbsp;dicom&nbsp;RT&nbsp;dose.&nbsp;</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;Function&nbsp;of&nbsp;matRad_DicomExporter</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;matRad_DicomExporter.matRad_exportDicomRTDoses()</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>24</td><td bgcolor="#FF0000">&nbsp;matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>25</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('Exporting&nbsp;DICOM&nbsp;RTDose...\n');</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>27</td><td bgcolor="#FF0000">env&nbsp;=&nbsp;matRad_getEnvironment();</td></tr>
-<tr><td>28</td><td bgcolor="#FF0000">isOctave&nbsp;=&nbsp;strcmp(env,'OCTAVE');</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>30</td><td bgcolor="#FF0000">if&nbsp;isOctave</td></tr>
-<tr><td>31</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('RTDose&nbsp;export&nbsp;currently&nbsp;not&nbsp;supported&nbsp;by&nbsp;matRad&nbsp;running&nbsp;in&nbsp;Octave&nbsp;using&nbsp;the&nbsp;dicom&nbsp;package!&nbsp;Skipping...');</td></tr>
-<tr><td>32</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%%&nbsp;CT&nbsp;check</td></tr>
-<tr><td>36</td><td bgcolor="#FF0000">ct&nbsp;=&nbsp;obj.ct;</td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">if&nbsp;~any(isfield(ct,{'x','y','z'}))</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%positionOffset&nbsp;=&nbsp;transpose(ct.cubeDim&nbsp;./&nbsp;2);</td></tr>
-<tr><td>39</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;positionOffset&nbsp;=&nbsp;ct.cubeDim&nbsp;./&nbsp;2;</td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.x&nbsp;=&nbsp;ct.resolution.x*[0:ct.cubeDim(2)-1]&nbsp;-&nbsp;positionOffset(2);</td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.y&nbsp;=&nbsp;ct.resolution.y*[0:ct.cubeDim(1)-1]&nbsp;-&nbsp;positionOffset(1);</td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.z&nbsp;=&nbsp;ct.resolution.z*[0:ct.cubeDim(3)-1]&nbsp;-&nbsp;positionOffset(3);</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">%%&nbsp;Meta&nbsp;data</td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">storageClass&nbsp;=&nbsp;'1.2.840.10008.5.1.4.1.1.481.2';</td></tr>
-<tr><td>47</td><td bgcolor="#FF0000">meta.MediaStorageSOPClassUID&nbsp;=&nbsp;storageClass;</td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">meta.SOPClassUID&nbsp;=&nbsp;storageClass;</td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">%TransferSyntaxUID&nbsp;=&nbsp;'1.2.840.10008.1.2.1';&nbsp;%Explicit&nbsp;VR&nbsp;little&nbsp;endian?</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">%meta.TransferSyntaxUID&nbsp;=&nbsp;TransferSyntaxUID;</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">meta.Modality&nbsp;=&nbsp;'RTDOSE';</td></tr>
-<tr><td>54</td><td bgcolor="#FF0000">meta.Manufacturer&nbsp;=&nbsp;'';</td></tr>
-<tr><td>55</td><td bgcolor="#FF0000">meta.DoseUnits&nbsp;=&nbsp;'GY';</td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>57</td><td bgcolor="#FFFFFF">%Reference</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">%ID&nbsp;of&nbsp;the&nbsp;CT</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">meta.StudyInstanceUID&nbsp;=&nbsp;obj.StudyInstanceUID;</td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">meta.StudyID&nbsp;=&nbsp;obj.StudyID;&nbsp;</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF">%Dates&nbsp;&amp;&nbsp;Times</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">currDate&nbsp;=&nbsp;now;</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">currDateStr&nbsp;=&nbsp;datestr(currDate,'yyyymmdd');</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">currTimeStr&nbsp;=&nbsp;datestr(currDate,'HHMMSS');</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">meta.InstanceCreationDate&nbsp;=&nbsp;currDateStr;</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">meta.InstanceCreationTime&nbsp;=&nbsp;currTimeStr;</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">meta.StudyDate&nbsp;=&nbsp;obj.StudyDate;</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">meta.StudyTime&nbsp;=&nbsp;obj.StudyTime;</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">meta.FrameOfReferenceUID&nbsp;=&nbsp;obj.FrameOfReferenceUID;</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">meta.PositionReferenceIndicator&nbsp;=&nbsp;'';</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF">%Remaining&nbsp;stuff</td></tr>
-<tr><td>78</td><td bgcolor="#FF0000">meta.AccessionNumber&nbsp;=&nbsp;'';</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">meta.StationName&nbsp;=&nbsp;'';</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">meta.OperatorsName&nbsp;=&nbsp;obj.OperatorsName;</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">meta.ReferringPhysicianName&nbsp;=&nbsp;obj.dicomName();</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">meta.PatientName&nbsp;=&nbsp;obj.PatientName;</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">meta.PatientID&nbsp;=&nbsp;obj.PatientID;</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">meta.PatientBirthDate&nbsp;=&nbsp;obj.PatientBirthDate;</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">meta.PatientSex&nbsp;=&nbsp;obj.PatientSex;</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">%This&nbsp;RTDose&nbsp;series</td></tr>
-<tr><td>89</td><td bgcolor="#FF0000">meta.SeriesInstanceUID&nbsp;=&nbsp;dicomuid;</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">%Now&nbsp;image&nbsp;meta</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">resolution&nbsp;=&nbsp;ct.resolution;</td></tr>
-<tr><td>93</td><td bgcolor="#FF0000">meta.PixelSpacing&nbsp;=&nbsp;[resolution.y;&nbsp;resolution.x];</td></tr>
-<tr><td>94</td><td bgcolor="#FF0000">meta.SliceThickness&nbsp;=&nbsp;resolution.z;</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">meta.ImagePositionPatient&nbsp;=&nbsp;[ct.x(1);&nbsp;ct.y(1);&nbsp;ct.z(1)];</td></tr>
-<tr><td>97</td><td bgcolor="#FF0000">meta.ImageOrientationPatient&nbsp;=&nbsp;[1;0;0;0;1;0];</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF">%No&nbsp;(Re)scaling</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">meta.RescaleSlope&nbsp;=&nbsp;1;</td></tr>
-<tr><td>102</td><td bgcolor="#FF0000">meta.RescaleIntercept&nbsp;=&nbsp;0;</td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">meta.RescaleType&nbsp;=&nbsp;'US';</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>105</td><td bgcolor="#FFFFFF">%RTDose&nbsp;is&nbsp;stored&nbsp;as&nbsp;multiframe&nbsp;image</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">meta.ImagesInAcquisition&nbsp;=&nbsp;ct.cubeDim(3);</td></tr>
-<tr><td>107</td><td bgcolor="#FF0000">meta.NumberOfFrames&nbsp;=&nbsp;ct.cubeDim(3);</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">meta.GridFrameOffsetVector&nbsp;=&nbsp;transpose(ct.z&nbsp;-&nbsp;ct.z(1));</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">%Referenced&nbsp;Plan</td></tr>
-<tr><td>111</td><td bgcolor="#FF0000">try</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rtPlanUID&nbsp;=&nbsp;obj.rtPlanMeta.SOPInstanceUID;</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rtPlanClassID&nbsp;=&nbsp;obj.rtPlanMeta.SOPClassUID;</td></tr>
-<tr><td>114</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;meta.ReferencedRTPlanSequence.Item_1.ReferencedSOPClassUID&nbsp;=&nbsp;rtPlanClassID;</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;meta.ReferencedRTPlanSequence.Item_1.ReferencedSOPInstanceUID&nbsp;=&nbsp;rtPlanUID;</td></tr>
-<tr><td>116</td><td bgcolor="#FF0000">catch</td></tr>
-<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rtPlanUID&nbsp;=&nbsp;'';</td></tr>
-<tr><td>118</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rtPlanClassID&nbsp;=&nbsp;'';</td></tr>
-<tr><td>119</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>122</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;4&nbsp;||&nbsp;isempty(doseFieldNames)</td></tr>
-<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseFieldNames&nbsp;=&nbsp;cell(0);</td></tr>
-<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fn&nbsp;=&nbsp;fieldnames(obj.resultGUI);</td></tr>
-<tr><td>126</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:numel(fn)</td></tr>
-<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(size(obj.resultGUI.(fn{i})))&nbsp;==&nbsp;3</td></tr>
-<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseFieldNames{end+1}&nbsp;=&nbsp;fn{i};</td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>131</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>132</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>133</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>134</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>136</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">obj.rtDoseMetas&nbsp;=&nbsp;struct([]);</td></tr>
-<tr><td>138</td><td bgcolor="#FF0000">obj.rtDoseExportStatus&nbsp;=&nbsp;struct([]);</td></tr>
-<tr><td>139</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>140</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numel(doseFieldNames)</td></tr>
-<tr><td>141</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseName&nbsp;=&nbsp;doseFieldNames{i};</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Now&nbsp;check&nbsp;if&nbsp;we&nbsp;export&nbsp;physical&nbsp;or&nbsp;RBE&nbsp;weighted&nbsp;dose,&nbsp;they&nbsp;are&nbsp;known</td></tr>
-<tr><td>144</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%to&nbsp;dicom</td></tr>
-<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strncmp(doseName,'physicalDose',12)</td></tr>
-<tr><td>146</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseType&nbsp;=&nbsp;'PHYSICAL';</td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;strncmp(doseName,'RBExDose',8)</td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseType&nbsp;=&nbsp;'EFFECTIVE';</td></tr>
-<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf('Dose&nbsp;Cube&nbsp;''%s''&nbsp;of&nbsp;unknown&nbsp;type&nbsp;for&nbsp;DICOM.&nbsp;Not&nbsp;exported!\n',doseName);</td></tr>
-<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
-<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>154</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Now&nbsp;check&nbsp;if&nbsp;we&nbsp;export&nbsp;a&nbsp;single&nbsp;beam</td></tr>
-<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(regexp(doseName,'_beam(\d+)','once'))</td></tr>
-<tr><td>156</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;export&nbsp;a&nbsp;single&nbsp;beam&nbsp;fraction</td></tr>
-<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deliveryType&nbsp;=&nbsp;'BEAM_SESSION';</td></tr>
-<tr><td>158</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deliveryType&nbsp;=&nbsp;'FRACTION';</td></tr>
-<tr><td>160</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>161</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>162</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseCube&nbsp;=&nbsp;zeros(ct.cubeDim(1),ct.cubeDim(2),1,ct.cubeDim(3));</td></tr>
-<tr><td>164</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseCube(:,:,1,:)&nbsp;=&nbsp;obj.resultGUI.(doseFieldNames{i});</td></tr>
-<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>166</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;minDose&nbsp;=&nbsp;min(doseCube(:));</td></tr>
-<tr><td>167</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maxDose&nbsp;=&nbsp;max(doseCube(:));</td></tr>
-<tr><td>168</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>169</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;minDose&nbsp;&lt;&nbsp;0</td></tr>
-<tr><td>170</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf('Dose&nbsp;Cube&nbsp;''%s''&nbsp;has&nbsp;negative&nbsp;values.&nbsp;Not&nbsp;exported!\n',doseName);</td></tr>
-<tr><td>171</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
-<tr><td>172</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>173</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseCubeFac&nbsp;=&nbsp;maxDose&nbsp;/&nbsp;double(uint16(Inf));&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>175</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseCube&nbsp;=&nbsp;uint16(doseCube&nbsp;./&nbsp;doseCubeFac);</td></tr>
-<tr><td>176</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metaCube&nbsp;=&nbsp;meta;</td></tr>
-<tr><td>178</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metaCube.DoseType&nbsp;=&nbsp;doseType;</td></tr>
-<tr><td>179</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metaCube.DoseSummationType&nbsp;=&nbsp;deliveryType;</td></tr>
-<tr><td>180</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>181</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%ID&nbsp;of&nbsp;the&nbsp;RTDose</td></tr>
-<tr><td>182</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;meta.SeriesInstanceUID&nbsp;=&nbsp;dicomuid;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>183</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metaCube.SeriesNumber&nbsp;=&nbsp;i;</td></tr>
-<tr><td>184</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metaCube.InstanceNumber&nbsp;=&nbsp;1;</td></tr>
-<tr><td>185</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;metaCube.DoseGridScaling&nbsp;=&nbsp;doseCubeFac;</td></tr>
-<tr><td>186</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>187</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;meta.SOPInstanceUID&nbsp;=&nbsp;dicomuid;</td></tr>
-<tr><td>188</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;meta.MediaStorageSOPInstanceUID&nbsp;=&nbsp;meta.SOPInstanceUID;</td></tr>
-<tr><td>189</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fileName&nbsp;=&nbsp;[obj.rtDoseFilePrefix&nbsp;num2str(i)&nbsp;'_'&nbsp;doseName&nbsp;'.dcm'];</td></tr>
-<tr><td>191</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>192</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;env&nbsp;=&nbsp;matRad_getEnvironment();</td></tr>
-<tr><td>193</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(env,'OCTAVE')</td></tr>
-<tr><td>194</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dicomwrite(doseCube,fullfile(obj.dicomDir,fileName),metaCube);</td></tr>
-<tr><td>195</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>196</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status&nbsp;=&nbsp;dicomwrite(doseCube,fullfile(obj.dicomDir,fileName),metaCube,'CreateMode','copy');%,'TransferSyntax',TransferSyntaxUID);</td></tr>
-<tr><td>197</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(status)</td></tr>
-<tr><td>198</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj.rtDoseExportStatus&nbsp;=&nbsp;obj.addStruct2StructArray(obj.rtDoseExportStatus,status,i);</td></tr>
-<tr><td>199</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>200</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>201</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>202</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;obj.rtDoseMetas&nbsp;=&nbsp;obj.addStruct2StructArray(obj.rtDoseMetas,metaCube);</td></tr>
-<tr><td>204</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>205</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;obj.rtDoseNames{i}&nbsp;=&nbsp;doseFieldNames{i};</td></tr>
-<tr><td>206</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>207</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_progress(i,numel(doseFieldNames));</td></tr>
-<tr><td>208</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>209</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>210</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>211</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>212</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

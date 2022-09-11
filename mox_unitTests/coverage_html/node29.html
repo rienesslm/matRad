@@ -1,258 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_importDicomCt.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_importDicomCt.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;ct&nbsp;=&nbsp;matRad_importDicomCt(ctList,&nbsp;resolution,&nbsp;dicomMetaBool,&nbsp;grid,&nbsp;visBool)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;import&nbsp;dicom&nbsp;ct&nbsp;data</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;=&nbsp;matRad_importDicomCt(ctList,&nbsp;resolution,&nbsp;dicomMetaBool)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;=&nbsp;matRad_importDicomCt(ctList,&nbsp;resolution,&nbsp;dicomMetaBool,&nbsp;grid)</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;=&nbsp;matRad_importDicomCt(ctList,&nbsp;resolution,&nbsp;dicomMetaBool,&nbsp;visBool)</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;=&nbsp;matRad_importDicomCt(ctList,&nbsp;resolution,&nbsp;dicomMetaBool,&nbsp;grid,&nbsp;visBool)</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ctList:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;of&nbsp;dicom&nbsp;ct&nbsp;files</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resolution:&nbsp;&nbsp;&nbsp;	resolution&nbsp;of&nbsp;the&nbsp;imported&nbsp;ct&nbsp;cube,&nbsp;i.e.&nbsp;this&nbsp;function</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;interpolate&nbsp;to&nbsp;a&nbsp;different&nbsp;resolution&nbsp;if&nbsp;desired</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dicomMetaBool:&nbsp;&nbsp;store&nbsp;complete&nbsp;dicom&nbsp;information&nbsp;if&nbsp;true</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;grid:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional:&nbsp;a&nbsp;priori&nbsp;grid&nbsp;specified&nbsp;for&nbsp;interpolation</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;visBool:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional:&nbsp;turn&nbsp;on/off&nbsp;visualization</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;ct&nbsp;struct.&nbsp;Note&nbsp;that&nbsp;this&nbsp;3D&nbsp;matlab&nbsp;array&nbsp;</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contains&nbsp;water&nbsp;euqivalent&nbsp;electron&nbsp;denisities.</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hounsfield&nbsp;units&nbsp;are&nbsp;converted&nbsp;using&nbsp;a&nbsp;standard&nbsp;lookup</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table&nbsp;in&nbsp;matRad_calcWaterEqD</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('\nimporting&nbsp;ct-cube...');</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%%&nbsp;processing&nbsp;input&nbsp;variables</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">if&nbsp;~exist('visBool','var')</td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">&nbsp;&nbsp;visBool&nbsp;=&nbsp;0;</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF">%&nbsp;creation&nbsp;of&nbsp;ctInfo&nbsp;list</td></tr>
-<tr><td>50</td><td bgcolor="#FF0000">numOfSlices&nbsp;=&nbsp;size(ctList,1);</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('\ncreating&nbsp;info...')</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">sliceThicknessStandard&nbsp;=&nbsp;true;</td></tr>
-<tr><td>54</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numOfSlices</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;verLessThan('matlab','9')</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpDicomInfo&nbsp;=&nbsp;dicominfo(ctList{i,1});</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpDicomInfo&nbsp;=&nbsp;dicominfo(ctList{i,1},'UseDictionaryVR',true);</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;remember&nbsp;relevant&nbsp;dicom&nbsp;info&nbsp;-&nbsp;do&nbsp;not&nbsp;record&nbsp;everything&nbsp;as&nbsp;some&nbsp;tags</td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;might&nbsp;not&nbsp;been&nbsp;defined&nbsp;for&nbsp;individual&nbsp;files</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).PixelSpacing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.PixelSpacing;</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).ImagePositionPatient&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.ImagePositionPatient;</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).SliceThickness&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.SliceThickness;</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).ImageOrientationPatient&nbsp;=&nbsp;tmpDicomInfo.ImageOrientationPatient;</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).PatientPosition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.PatientPosition;</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).Rows&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.Rows;</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).Columns&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.Columns;</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).Width&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.Width;</td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).Height&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.Height;</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).RescaleSlope&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.RescaleSlope;</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).RescaleIntercept&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmpDicomInfo.RescaleIntercept;</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Problem&nbsp;due&nbsp;to&nbsp;some&nbsp;CT&nbsp;files&nbsp;using&nbsp;non-standard&nbsp;SpacingBetweenSlices</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>78</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(ctInfo(i).SliceThickness)</td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Print&nbsp;warning&nbsp;ocne</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;sliceThicknessStandard</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('Non-standard&nbsp;use&nbsp;of&nbsp;SliceThickness&nbsp;Attribute&nbsp;(empty),&nbsp;trying&nbsp;to&nbsp;overwrite&nbsp;with&nbsp;SpacingBetweenSlices');</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sliceThicknessStandard&nbsp;=&nbsp;false;</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctInfo(i).SliceThickness&nbsp;=&nbsp;tmpDicomInfo.SpacingBetweenSlices;</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;i&nbsp;==&nbsp;1</td></tr>
-<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;completeDicom&nbsp;=&nbsp;tmpDicomInfo;</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_progress(i,numOfSlices);</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">%&nbsp;adjusting&nbsp;sequence&nbsp;of&nbsp;slices&nbsp;(filenames&nbsp;may&nbsp;not&nbsp;be&nbsp;ordered&nbsp;propperly....</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF">%&nbsp;e.g.&nbsp;CT1.dcm,&nbsp;CT10.dcm,&nbsp;CT100zCoordList&nbsp;=&nbsp;[ctInfo.ImagePositionPatient(1,3)]';.dcm,&nbsp;CT101.dcm,...</td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">CoordList&nbsp;=&nbsp;[ctInfo.ImagePositionPatient]';</td></tr>
-<tr><td>97</td><td bgcolor="#FF0000">[~,&nbsp;indexing]&nbsp;=&nbsp;sort(CoordList(:,3));&nbsp;%&nbsp;get&nbsp;sortation&nbsp;from&nbsp;z-coordinates</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">ctList&nbsp;=&nbsp;ctList(indexing);</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">ctInfo&nbsp;=&nbsp;ctInfo(indexing);</td></tr>
-<tr><td>101</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">%%&nbsp;check&nbsp;data&nbsp;set&nbsp;for&nbsp;consistency</td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">if&nbsp;size(unique([ctInfo.PixelSpacing]','rows'),1)&nbsp;&gt;&nbsp;1</td></tr>
-<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Different&nbsp;pixel&nbsp;size&nbsp;in&nbsp;different&nbsp;CT&nbsp;slices');</td></tr>
-<tr><td>105</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>106</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>107</td><td bgcolor="#FF0000">coordsOfFirstPixel&nbsp;=&nbsp;[ctInfo.ImagePositionPatient];</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">if&nbsp;numel(unique(coordsOfFirstPixel(1,:)))&nbsp;&gt;&nbsp;1&nbsp;||&nbsp;numel(unique(coordsOfFirstPixel(2,:)))&nbsp;&gt;&nbsp;1</td></tr>
-<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Ct&nbsp;slices&nbsp;are&nbsp;not&nbsp;aligned');</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>111</td><td bgcolor="#FF0000">if&nbsp;sum(diff(coordsOfFirstPixel(3,:))&lt;=0)&nbsp;&gt;&nbsp;0</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Ct&nbsp;slices&nbsp;not&nbsp;monotonically&nbsp;increasing');</td></tr>
-<tr><td>113</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>114</td><td bgcolor="#FF0000">if&nbsp;numel(unique([ctInfo.Rows]))&nbsp;&gt;&nbsp;1&nbsp;||&nbsp;numel(unique([ctInfo.Columns]))&nbsp;&gt;&nbsp;1</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Ct&nbsp;slice&nbsp;sizes&nbsp;inconsistent');</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>117</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>119</td><td bgcolor="#FFFFFF">%%&nbsp;checking&nbsp;the&nbsp;patient&nbsp;position</td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">%&nbsp;As&nbsp;of&nbsp;now,&nbsp;the&nbsp;matRad&nbsp;treatment&nbsp;planning&nbsp;system&nbsp;is&nbsp;only&nbsp;valid&nbsp;for</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF">%&nbsp;patients&nbsp;in&nbsp;a&nbsp;supine&nbsp;position.&nbsp;Other&nbsp;orientations&nbsp;(e.g.&nbsp;prone,&nbsp;decubitus</td></tr>
-<tr><td>122</td><td bgcolor="#FFFFFF">%&nbsp;left/right)&nbsp;are&nbsp;not&nbsp;supported.</td></tr>
-<tr><td>123</td><td bgcolor="#FFFFFF">%&nbsp;Defined&nbsp;Terms:</td></tr>
-<tr><td>124</td><td bgcolor="#FFFFFF">%&nbsp;HFP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Head&nbsp;First-Prone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;supported)</td></tr>
-<tr><td>125</td><td bgcolor="#FFFFFF">%&nbsp;HFS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Head&nbsp;First-Supine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(supported)</td></tr>
-<tr><td>126</td><td bgcolor="#FFFFFF">%&nbsp;HFDR&nbsp;&nbsp;&nbsp;&nbsp;Head&nbsp;First-Decubitus&nbsp;Right&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;supported)</td></tr>
-<tr><td>127</td><td bgcolor="#FFFFFF">%&nbsp;HFDL&nbsp;&nbsp;&nbsp;&nbsp;Head&nbsp;First-Decubitus&nbsp;Left&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;supported)</td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF">%&nbsp;FFDR&nbsp;&nbsp;&nbsp;&nbsp;Feet&nbsp;First-Decubitus&nbsp;Right&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;supported)</td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">%&nbsp;FFDL&nbsp;&nbsp;&nbsp;&nbsp;Feet&nbsp;First-Decubitus&nbsp;Left&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;supported)</td></tr>
-<tr><td>130</td><td bgcolor="#FFFFFF">%&nbsp;FFP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Feet&nbsp;First-Prone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;supported)</td></tr>
-<tr><td>131</td><td bgcolor="#FFFFFF">%&nbsp;FFS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Feet&nbsp;First-Supine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(supported)</td></tr>
-<tr><td>132</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>133</td><td bgcolor="#FF0000">if&nbsp;isempty(regexp(ctInfo(1).PatientPosition,{'S','P'},&nbsp;'once'))</td></tr>
-<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError(['This&nbsp;Patient&nbsp;Position&nbsp;is&nbsp;not&nbsp;supported&nbsp;by&nbsp;matRad.'...</td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'&nbsp;As&nbsp;of&nbsp;now&nbsp;only&nbsp;''HFS''&nbsp;(Head&nbsp;First-Supine),&nbsp;''FFS'''...</td></tr>
-<tr><td>136</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'&nbsp;(Feet&nbsp;First-Supine),&nbsp;'...&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''HFP''&nbsp;(Head&nbsp;First-Prone),&nbsp;and&nbsp;''FFP'''...</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'&nbsp;(Feet&nbsp;First-Prone)&nbsp;can&nbsp;be&nbsp;processed.'])&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>139</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>140</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>141</td><td bgcolor="#FFFFFF">%%&nbsp;creation&nbsp;of&nbsp;ct-cube</td></tr>
-<tr><td>142</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('reading&nbsp;slices...')</td></tr>
-<tr><td>143</td><td bgcolor="#FF0000">origCt&nbsp;=&nbsp;zeros(ctInfo(1).Height,&nbsp;ctInfo(1).Width,&nbsp;numOfSlices);</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numOfSlices</td></tr>
-<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;currentFilename&nbsp;=&nbsp;ctList{i};</td></tr>
-<tr><td>146</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[currentImage,&nbsp;map]&nbsp;=&nbsp;dicomread(currentFilename);</td></tr>
-<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;origCt(:,:,i)&nbsp;=&nbsp;currentImage(:,:);&nbsp;%&nbsp;creation&nbsp;of&nbsp;the&nbsp;ct&nbsp;cube</td></tr>
-<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;draw&nbsp;current&nbsp;ct-slice</td></tr>
-<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;visBool</td></tr>
-<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(map)</td></tr>
-<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image(ind2rgb(uint8(63*currentImage/max(currentImage(:))),map));</td></tr>
-<tr><td>153</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel('x&nbsp;[voxelnumber]')</td></tr>
-<tr><td>154</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ylabel('y&nbsp;[voxelnumber]')</td></tr>
-<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title(['Slice&nbsp;#&nbsp;'&nbsp;int2str(i)&nbsp;'&nbsp;of&nbsp;'&nbsp;int2str(numOfSlices)])</td></tr>
-<tr><td>156</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image(ind2rgb(uint8(63*currentImage/max(currentImage(:))),bone));</td></tr>
-<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel('x&nbsp;[voxelnumber]')</td></tr>
-<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ylabel('y&nbsp;[voxelnumber]')</td></tr>
-<tr><td>160</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title(['Slice&nbsp;#&nbsp;'&nbsp;int2str(i)&nbsp;'&nbsp;of&nbsp;'&nbsp;int2str(numOfSlices)])</td></tr>
-<tr><td>161</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>162</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;axis&nbsp;equal&nbsp;tight;</td></tr>
-<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pause(0.1);</td></tr>
-<tr><td>164</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>165</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_progress(i,numOfSlices);</td></tr>
-<tr><td>166</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>167</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>168</td><td bgcolor="#FFFFFF">%%&nbsp;correction&nbsp;if&nbsp;not&nbsp;lps-coordinate-system</td></tr>
-<tr><td>169</td><td bgcolor="#FFFFFF">%&nbsp;when&nbsp;using&nbsp;the&nbsp;physical&nbsp;coordinates&nbsp;(ctInfo.ImagePositionPatient)&nbsp;to</td></tr>
-<tr><td>170</td><td bgcolor="#FFFFFF">%&nbsp;arrange&nbsp;the&nbsp;&nbsp;slices&nbsp;in&nbsp;z-direction,&nbsp;there&nbsp;is&nbsp;no&nbsp;more&nbsp;need&nbsp;for&nbsp;mirroring</td></tr>
-<tr><td>171</td><td bgcolor="#FFFFFF">%&nbsp;in&nbsp;the&nbsp;z-direction</td></tr>
-<tr><td>172</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('\nz-coordinates&nbsp;taken&nbsp;from&nbsp;ImagePositionPatient\n')</td></tr>
-<tr><td>173</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>174</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;x-&nbsp;&amp;&nbsp;y-direction&nbsp;in&nbsp;lps-coordinates&nbsp;are&nbsp;specified&nbsp;in:</td></tr>
-<tr><td>175</td><td bgcolor="#FFFFFF">%&nbsp;ImageOrientationPatient</td></tr>
-<tr><td>176</td><td bgcolor="#FF0000">xDir&nbsp;=&nbsp;ctInfo(1).ImageOrientationPatient(1:3);&nbsp;%&nbsp;lps:&nbsp;[1;0;0]</td></tr>
-<tr><td>177</td><td bgcolor="#FF0000">yDir&nbsp;=&nbsp;ctInfo(1).ImageOrientationPatient(4:6);&nbsp;%&nbsp;lps:&nbsp;[0;1;0]</td></tr>
-<tr><td>178</td><td bgcolor="#FF0000">nonStandardDirection&nbsp;=&nbsp;false;</td></tr>
-<tr><td>179</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>180</td><td bgcolor="#FFFFFF">%&nbsp;correct&nbsp;x-&nbsp;&amp;&nbsp;y-direction</td></tr>
-<tr><td>181</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>182</td><td bgcolor="#FFFFFF">%&nbsp;if&nbsp;xDir(1)&nbsp;==&nbsp;1&nbsp;&amp;&amp;&nbsp;xDir(2)&nbsp;==&nbsp;0&nbsp;&amp;&amp;&nbsp;xDir(3)&nbsp;==&nbsp;0</td></tr>
-<tr><td>183</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('x-direction&nbsp;OK\n')</td></tr>
-<tr><td>184</td><td bgcolor="#FFFFFF">%&nbsp;elseif&nbsp;xDir(1)&nbsp;==&nbsp;-1&nbsp;&amp;&amp;&nbsp;xDir(2)&nbsp;==&nbsp;0&nbsp;&amp;&amp;&nbsp;xDir(3)&nbsp;==&nbsp;0</td></tr>
-<tr><td>185</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('\nMirroring&nbsp;x-direction...')</td></tr>
-<tr><td>186</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origCt&nbsp;=&nbsp;flip(origCt,1);</td></tr>
-<tr><td>187</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('finished!\n')</td></tr>
-<tr><td>188</td><td bgcolor="#FFFFFF">%&nbsp;else</td></tr>
-<tr><td>189</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonStandardDirection&nbsp;=&nbsp;true;</td></tr>
-<tr><td>190</td><td bgcolor="#FFFFFF">%&nbsp;end</td></tr>
-<tr><td>191</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>192</td><td bgcolor="#FFFFFF">%&nbsp;if&nbsp;yDir(1)&nbsp;==&nbsp;0&nbsp;&amp;&amp;&nbsp;yDir(2)&nbsp;==&nbsp;1&nbsp;&amp;&amp;&nbsp;yDir(3)&nbsp;==&nbsp;0</td></tr>
-<tr><td>193</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('y-direction&nbsp;OK\n')</td></tr>
-<tr><td>194</td><td bgcolor="#FFFFFF">%&nbsp;elseif&nbsp;yDir(1)&nbsp;==&nbsp;0&nbsp;&amp;&amp;&nbsp;yDir(2)&nbsp;==&nbsp;-1&nbsp;&amp;&amp;&nbsp;yDir(3)&nbsp;==&nbsp;0</td></tr>
-<tr><td>195</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('\nMirroring&nbsp;y-direction...')</td></tr>
-<tr><td>196</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origCt&nbsp;=&nbsp;flip(origCt,2);</td></tr>
-<tr><td>197</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('finished!\n')</td></tr>
-<tr><td>198</td><td bgcolor="#FFFFFF">%&nbsp;else</td></tr>
-<tr><td>199</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonStandardDirection&nbsp;=&nbsp;true;</td></tr>
-<tr><td>200</td><td bgcolor="#FFFFFF">%&nbsp;end</td></tr>
-<tr><td>201</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>202</td><td bgcolor="#FF0000">if&nbsp;nonStandardDirection</td></tr>
-<tr><td>203</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo(['Non-standard&nbsp;patient&nbsp;orientation.\n'...</td></tr>
-<tr><td>204</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'CT&nbsp;might&nbsp;not&nbsp;fit&nbsp;to&nbsp;contoured&nbsp;structures\n'])</td></tr>
-<tr><td>205</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>206</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>207</td><td bgcolor="#FFFFFF">%%&nbsp;interpolate&nbsp;cube</td></tr>
-<tr><td>208</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('\nInterpolating&nbsp;CT&nbsp;cube...');</td></tr>
-<tr><td>209</td><td bgcolor="#FF0000">if&nbsp;exist('grid','var')</td></tr>
-<tr><td>210</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;=&nbsp;matRad_interpDicomCtCube(origCt,&nbsp;ctInfo,&nbsp;resolution,&nbsp;grid);</td></tr>
-<tr><td>211</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>212</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;=&nbsp;matRad_interpDicomCtCube(origCt,&nbsp;ctInfo,&nbsp;resolution);</td></tr>
-<tr><td>213</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>214</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('finished!\n');</td></tr>
-<tr><td>215</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>216</td><td bgcolor="#FFFFFF">%%&nbsp;remember&nbsp;some&nbsp;parameters&nbsp;of&nbsp;original&nbsp;dicom</td></tr>
-<tr><td>217</td><td bgcolor="#FF0000">ct.dicomInfo.PixelSpacing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ctInfo(1).PixelSpacing;</td></tr>
-<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmp&nbsp;=&nbsp;[ctInfo.ImagePositionPatient];</td></tr>
-<tr><td>219</td><td bgcolor="#FF0000">ct.dicomInfo.SlicePositions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;tmp(3,:);</td></tr>
-<tr><td>220</td><td bgcolor="#FF0000">ct.dicomInfo.SliceThickness&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[ctInfo.SliceThickness];</td></tr>
-<tr><td>221</td><td bgcolor="#FF0000">ct.dicomInfo.ImagePositionPatient&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ctInfo(1).ImagePositionPatient;</td></tr>
-<tr><td>222</td><td bgcolor="#FF0000">ct.dicomInfo.ImageOrientationPatient&nbsp;=&nbsp;ctInfo(1).ImageOrientationPatient;</td></tr>
-<tr><td>223</td><td bgcolor="#FF0000">ct.dicomInfo.PatientPosition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ctInfo(1).PatientPosition;</td></tr>
-<tr><td>224</td><td bgcolor="#FF0000">ct.dicomInfo.Width&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ctInfo(1).Width;</td></tr>
-<tr><td>225</td><td bgcolor="#FF0000">ct.dicomInfo.Height&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ctInfo(1).Height;</td></tr>
-<tr><td>226</td><td bgcolor="#FF0000">ct.dicomInfo.RescaleSlope&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ctInfo(1).RescaleSlope;</td></tr>
-<tr><td>227</td><td bgcolor="#FF0000">ct.dicomInfo.RescaleIntercept&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;ctInfo(1).RescaleIntercept;</td></tr>
-<tr><td>228</td><td bgcolor="#FF0000">if&nbsp;isfield(completeDicom,&nbsp;'Manufacturer')</td></tr>
-<tr><td>229</td><td bgcolor="#FF0000">ct.dicomInfo.Manufacturer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;completeDicom.Manufacturer;</td></tr>
-<tr><td>230</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>231</td><td bgcolor="#FF0000">if&nbsp;isfield(completeDicom,&nbsp;'ManufacturerModelName')</td></tr>
-<tr><td>232</td><td bgcolor="#FF0000">ct.dicomInfo.ManufacturerModelName&nbsp;&nbsp;&nbsp;=&nbsp;completeDicom.ManufacturerModelName;</td></tr>
-<tr><td>233</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>234</td><td bgcolor="#FF0000">if&nbsp;isfield(completeDicom,&nbsp;'ConvolutionKernel')</td></tr>
-<tr><td>235</td><td bgcolor="#FF0000">ct.dicomInfo.ConvolutionKernel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;completeDicom.ConvolutionKernel;</td></tr>
-<tr><td>236</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>237</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>238</td><td bgcolor="#FFFFFF">%&nbsp;store&nbsp;patientName&nbsp;only&nbsp;if&nbsp;user&nbsp;wants&nbsp;to</td></tr>
-<tr><td>239</td><td bgcolor="#FF0000">if&nbsp;isfield(completeDicom,'PatientName')&nbsp;&amp;&amp;&nbsp;dicomMetaBool&nbsp;==&nbsp;true</td></tr>
-<tr><td>240</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.dicomInfo.PatientName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;completeDicom.PatientName;</td></tr>
-<tr><td>241</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>242</td><td bgcolor="#FF0000">if&nbsp;dicomMetaBool&nbsp;==&nbsp;true</td></tr>
-<tr><td>243</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.dicomMeta&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;completeDicom;</td></tr>
-<tr><td>244</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>245</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>246</td><td bgcolor="#FF0000">ct.timeStamp&nbsp;=&nbsp;datestr(clock);</td></tr>
-<tr><td>247</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>248</td><td bgcolor="#FFFFFF">%&nbsp;convert&nbsp;to&nbsp;Hounsfield&nbsp;units</td></tr>
-<tr><td>249</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('\nconversion&nbsp;of&nbsp;ct-Cube&nbsp;to&nbsp;Hounsfield&nbsp;units...');</td></tr>
-<tr><td>250</td><td bgcolor="#FF0000">ct&nbsp;=&nbsp;matRad_calcHU(ct);</td></tr>
-<tr><td>251</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('finished!\n');</td></tr>
-<tr><td>252</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>253</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>254</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

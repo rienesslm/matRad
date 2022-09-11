@@ -1,93 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcDVH.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcDVH.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;dvh&nbsp;=&nbsp;matRad_calcDVH(cst,doseCube,dvhType,doseGrid)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;dvh&nbsp;calculation</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dvh&nbsp;=&nbsp;matRad_calcDVH(cst,doseCube)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dvh&nbsp;=&nbsp;matRad_calcDVH(cst,doseCube,dvhType)</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dvh&nbsp;=&nbsp;matRad_calcDVH(cst,doseCube,doseGrid)</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dvh&nbsp;=&nbsp;matRad_calcDVH(cst,doseCube,dvhType,doseGrid)</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;doseCube:&nbsp;&nbsp;&nbsp;arbitrary&nbsp;doseCube&nbsp;(e.g.&nbsp;physicalDose)</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dvhType:&nbsp;&nbsp;&nbsp;&nbsp;(optional)&nbsp;string,&nbsp;'cum'&nbsp;for&nbsp;cumulative,&nbsp;'diff'&nbsp;for&nbsp;differential</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dvh</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;doseGrid:&nbsp;&nbsp;&nbsp;(optional)&nbsp;use&nbsp;predefined&nbsp;evaluation&nbsp;points.&nbsp;Useful&nbsp;when</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comparing&nbsp;multiple&nbsp;realizations</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dose&nbsp;volume&nbsp;histogram</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;van't&nbsp;Riet&nbsp;et.&nbsp;al.,&nbsp;IJROBP,&nbsp;1997&nbsp;Feb&nbsp;1;37(3):731-6.</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;Kataria&nbsp;et.&nbsp;al.,&nbsp;J&nbsp;Med&nbsp;Phys.&nbsp;2012&nbsp;Oct-Dec;&nbsp;37(4):&nbsp;207�213.</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2016&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>38</td><td bgcolor="#FF0000">if&nbsp;~exist('dvhType','var')&nbsp;||&nbsp;isempty(dvhType)</td></tr>
-<tr><td>39</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dvhType&nbsp;=&nbsp;'cum';</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">if&nbsp;~exist('doseGrid',&nbsp;'var')&nbsp;||&nbsp;isempty(doseGrid)</td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maxDose&nbsp;=&nbsp;max(doseCube(:));</td></tr>
-<tr><td>44</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;minDose&nbsp;=&nbsp;min(doseCube(:));</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;dvhPoints&nbsp;for&nbsp;every&nbsp;structure&nbsp;and&nbsp;every&nbsp;scenario&nbsp;the&nbsp;same</td></tr>
-<tr><td>47</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;n&nbsp;=&nbsp;1000;</td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(dvhType,&nbsp;'cum')</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseGrid&nbsp;=&nbsp;linspace(0,maxDose*1.05,n);</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;strcmp(dvhType,&nbsp;'diff')</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseGrid&nbsp;=&nbsp;linspace(0.95*minDose,maxDose*1.05,n);</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>53</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>55</td><td bgcolor="#FF0000">numOfVois&nbsp;=&nbsp;size(cst,1);</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">dvh&nbsp;=&nbsp;struct;</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numOfVois</td></tr>
-<tr><td>58</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dvh(i).doseGrid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;doseGrid;</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dvh(i).volumePoints&nbsp;=&nbsp;getDVHPoints(cst,&nbsp;i,&nbsp;doseCube,&nbsp;doseGrid,&nbsp;dvhType);</td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dvh(i).name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;cst{i,2};</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF">end&nbsp;%eof&nbsp;</td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF">function&nbsp;dvh&nbsp;=&nbsp;getDVHPoints(cst,&nbsp;sIx,&nbsp;doseCube,&nbsp;dvhPoints,&nbsp;dvhType)</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">n&nbsp;=&nbsp;numel(dvhPoints);</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">dvh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;NaN&nbsp;*&nbsp;ones(1,n);</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">indices&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;cst{sIx,4}{1};</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">numOfVoxels&nbsp;=&nbsp;numel(indices);</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">doseInVoi&nbsp;&nbsp;&nbsp;=&nbsp;doseCube(indices);</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">switch&nbsp;dvhType</td></tr>
-<tr><td>74</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'cum'&nbsp;%&nbsp;cummulative&nbsp;DVH</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:n</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dvh(j)&nbsp;=&nbsp;sum(doseInVoi&nbsp;&gt;=&nbsp;dvhPoints(j));</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'diff'&nbsp;%&nbsp;differential&nbsp;DVH</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;binning&nbsp;=&nbsp;(dvhPoints(2)&nbsp;-&nbsp;dvhPoints(1))/2;</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:n&nbsp;%&nbsp;differential&nbsp;DVH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dvh(j)&nbsp;=&nbsp;sum(dvhPoints(j)&nbsp;+&nbsp;binning&nbsp;&gt;&nbsp;doseInVoi&nbsp;&amp;&nbsp;doseInVoi&nbsp;&gt;&nbsp;dvhPoints(j)&nbsp;-&nbsp;binning);</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">dvh&nbsp;=&nbsp;dvh&nbsp;./&nbsp;numOfVoxels&nbsp;*&nbsp;100;</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF">end&nbsp;%eof&nbsp;getDVHPoints</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

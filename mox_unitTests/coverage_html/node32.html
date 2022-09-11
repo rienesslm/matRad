@@ -1,170 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_importDicomRTPlan.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_importDicomRTPlan.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;pln&nbsp;=&nbsp;matRad_importDicomRTPlan(ct,&nbsp;rtPlanFiles,&nbsp;dicomMetaBool)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;import&nbsp;dicom&nbsp;RTPLAN&nbsp;data</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln&nbsp;=&nbsp;matRad_importDicomRTPlan(ct,&nbsp;rtPlanFiles,&nbsp;dicomMetaBool)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;imported&nbsp;by&nbsp;the&nbsp;matRad_importDicomCt&nbsp;function</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;rtPlanFiles:&nbsp;&nbsp;&nbsp;	list&nbsp;of&nbsp;RTPlan&nbsp;Dicom&nbsp;files</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dicomMetaBool:&nbsp;&nbsp;import&nbsp;whole&nbsp;dicom&nbsp;information</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;pln&nbsp;struct&nbsp;with&nbsp;meta&nbsp;information.&nbsp;Note&nbsp;that</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelWidth&nbsp;is&nbsp;determined&nbsp;via&nbsp;the&nbsp;importSteering&nbsp;function.</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%%&nbsp;load&nbsp;plan&nbsp;file</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;size&nbsp;of&nbsp;RT&nbsp;Plan</td></tr>
-<tr><td>34</td><td bgcolor="#FF0000">if&nbsp;size(rtPlanFiles,1)&nbsp;~=&nbsp;1</td></tr>
-<tr><td>35</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;errordlg('Too&nbsp;few&nbsp;or&nbsp;to&nbsp;many&nbsp;RTPlan&nbsp;files')</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;read&nbsp;information&nbsp;out&nbsp;of&nbsp;the&nbsp;RT&nbsp;file</td></tr>
-<tr><td>39</td><td bgcolor="#FF0000">if&nbsp;verLessThan('matlab','9')</td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;planInfo&nbsp;=&nbsp;dicominfo(rtPlanFiles{1});</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;planInfo&nbsp;=&nbsp;dicominfo(rtPlanFiles{1},'UseDictionaryVR',true);</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;which&nbsp;type&nbsp;of&nbsp;Radiation&nbsp;is&nbsp;used</td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">if&nbsp;isfield(planInfo,&nbsp;'BeamSequence')</td></tr>
-<tr><td>47</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;BeamParam&nbsp;=&nbsp;'BeamSequence';</td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ControlParam&nbsp;=&nbsp;'ControlPointSequence';</td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF">elseif&nbsp;isfield(planInfo,&nbsp;'IonBeamSequence')</td></tr>
-<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;BeamParam&nbsp;=&nbsp;'IonBeamSequence';</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ControlParam&nbsp;=&nbsp;'IonControlPointSequence';</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;errordlg('Not&nbsp;supported&nbsp;kind&nbsp;of&nbsp;DICOM&nbsp;RT&nbsp;plan&nbsp;file.');&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;get&nbsp;beam&nbsp;sequence</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">BeamSequence&nbsp;=&nbsp;planInfo.(BeamParam);</td></tr>
-<tr><td>58</td><td bgcolor="#FF0000">BeamSeqNames&nbsp;=&nbsp;fieldnames(BeamSequence);</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">%&nbsp;use&nbsp;the&nbsp;treatment&nbsp;beams&nbsp;only</td></tr>
-<tr><td>61</td><td bgcolor="#FF0000">if&nbsp;isfield(BeamSequence.(BeamSeqNames{1}),'TreatmentDeliveryType')</td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:length(BeamSeqNames)</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currBeamSeq&nbsp;=&nbsp;BeamSequence.(BeamSeqNames{i});</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;treatDelType&nbsp;=&nbsp;currBeamSeq.TreatmentDeliveryType;</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~strcmpi(treatDelType,'TREATMENT')</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BeamSequence&nbsp;=&nbsp;rmfield(BeamSequence,BeamSeqNames{i});</td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;catch</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning('Something&nbsp;went&nbsp;wrong&nbsp;while&nbsp;determining&nbsp;the&nbsp;type&nbsp;of&nbsp;the&nbsp;beam.');</td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;BeamSeqNames&nbsp;=&nbsp;fieldnames(BeamSequence);</td></tr>
-<tr><td>74</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF">%%&nbsp;get&nbsp;information&nbsp;may&nbsp;change&nbsp;between&nbsp;beams</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">%&nbsp;loop&nbsp;over&nbsp;beams</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">gantryAngles{length(BeamSeqNames)}&nbsp;=&nbsp;[];</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">PatientSupportAngle{length(BeamSeqNames)}&nbsp;=&nbsp;[];</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">isoCenter&nbsp;=&nbsp;NaN*ones(length(BeamSeqNames),3);</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:length(BeamSeqNames)&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;currBeamSeq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;BeamSequence.(BeamSeqNames{i});</td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;parameters&nbsp;not&nbsp;changing&nbsp;are&nbsp;stored&nbsp;in&nbsp;the&nbsp;first&nbsp;ControlPointSequence</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;gantryAngles{i}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;currBeamSeq.(ControlParam).Item_1.GantryAngle;</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;PatientSupportAngle{i}&nbsp;&nbsp;=&nbsp;currBeamSeq.(ControlParam).Item_1.PatientSupportAngle;</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isoCenter(i,:)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;currBeamSeq.(ControlParam).Item_1.IsocenterPosition';</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">%&nbsp;transform&nbsp;iso.&nbsp;At&nbsp;the&nbsp;moment&nbsp;just&nbsp;this&nbsp;way&nbsp;for&nbsp;HFS</td></tr>
-<tr><td>91</td><td bgcolor="#FF0000">if&nbsp;ct.dicomInfo.ImageOrientationPatient&nbsp;==&nbsp;[1;0;0;0;1;0]</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isoCenter&nbsp;=&nbsp;isoCenter&nbsp;-&nbsp;ones(length(BeamSeqNames),1)&nbsp;*&nbsp;...</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;([ct.x(1)&nbsp;ct.y(1)&nbsp;ct.z(1)]&nbsp;-&nbsp;[ct.resolution.x&nbsp;ct.resolution.y&nbsp;ct.resolution.z]);</td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('This&nbsp;Orientation&nbsp;is&nbsp;not&nbsp;yet&nbsp;supported.');</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF">%%&nbsp;read&nbsp;constant&nbsp;parameters</td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF">%&nbsp;readout&nbsp;charge&nbsp;and&nbsp;mass&nbsp;to&nbsp;set&nbsp;radiationMode&nbsp;to&nbsp;matRad&nbsp;specific&nbsp;name</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">radiationMode&nbsp;=&nbsp;planInfo.(BeamParam).Item_1.RadiationType;</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">if&nbsp;~strncmpi(radiationMode,'photons',6)</td></tr>
-<tr><td>102</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radiationMass&nbsp;=&nbsp;planInfo.(BeamParam).Item_1.RadiationMassNumber;</td></tr>
-<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radiationAtomicNumber&nbsp;=&nbsp;planInfo.(BeamParam).Item_1.RadiationAtomicNumber;</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;catch</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning('Could&nbsp;not&nbsp;determine&nbsp;mass&nbsp;and&nbsp;atomic&nbsp;number&nbsp;of&nbsp;the&nbsp;particle');</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>110</td><td bgcolor="#FF0000">if&nbsp;strncmpi(radiationMode,'photons',6)</td></tr>
-<tr><td>111</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;radiationMode&nbsp;=&nbsp;'photons';</td></tr>
-<tr><td>112</td><td bgcolor="#FFFFFF">elseif&nbsp;strncmpi(radiationMode,'proton',6)</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;radiationMode&nbsp;=&nbsp;'protons';</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">elseif&nbsp;(strncmpi(radiationMode,'ion',3)&nbsp;&amp;&amp;&nbsp;radiationMass&nbsp;==&nbsp;12&nbsp;&amp;&amp;&nbsp;radiationAtomicNumber&nbsp;==&nbsp;6)</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;radiationMode&nbsp;=&nbsp;'carbon';</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;warning('The&nbsp;given&nbsp;type&nbsp;of&nbsp;radiation&nbsp;is&nbsp;not&nbsp;yet&nbsp;supported');</td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>119</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">%&nbsp;extract&nbsp;field&nbsp;shapes</td></tr>
-<tr><td>121</td><td bgcolor="#FF0000">if&nbsp;strcmp(radiationMode,&nbsp;'photons')</td></tr>
-<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fractionSequence&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;planInfo.FractionGroupSequence.Item_1;</td></tr>
-<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propStf.collimation&nbsp;&nbsp;=&nbsp;matRad_importFieldShapes(BeamSequence,fractionSequence);</td></tr>
-<tr><td>125</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>126</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>127</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF">%%&nbsp;write&nbsp;parameters&nbsp;found&nbsp;to&nbsp;pln&nbsp;variable</td></tr>
-<tr><td>129</td><td bgcolor="#FF0000">pln.radiationMode&nbsp;&nbsp;&nbsp;=&nbsp;radiationMode;&nbsp;%&nbsp;either&nbsp;photons&nbsp;/&nbsp;protons&nbsp;/&nbsp;carbon</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">pln.numOfFractions&nbsp;&nbsp;=&nbsp;planInfo.FractionGroupSequence.Item_1.NumberOfFractionsPlanned;</td></tr>
-<tr><td>131</td><td bgcolor="#FF0000">pln.machine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;planInfo.(BeamParam).Item_1.TreatmentMachineName;</td></tr>
-<tr><td>132</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>133</td><td bgcolor="#FF0000">pln.propStf.isoCenter&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;isoCenter;</td></tr>
-<tr><td>134</td><td bgcolor="#FF0000">pln.propStf.bixelWidth&nbsp;&nbsp;&nbsp;=&nbsp;NaN;&nbsp;%&nbsp;[mm]&nbsp;/&nbsp;also&nbsp;corresponds&nbsp;to&nbsp;lateral&nbsp;spot&nbsp;spacing&nbsp;for&nbsp;particles</td></tr>
-<tr><td>135</td><td bgcolor="#FF0000">pln.propStf.gantryAngles&nbsp;=&nbsp;[gantryAngles{1:length(BeamSeqNames)}];</td></tr>
-<tr><td>136</td><td bgcolor="#FF0000">pln.propStf.couchAngles&nbsp;&nbsp;=&nbsp;[PatientSupportAngle{1:length(BeamSeqNames)}];&nbsp;%&nbsp;[°]</td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">pln.propStf.numOfBeams&nbsp;&nbsp;&nbsp;=&nbsp;length(BeamSeqNames);</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>139</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>140</td><td bgcolor="#FF0000">pln.propOpt.bioOptimization&nbsp;=&nbsp;'none';&nbsp;%&nbsp;none:&nbsp;physical&nbsp;optimization;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const_RBExD;&nbsp;constant&nbsp;RBE&nbsp;of&nbsp;1.1;</td></tr>
-<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;LEMIV_effect:&nbsp;effect-based&nbsp;optimization;&nbsp;LEMIV_RBExD:&nbsp;optimization&nbsp;of&nbsp;RBE-weighted&nbsp;dose</td></tr>
-<tr><td>142</td><td bgcolor="#FF0000">pln.propOpt.runSequencing&nbsp;&nbsp;&nbsp;=&nbsp;false;&nbsp;%&nbsp;1/true:&nbsp;run&nbsp;sequencing,&nbsp;0/false:&nbsp;don't&nbsp;/&nbsp;will&nbsp;be&nbsp;ignored&nbsp;for&nbsp;particles&nbsp;and&nbsp;also&nbsp;triggered&nbsp;by&nbsp;runDAO&nbsp;below</td></tr>
-<tr><td>143</td><td bgcolor="#FF0000">pln.propOpt.runDAO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;false;&nbsp;%&nbsp;1/true:&nbsp;run&nbsp;DAO,&nbsp;0/false:&nbsp;don't&nbsp;/&nbsp;will&nbsp;be&nbsp;ignored&nbsp;for&nbsp;particles</td></tr>
-<tr><td>144</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF">%&nbsp;if&nbsp;we&nbsp;imported&nbsp;field&nbsp;shapes&nbsp;then&nbsp;let's&nbsp;trigger&nbsp;field&nbsp;based&nbsp;dose&nbsp;calc&nbsp;by</td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">%&nbsp;setting&nbsp;the&nbsp;bixelWidth&nbsp;to&nbsp;'field'</td></tr>
-<tr><td>147</td><td bgcolor="#FF0000">if&nbsp;isfield(pln.propStf,'collimation')</td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.propStf.bixelWidth&nbsp;&nbsp;=&nbsp;'field';&nbsp;</td></tr>
-<tr><td>149</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>150</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>151</td><td bgcolor="#FFFFFF">%&nbsp;timestamp</td></tr>
-<tr><td>152</td><td bgcolor="#FF0000">pln.DicomInfo.timeStamp&nbsp;=&nbsp;datestr(clock);</td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>154</td><td bgcolor="#FF0000">try</td></tr>
-<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;pln.DicomInfo.SOPClassUID&nbsp;=&nbsp;planInfo.SOPClassUID;</td></tr>
-<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;pln.DicomInfo.SOPInstanceUID&nbsp;=&nbsp;planInfo.SOPInstanceUID;</td></tr>
-<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;pln.DicomInfo.ReferencedDoseSequence&nbsp;=&nbsp;planInfo.ReferencedDoseSequence;</td></tr>
-<tr><td>158</td><td bgcolor="#FF0000">catch</td></tr>
-<tr><td>159</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>160</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>161</td><td bgcolor="#FFFFFF">%&nbsp;safe&nbsp;entire&nbsp;dicomInfo</td></tr>
-<tr><td>162</td><td bgcolor="#FF0000">if&nbsp;dicomMetaBool&nbsp;==&nbsp;true</td></tr>
-<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;pln.DicomInfo.Meta&nbsp;=&nbsp;planInfo;</td></tr>
-<tr><td>164</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>165</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>166</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

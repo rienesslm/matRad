@@ -1,162 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcQualityIndicators.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcQualityIndicators.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;qi&nbsp;=&nbsp;matRad_calcQualityIndicators(cst,pln,doseCube,refGy,refVol)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;QI&nbsp;calculation</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;qi&nbsp;=&nbsp;matRad_calcQualityIndicators(cst,pln,doseCube)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;qi&nbsp;=&nbsp;matRad_calcQualityIndicators(cst,pln,doseCube,refGy,refVol)</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;pln&nbsp;struct</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;doseCube:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arbitrary&nbsp;doseCube&nbsp;(e.g.&nbsp;physicalDose)</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;refGy:&nbsp;(optional)&nbsp;&nbsp;&nbsp;array&nbsp;of&nbsp;dose&nbsp;values&nbsp;used&nbsp;for&nbsp;V_XGy&nbsp;calculation</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;is&nbsp;[40&nbsp;50&nbsp;60]</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;refVol:(optional)&nbsp;&nbsp;&nbsp;array&nbsp;of&nbsp;volumes&nbsp;(0-100)&nbsp;used&nbsp;for&nbsp;D_X&nbsp;calculation</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;is&nbsp;[2&nbsp;5&nbsp;95&nbsp;98]</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE:&nbsp;Call&nbsp;either&nbsp;both&nbsp;or&nbsp;none!</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;qi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;various&nbsp;quality&nbsp;indicators&nbsp;like&nbsp;CI,&nbsp;HI&nbsp;(for&nbsp;</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targets)&nbsp;and&nbsp;DX,&nbsp;VX&nbsp;within&nbsp;a&nbsp;structure&nbsp;set&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;van't&nbsp;Riet&nbsp;et.&nbsp;al.,&nbsp;IJROBP,&nbsp;1997&nbsp;Feb&nbsp;1;37(3):731-6.</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;Kataria&nbsp;et.&nbsp;al.,&nbsp;J&nbsp;Med&nbsp;Phys.&nbsp;2012&nbsp;Oct-Dec;&nbsp;37(4)</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2016&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">if&nbsp;~exist('refVol',&nbsp;'var')&nbsp;||&nbsp;isempty(refVol)</td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;refVol&nbsp;=&nbsp;[2&nbsp;5&nbsp;50&nbsp;95&nbsp;98];</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">if&nbsp;~exist('refGy',&nbsp;'var')&nbsp;||&nbsp;isempty(refGy)</td></tr>
-<tr><td>47</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;refGy&nbsp;=&nbsp;floor(linspace(0,max(doseCube(:)),6)*10)/10;</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;QIs&nbsp;per&nbsp;VOI</td></tr>
-<tr><td>52</td><td bgcolor="#FF0000">qi&nbsp;=&nbsp;struct;</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">for&nbsp;runVoi&nbsp;=&nbsp;1:size(cst,1)</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>55</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;indices&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;cst{runVoi,4}{1};</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numOfVoxels&nbsp;=&nbsp;numel(indices);&nbsp;</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;voiPrint&nbsp;=&nbsp;sprintf('%3d&nbsp;%20s',cst{runVoi,1},cst{runVoi,2});&nbsp;%String&nbsp;that&nbsp;will&nbsp;print&nbsp;quality&nbsp;indicators</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;Dose,&nbsp;dose&nbsp;is&nbsp;sorted&nbsp;to&nbsp;simplify&nbsp;calculations</td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseInVoi&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;sort(doseCube(indices));</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(doseInVoi)</td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).name&nbsp;=&nbsp;cst{runVoi,2};</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;easy&nbsp;stats</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).mean&nbsp;=&nbsp;mean(doseInVoi);</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).std&nbsp;&nbsp;=&nbsp;std(doseInVoi);</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).max&nbsp;&nbsp;=&nbsp;doseInVoi(end);</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).min&nbsp;&nbsp;=&nbsp;doseInVoi(1);</td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiPrint&nbsp;=&nbsp;sprintf('%s&nbsp;-&nbsp;Mean&nbsp;dose&nbsp;=&nbsp;%5.2f&nbsp;Gy&nbsp;+/-&nbsp;%5.2f&nbsp;Gy&nbsp;(Max&nbsp;dose&nbsp;=&nbsp;%5.2f&nbsp;Gy,&nbsp;Min&nbsp;dose&nbsp;=&nbsp;%5.2f&nbsp;Gy)\n%27s',&nbsp;...</td></tr>
-<tr><td>73</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiPrint,qi(runVoi).mean,qi(runVoi).std,qi(runVoi).max,qi(runVoi).min,'&nbsp;');</td></tr>
-<tr><td>74</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DX&nbsp;=&nbsp;@(x)&nbsp;matRad_interp1(linspace(0,1,numOfVoxels),doseInVoi,(100-x)*0.01);</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VX&nbsp;=&nbsp;@(x)&nbsp;numel(doseInVoi(doseInVoi&nbsp;&gt;=&nbsp;x))&nbsp;/&nbsp;numOfVoxels;</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;VX&nbsp;and&nbsp;DX&nbsp;struct&nbsp;fieldnames&nbsp;at&nbsp;runtime&nbsp;and&nbsp;fill</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;runDX&nbsp;=&nbsp;1:numel(refVol)</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).(strcat('D_',num2str(refVol(runDX))))&nbsp;=&nbsp;DX(refVol(runDX));</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiPrint&nbsp;=&nbsp;sprintf('%sD%d%%&nbsp;=&nbsp;%5.2f&nbsp;Gy,&nbsp;',voiPrint,refVol(runDX),DX(refVol(runDX)));</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiPrint&nbsp;=&nbsp;sprintf('%s\n%27s',voiPrint,'&nbsp;');</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;runVX&nbsp;=&nbsp;1:numel(refGy)</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sRefGy&nbsp;=&nbsp;num2str(refGy(runVX),3);</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).(['V_'&nbsp;strrep(sRefGy,'.','_')&nbsp;'Gy'])&nbsp;=&nbsp;VX(refGy(runVX));</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiPrint&nbsp;=&nbsp;sprintf(['%sV'&nbsp;sRefGy&nbsp;'Gy&nbsp;=&nbsp;%6.2f%%,&nbsp;'],voiPrint,VX(refGy(runVX))*100);</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiPrint&nbsp;=&nbsp;sprintf('%s\n%27s',voiPrint,'&nbsp;');</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;if&nbsp;current&nbsp;voi&nbsp;is&nbsp;a&nbsp;target&nbsp;-&gt;&nbsp;calculate&nbsp;homogeneity&nbsp;and&nbsp;conformity</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(cst{runVoi,3},'TARGET')&nbsp;&gt;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;loop&nbsp;over&nbsp;target&nbsp;objectives&nbsp;and&nbsp;get&nbsp;the&nbsp;lowest&nbsp;dose&nbsp;objective&nbsp;</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;referenceDose&nbsp;=&nbsp;inf;</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isstruct(cst{runVoi,6})</td></tr>
-<tr><td>98</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cst{runVoi,6}&nbsp;=&nbsp;num2cell(arrayfun(@matRad_DoseOptimizationFunction.convertOldOptimizationStruct,cst{runVoi,6}));</td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;runObjective&nbsp;=&nbsp;1:numel(cst{runVoi,6})</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;check&nbsp;if&nbsp;this&nbsp;is&nbsp;an&nbsp;objective&nbsp;that&nbsp;penalizes&nbsp;underdosing&nbsp;</td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj&nbsp;=&nbsp;cst{runVoi,6}{runObjective};</td></tr>
-<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isa(obj,'matRad_DoseOptimizationFunction')</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj&nbsp;=&nbsp;matRad_DoseOptimizationFunction.createInstanceFromStruct(obj);</td></tr>
-<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;catch&nbsp;ME</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('Objective/Constraint&nbsp;not&nbsp;valid!\n%s',ME.message)</td></tr>
-<tr><td>109</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%if&nbsp;strcmp(cst{runVoi,6}(runObjective).type,'square&nbsp;deviation')&nbsp;&gt;&nbsp;0&nbsp;||&nbsp;strcmp(cst{runVoi,6}(runObjective).type,'square&nbsp;underdosing')&nbsp;&gt;&nbsp;0</td></tr>
-<tr><td>114</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isa(obj,'DoseObjectives.matRad_SquaredDeviation')&nbsp;||&nbsp;isa(obj,'DoseObjectives.matRad_SquaredUnderdosing')</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;referenceDose&nbsp;=&nbsp;(min(obj.getDoseParameters(),referenceDose))/pln.numOfFractions;</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>117</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;referenceDose&nbsp;==&nbsp;inf&nbsp;</td></tr>
-<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiPrint&nbsp;=&nbsp;sprintf('%s%s',voiPrint,'Warning:&nbsp;target&nbsp;has&nbsp;no&nbsp;objective&nbsp;that&nbsp;penalizes&nbsp;underdosage,&nbsp;');</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;</td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StringReferenceDose&nbsp;=&nbsp;regexprep(num2str(round(referenceDose*100)/100),'\D','_');</td></tr>
-<tr><td>124</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Conformity&nbsp;Index,&nbsp;fieldname&nbsp;contains&nbsp;reference&nbsp;dose</td></tr>
-<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VTarget95&nbsp;=&nbsp;sum(doseInVoi&nbsp;&gt;=&nbsp;0.95*referenceDose);&nbsp;%&nbsp;number&nbsp;of&nbsp;target&nbsp;voxels&nbsp;recieving&nbsp;dose&nbsp;&gt;=&nbsp;0.95&nbsp;dPres</td></tr>
-<tr><td>126</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VTreated95&nbsp;=&nbsp;sum(doseCube(:)&nbsp;&gt;=&nbsp;0.95*referenceDose);&nbsp;&nbsp;%number&nbsp;of&nbsp;all&nbsp;voxels&nbsp;recieving&nbsp;dose&nbsp;&gt;=&nbsp;0.95&nbsp;dPres&nbsp;("treated&nbsp;volume")</td></tr>
-<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).(['CI_'&nbsp;StringReferenceDose&nbsp;'Gy'])&nbsp;=&nbsp;VTarget95^2/(numOfVoxels&nbsp;*&nbsp;VTreated95);&nbsp;</td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Homogeneity&nbsp;Index&nbsp;(one&nbsp;out&nbsp;of&nbsp;many),&nbsp;fieldname&nbsp;contains&nbsp;reference&nbsp;dose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).(['HI_'&nbsp;StringReferenceDose&nbsp;'Gy'])&nbsp;=&nbsp;(DX(5)&nbsp;-&nbsp;DX(95))/referenceDose&nbsp;*&nbsp;100;</td></tr>
-<tr><td>131</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voiPrint&nbsp;=&nbsp;sprintf('%sCI&nbsp;=&nbsp;%6.4f,&nbsp;HI&nbsp;=&nbsp;%5.2f&nbsp;for&nbsp;reference&nbsp;dose&nbsp;of&nbsp;%3.1f&nbsp;Gy\n',voiPrint,...</td></tr>
-<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(runVoi).(['CI_'&nbsp;StringReferenceDose&nbsp;'Gy']),qi(runVoi).(['HI_'&nbsp;StringReferenceDose&nbsp;'Gy']),referenceDose);</td></tr>
-<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>136</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;do&nbsp;it&nbsp;this&nbsp;way&nbsp;so&nbsp;the&nbsp;percentages&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;not&nbsp;interpreted&nbsp;as&nbsp;format&nbsp;specifiers</td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('%s\n',voiPrint);&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('%d&nbsp;%s&nbsp;-&nbsp;No&nbsp;dose&nbsp;information.',cst{runVoi,1},cst{runVoi,2});&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>140</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>141</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>143</td><td bgcolor="#FFFFFF">%&nbsp;assign&nbsp;VOI&nbsp;names&nbsp;which&nbsp;could&nbsp;be&nbsp;corrupted&nbsp;due&nbsp;to&nbsp;empty&nbsp;structures</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">listOfFields&nbsp;=&nbsp;fieldnames(qi);</td></tr>
-<tr><td>145</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:size(cst,1)</td></tr>
-<tr><td>146</td><td bgcolor="#FF0000">&nbsp;&nbsp;indices&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;cst{i,4}{1};</td></tr>
-<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;doseInVoi&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;sort(doseCube(indices));</td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;if&nbsp;isempty(doseInVoi)</td></tr>
-<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:numel(listOfFields)</td></tr>
-<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(i).(listOfFields{j})&nbsp;=&nbsp;NaN;</td></tr>
-<tr><td>151</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qi(i).name&nbsp;=&nbsp;cst{i,2};</td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;end</td></tr>
-<tr><td>154</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>155</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>156</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>157</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>158</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

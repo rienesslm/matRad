@@ -1,118 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\plotting\matRad_plotCtSlice3D.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\plotting\matRad_plotCtSlice3D.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[ctHandle,cMap,window]&nbsp;=&nbsp;matRad_plotCtSlice3D(axesHandle,ct,cubeIdx,plane,ctSlice,cMap,window)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;that&nbsp;generates&nbsp;the&nbsp;plot&nbsp;for&nbsp;the&nbsp;CT&nbsp;in&nbsp;the&nbsp;GUI&nbsp;3D&nbsp;view&nbsp;</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;The&nbsp;function&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;in&nbsp;personal&nbsp;matlab&nbsp;figures&nbsp;by&nbsp;passing&nbsp;the</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;corresponding&nbsp;axes&nbsp;handle</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[ctHandle,cMap,window]&nbsp;=&nbsp;matRad_plotCtSlice3D(axesHandle,ct,cubeIdx,plane,ctSlice,cMap,window)</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;axesHandle&nbsp;&nbsp;handle&nbsp;to&nbsp;3D&nbsp;axes&nbsp;the&nbsp;slice&nbsp;should&nbsp;be&nbsp;displayed&nbsp;in</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;ct&nbsp;struct&nbsp;used&nbsp;in&nbsp;matRad</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cubeIdx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Index&nbsp;of&nbsp;the&nbsp;desired&nbsp;cube&nbsp;in&nbsp;the&nbsp;ct&nbsp;struct</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;plane&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plane&nbsp;view&nbsp;(coronal=1,sagittal=2,axial=3)</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ctSlice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;slice&nbsp;in&nbsp;the&nbsp;selected&nbsp;plane&nbsp;of&nbsp;the&nbsp;3D&nbsp;cube</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cMap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional&nbsp;argument&nbsp;defining&nbsp;the&nbsp;colormap,&nbsp;default&nbsp;is&nbsp;bone</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;use&nbsp;the&nbsp;default&nbsp;map&nbsp;with&nbsp;the&nbsp;window&nbsp;argument</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;you&nbsp;can&nbsp;use&nbsp;an&nbsp;empty&nbsp;array&nbsp;[]</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;window&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional&nbsp;argument&nbsp;defining&nbsp;the&nbsp;displayed&nbsp;range.&nbsp;default&nbsp;is</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[min(ctCube(:))&nbsp;max(ctCube(:))]</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ctHandle&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;of&nbsp;the&nbsp;plotted&nbsp;CT&nbsp;axes</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cMap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;used&nbsp;colormap&nbsp;(same&nbsp;as&nbsp;input&nbsp;if&nbsp;set)</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;window&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;used&nbsp;window&nbsp;(same&nbsp;as&nbsp;input&nbsp;if&nbsp;set)</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%Use&nbsp;default&nbsp;colormap?</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;6&nbsp;||&nbsp;isempty(cMap)</td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cMap&nbsp;=&nbsp;bone(64);</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;7&nbsp;||&nbsp;isempty(window)</td></tr>
-<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;window&nbsp;=&nbsp;[min(ct.cubeHU{cubeIdx}(:))&nbsp;max(ct.cubeHU{cubeIdx}(:))];&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">cMapScale&nbsp;=&nbsp;size(cMap,1)&nbsp;-&nbsp;1;</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">%Create&nbsp;the&nbsp;coordinates</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">coords{1}&nbsp;=&nbsp;ct.resolution.x&nbsp;*&nbsp;(1:ct.cubeDim(2));</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">coords{2}&nbsp;=&nbsp;ct.resolution.y&nbsp;*&nbsp;(1:ct.cubeDim(1));</td></tr>
-<tr><td>58</td><td bgcolor="#FF0000">coords{3}&nbsp;=&nbsp;ct.resolution.z&nbsp;*&nbsp;(1:ct.cubeDim(3));</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">%&nbsp;slice&nbsp;plot&nbsp;with&nbsp;surface(...),&nbsp;colormapping&nbsp;can&nbsp;be&nbsp;done&nbsp;by&nbsp;texture</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">%&nbsp;mapping,&nbsp;this&nbsp;is&nbsp;why&nbsp;we&nbsp;use&nbsp;surface&nbsp;instead&nbsp;of&nbsp;slice</td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">if&nbsp;plane&nbsp;==&nbsp;1&nbsp;%&nbsp;Coronal&nbsp;plane</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[xMesh,zMesh]&nbsp;=&nbsp;meshgrid(coords{2},coords{3});</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yMesh&nbsp;=&nbsp;ctSlice*ct.resolution.x*ones(size(xMesh));</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctIndexed&nbsp;=&nbsp;uint8(cMapScale*(squeeze((ct.cubeHU{cubeIdx}(ctSlice,:,:)-window(1))/(window(2)&nbsp;-&nbsp;window(1)))));</td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;ct_rgb&nbsp;=&nbsp;permute(ct_rgb,[2&nbsp;1&nbsp;3]);</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF">elseif&nbsp;plane&nbsp;==&nbsp;2&nbsp;%&nbsp;sagittal&nbsp;plane</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[yMesh,zMesh]&nbsp;=&nbsp;meshgrid(coords{1},coords{3});</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xMesh&nbsp;=&nbsp;ctSlice*ct.resolution.y*ones(size(yMesh));</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctIndexed&nbsp;=&nbsp;uint8(cMapScale*(squeeze((ct.cubeHU{cubeIdx}(:,ctSlice,:)-window(1))/(window(2)&nbsp;-&nbsp;window(1)))));</td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;ct_rgb&nbsp;=&nbsp;permute(ct_rgb,[2&nbsp;1&nbsp;3]);</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF">elseif&nbsp;plane&nbsp;==&nbsp;3&nbsp;%&nbsp;Axial&nbsp;plane</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[xMesh,yMesh]&nbsp;=&nbsp;meshgrid(coords{2},coords{1});</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zMesh&nbsp;=&nbsp;ctSlice*ct.resolution.z*ones(size(xMesh));&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ctIndexed&nbsp;=&nbsp;uint8(cMapScale*(squeeze((ct.cubeHU{cubeIdx}(:,:,ctSlice)-window(1))/(window(2)&nbsp;-&nbsp;window(1)))));</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">	matRad_cfg.dispError('Invalid&nbsp;plane&nbsp;''%d''&nbsp;selected&nbsp;for&nbsp;visualization!',plane);</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF">%This&nbsp;circumenvents&nbsp;a&nbsp;bug&nbsp;in&nbsp;Octave&nbsp;when&nbsp;the&nbsp;index&nbsp;in&nbsp;the&nbsp;image&nbsp;hase&nbsp;the&nbsp;maximum&nbsp;value&nbsp;of&nbsp;uint8</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">if&nbsp;matRad_cfg.isOctave</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">	ctIndexed(ctIndexed&nbsp;==&nbsp;255)&nbsp;=&nbsp;254;</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">ct_rgb&nbsp;=&nbsp;ind2rgb(ctIndexed,cMap);</td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">ctHandle&nbsp;=&nbsp;surface('XData',xMesh,&nbsp;'YData',yMesh,&nbsp;'ZData',zMesh,&nbsp;...</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'CData',ct_rgb,&nbsp;'CDataMapping','direct',&nbsp;...</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'EdgeColor','none',&nbsp;'FaceColor','texturemap',&nbsp;'BackFaceLighting','unlit','FaceLighting','flat','Parent',axesHandle);</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">%{</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF">%&nbsp;slice&nbsp;plot&nbsp;with&nbsp;slice(...)</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF">%&nbsp;seems&nbsp;technically&nbsp;more&nbsp;reasonable,&nbsp;however&nbsp;manual&nbsp;colormapping&nbsp;not&nbsp;straightforward&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>94</td><td bgcolor="#FF0000">[xMesh,yMesh,zMesh]&nbsp;=&nbsp;meshgrid(coords{:});</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">slicePlane{1}&nbsp;=&nbsp;[];</td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">slicePlane{2}&nbsp;=&nbsp;[];</td></tr>
-<tr><td>97</td><td bgcolor="#FF0000">slicePlane{3}&nbsp;=&nbsp;[];</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">slicePlane{plane}&nbsp;=&nbsp;coords{plane}(ctSlice);</td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">ct_rgb&nbsp;=&nbsp;ind2rgb(uint8(cMapScale*((ct.cubeHU{cubeIdx}-window(1))/(window(2)&nbsp;-&nbsp;window(1)))),cMap);</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">ctHandle&nbsp;=&nbsp;slice(axesHandle,xMesh,yMesh,zMesh,ct.cubeHU{cubeIdx},slicePlane{:});</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">set(ctHandle,'EdgeColor','none');</td></tr>
-<tr><td>106</td><td bgcolor="#FFFFFF">%}</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>112</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>113</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

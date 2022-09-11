@@ -1,92 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_interpDicomCtCube.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_interpDicomCtCube.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;interpCt&nbsp;=&nbsp;matRad_interpDicomCtCube(origCt,&nbsp;origCtInfo,&nbsp;resolution,&nbsp;grid)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;interpolate&nbsp;a&nbsp;3D&nbsp;ct&nbsp;cube&nbsp;to&nbsp;a&nbsp;different&nbsp;resolution</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;interpCt&nbsp;=&nbsp;matRad_interpDicomCtCube(origCt,&nbsp;origCtInfo,&nbsp;resolution)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;interpCt&nbsp;=&nbsp;matRad_interpDicomCtCube(origCt,&nbsp;origCtInfo,&nbsp;resolution,&nbsp;grid)</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;origCt:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;original&nbsp;CT&nbsp;as&nbsp;matlab&nbsp;3D&nbsp;array</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;origCtInfo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;meta&nbsp;information&nbsp;about&nbsp;the&nbsp;geometry&nbsp;of&nbsp;the&nbsp;orgiCt&nbsp;cube</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resolution:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target&nbsp;resolution&nbsp;[mm]&nbsp;in&nbsp;x,&nbsp;y,&nbsp;an&nbsp;z&nbsp;direction&nbsp;for&nbsp;the</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;cube</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;grid:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional:&nbsp;externally&nbsp;specified&nbsp;grid&nbsp;vector</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;interpCt:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interpolated&nbsp;ct&nbsp;cube&nbsp;as&nbsp;matlab&nbsp;3D&nbsp;array</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>34</td><td bgcolor="#FF0000">coordsOfFirstPixel&nbsp;=&nbsp;[origCtInfo.ImagePositionPatient];</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;up&nbsp;grid&nbsp;vectors</td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">x&nbsp;=&nbsp;coordsOfFirstPixel(1,1)&nbsp;+&nbsp;origCtInfo(1).ImageOrientationPatient(1)&nbsp;*&nbsp;...</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origCtInfo(1).PixelSpacing(1)*double([0:origCtInfo(1).Columns-1]);</td></tr>
-<tr><td>39</td><td bgcolor="#FF0000">y&nbsp;=&nbsp;coordsOfFirstPixel(2,1)&nbsp;+&nbsp;origCtInfo(1).ImageOrientationPatient(5)&nbsp;*&nbsp;...</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origCtInfo(1).PixelSpacing(2)*double([0:origCtInfo(1).Rows-1]);</td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">z&nbsp;=&nbsp;coordsOfFirstPixel(3,:);</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">if&nbsp;exist('grid','var')</td></tr>
-<tr><td>44</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xq&nbsp;=&nbsp;grid{1};</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yq&nbsp;=&nbsp;grid{2};</td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zq&nbsp;=&nbsp;grid{3};</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;calculate&nbsp;intersection&nbsp;of&nbsp;regions&nbsp;to&nbsp;avoid&nbsp;interpolation&nbsp;issues</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xqRe&nbsp;=&nbsp;coordsOfFirstPixel(1,1):origCtInfo(1).ImageOrientationPatient(1)*resolution.x:&nbsp;...</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coordsOfFirstPixel(1,1)+origCtInfo(1).ImageOrientationPatient(1)*origCtInfo(1).PixelSpacing(1)*double(origCtInfo(1).Columns-1));</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yqRe&nbsp;=&nbsp;[coordsOfFirstPixel(2,1):origCtInfo(1).ImageOrientationPatient(5)*resolution.y:&nbsp;...</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coordsOfFirstPixel(2,1)+origCtInfo(1).ImageOrientationPatient(5)*origCtInfo(1).PixelSpacing(2)*double(origCtInfo(1).Rows-1))];</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zqRe&nbsp;=&nbsp;coordsOfFirstPixel(3,1):resolution.z:&nbsp;coordsOfFirstPixel(3,end);</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;cut&nbsp;values</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xq(xq&nbsp;&lt;&nbsp;min(xqRe))&nbsp;=&nbsp;[];</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xq(xq&nbsp;&gt;&nbsp;max(xqRe))&nbsp;=&nbsp;[];</td></tr>
-<tr><td>58</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yq(yq&nbsp;&lt;&nbsp;min(yqRe))&nbsp;=&nbsp;[];</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yq(yq&nbsp;&gt;&nbsp;max(yqRe))&nbsp;=&nbsp;[];</td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zq(zq&nbsp;&lt;&nbsp;min(zqRe))&nbsp;=&nbsp;[];</td></tr>
-<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zq(zq&nbsp;&gt;&nbsp;max(zqRe))&nbsp;=&nbsp;[];</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;xq&nbsp;=&nbsp;coordsOfFirstPixel(1,1):origCtInfo(1).ImageOrientationPatient(1)*resolution.x:&nbsp;...</td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coordsOfFirstPixel(1,1)+origCtInfo(1).ImageOrientationPatient(1)*origCtInfo(1).PixelSpacing(1)*double(origCtInfo(1).Columns-1));</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;yq&nbsp;=&nbsp;[coordsOfFirstPixel(2,1):origCtInfo(1).ImageOrientationPatient(5)*resolution.y:&nbsp;...</td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coordsOfFirstPixel(2,1)+origCtInfo(1).ImageOrientationPatient(5)*origCtInfo(1).PixelSpacing(2)*double(origCtInfo(1).Rows-1))];</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;zq&nbsp;=&nbsp;coordsOfFirstPixel(3,1):resolution.z:&nbsp;coordsOfFirstPixel(3,end);</td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>69</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;up&nbsp;grid&nbsp;matrices&nbsp;-&nbsp;implicit&nbsp;dimension&nbsp;permuation&nbsp;(X&nbsp;Y&nbsp;Z-&gt;&nbsp;Y&nbsp;X&nbsp;Z)</td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF">%&nbsp;Matlab&nbsp;represents&nbsp;internally&nbsp;in&nbsp;the&nbsp;first&nbsp;matrix&nbsp;dimension&nbsp;the</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF">%&nbsp;ordinate&nbsp;axis&nbsp;and&nbsp;in&nbsp;the&nbsp;second&nbsp;matrix&nbsp;dimension&nbsp;the&nbsp;abscissas&nbsp;axis</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">[&nbsp;X,&nbsp;&nbsp;Y,&nbsp;&nbsp;Z]&nbsp;=&nbsp;meshgrid(x,y,z);</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">[Xq,&nbsp;Yq,&nbsp;Zq]&nbsp;=&nbsp;meshgrid(xq,yq,zq);</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">%&nbsp;interpolate&nbsp;cube&nbsp;-&nbsp;cube&nbsp;is&nbsp;now&nbsp;stored&nbsp;in&nbsp;Y&nbsp;X&nbsp;Z&nbsp;</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">interpCt.cubeIV{1}&nbsp;=&nbsp;interp3(X,Y,Z,double(origCt),Xq,Yq,Zq);</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">%&nbsp;some&nbsp;meta&nbsp;information</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">interpCt.resolution&nbsp;=&nbsp;resolution;</td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">interpCt.x&nbsp;=&nbsp;xq;</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">interpCt.y&nbsp;=&nbsp;yq;</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">interpCt.z&nbsp;=&nbsp;zq;</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">interpCt.cubeDim&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[numel(yq)&nbsp;numel(xq)&nbsp;numel(zq)];</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">interpCt.numOfCtScen&nbsp;=&nbsp;1;</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

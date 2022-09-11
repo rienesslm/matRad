@@ -1,191 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\plotting\matRad_plotPlan3D.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\plotting\matRad_plotPlan3D.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;matRad_plotPlan3D(axesHandle,pln,stf)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;visualize&nbsp;a&nbsp;plan&nbsp;in&nbsp;3D&nbsp;</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;Stf&nbsp;is&nbsp;optional&nbsp;for&nbsp;plotting&nbsp;more&nbsp;detailed&nbsp;field&nbsp;contours&nbsp;in&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;visualization&nbsp;of&nbsp;the&nbsp;impinging&nbsp;beams.</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;rotMat&nbsp;=&nbsp;matRad_plotPlan3D(axesHandle,pln)</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;rotMat&nbsp;=&nbsp;matRad_plotPlan3D(axesHandle,pln,stf)</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;axesHandle:&nbsp;handle&nbsp;to&nbsp;the&nbsp;axes&nbsp;the&nbsp;plan&nbsp;should&nbsp;be&nbsp;visualized&nbsp;in.</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;plan&nbsp;meta&nbsp;information&nbsp;struct</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional&nbsp;steering&nbsp;information&nbsp;struct.&nbsp;if&nbsp;stf&nbsp;is&nbsp;passed&nbsp;and&nbsp;</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;not&nbsp;empty,&nbsp;the&nbsp;function&nbsp;will&nbsp;use&nbsp;the&nbsp;ray&nbsp;position&nbsp;&nbsp;</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;information&nbsp;to&nbsp;plot&nbsp;more&nbsp;detailed&nbsp;field&nbsp;contours&nbsp;than&nbsp;with&nbsp;</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pln&nbsp;only</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">if&nbsp;ishold(axesHandle)</td></tr>
-<tr><td>38</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;wasHold&nbsp;=&nbsp;true;</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;wasHold&nbsp;=&nbsp;false;</td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold(axesHandle,'on');</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%nice&nbsp;pink&nbsp;;)</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">beamColor&nbsp;=&nbsp;[255&nbsp;20&nbsp;147]/255;</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">%We&nbsp;perform&nbsp;a&nbsp;rudimentary&nbsp;visualization&nbsp;of&nbsp;the&nbsp;beam&nbsp;angles&nbsp;if&nbsp;there&nbsp;is&nbsp;no&nbsp;stf</td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;3&nbsp;||&nbsp;isempty(stf)</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;visFieldExtent&nbsp;=&nbsp;50;</td></tr>
-<tr><td>50</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;visFieldPoints_bev&nbsp;=&nbsp;[-visFieldExtent&nbsp;0&nbsp;-visFieldExtent;&nbsp;...</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visFieldExtent&nbsp;&nbsp;0&nbsp;-visFieldExtent;&nbsp;...</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visFieldExtent&nbsp;&nbsp;0&nbsp;&nbsp;visFieldExtent;&nbsp;...</td></tr>
-<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-visFieldExtent&nbsp;0&nbsp;&nbsp;visFieldExtent;</td></tr>
-<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-visFieldExtent&nbsp;0&nbsp;-visFieldExtent];&nbsp;%repeat&nbsp;the&nbsp;first&nbsp;value&nbsp;for&nbsp;closed&nbsp;contour</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;visFieldPoints_bev&nbsp;=&nbsp;visFieldPoints_bev&nbsp;./&nbsp;2;</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;visFieldPoints_bev&nbsp;=&nbsp;visFieldPoints_bev';</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fileName&nbsp;=&nbsp;[pln.radiationMode&nbsp;'_'&nbsp;pln.machine];</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%Get&nbsp;a&nbsp;SAD</td></tr>
-<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;try</td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;load([fileparts(mfilename('fullpath'))&nbsp;filesep&nbsp;'basedata'&nbsp;filesep&nbsp;fileName]);</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAD&nbsp;=&nbsp;machine.meta.SAD;</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;catch</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(pln.radiationMode,'protons')&nbsp;||&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAD&nbsp;=&nbsp;10000;</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAD&nbsp;=&nbsp;1500;</td></tr>
-<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;default&nbsp;beam&nbsp;vector</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;beamVector&nbsp;=&nbsp;[0&nbsp;SAD&nbsp;0];</td></tr>
-<tr><td>74</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;beamIx&nbsp;=&nbsp;1:pln.propStf.numOfBeams</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rotMat&nbsp;=&nbsp;matRad_getRotationMatrix(pln.propStf.gantryAngles(beamIx),pln.propStf.couchAngles(beamIx));</td></tr>
-<tr><td>78</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;beamIsoCenter&nbsp;=&nbsp;pln.propStf.isoCenter(beamIx,:);</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currBeamVector&nbsp;=&nbsp;rotMat*beamVector';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currBeamSource&nbsp;=&nbsp;beamIsoCenter&nbsp;-&nbsp;currBeamVector';</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currBeamOuterTarget&nbsp;=&nbsp;beamIsoCenter&nbsp;+&nbsp;currBeamVector';</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Central&nbsp;ray</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line('XData',[currBeamSource(1)&nbsp;beamIsoCenter(1)],'YData',[currBeamSource(2)&nbsp;beamIsoCenter(2)],'ZData',[currBeamSource(3)&nbsp;beamIsoCenter(3)],'Parent',axesHandle,'LineWidth',2,'Color',beamColor);</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line('XData',[currBeamOuterTarget(1)&nbsp;beamIsoCenter(1)],'YData',[currBeamOuterTarget(2)&nbsp;beamIsoCenter(2)],'ZData',[currBeamOuterTarget(3)&nbsp;beamIsoCenter(3)],'Parent',axesHandle,'LineWidth',2,'Color',beamColor,'LineStyle',':');</td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Field&nbsp;rays</td></tr>
-<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;v&nbsp;=&nbsp;1:size(visFieldPoints_bev,2)</td></tr>
-<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visFieldPoints_world(1:3,v)&nbsp;=&nbsp;rotMat*visFieldPoints_bev(1:3,v)&nbsp;+&nbsp;beamIsoCenter';</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%skipt&nbsp;the&nbsp;drawing&nbsp;of&nbsp;the&nbsp;first&nbsp;vertex&nbsp;since&nbsp;it&nbsp;is&nbsp;there&nbsp;twice</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;v==1&nbsp;</td></tr>
-<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Draw&nbsp;the&nbsp;lines&nbsp;from&nbsp;the&nbsp;source&nbsp;point&nbsp;to&nbsp;the&nbsp;contour&nbsp;point&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line('XData',[currBeamSource(1)&nbsp;visFieldPoints_world(1,v)],'YData',[currBeamSource(2)&nbsp;visFieldPoints_world(2,v)],'ZData',[currBeamSource(3)&nbsp;visFieldPoints_world(3,v)],'Parent',axesHandle,'LineWidth',1,'Color',beamColor);</td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%extend&nbsp;further</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currPointVector&nbsp;=&nbsp;visFieldPoints_world(1:3,v)&nbsp;-&nbsp;currBeamSource';</td></tr>
-<tr><td>102</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currPointOuterTarget&nbsp;=&nbsp;currPointVector&nbsp;+&nbsp;visFieldPoints_world(1:3,v);</td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line('XData',[currPointOuterTarget(1)&nbsp;visFieldPoints_world(1,v)],'YData',[currPointOuterTarget(2)&nbsp;visFieldPoints_world(2,v)],'ZData',[currPointOuterTarget(3)&nbsp;visFieldPoints_world(3,v)],'Parent',axesHandle,'LineWidth',1,'Color',beamColor,'LineStyle',':');</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>105</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%contour</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line('XData',[visFieldPoints_world(1,v)&nbsp;visFieldPoints_world(1,v-1)],...</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'YData',[visFieldPoints_world(2,v)&nbsp;visFieldPoints_world(2,v-1)],...</td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'ZData',[visFieldPoints_world(3,v)&nbsp;visFieldPoints_world(3,v-1)],...</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Parent',axesHandle,'LineWidth',2,'Color',beamColor);</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>112</td><td bgcolor="#FFFFFF">else&nbsp;%We&nbsp;use&nbsp;the&nbsp;steering&nbsp;information&nbsp;to&nbsp;visualize&nbsp;the&nbsp;field&nbsp;contour</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;fieldIx&nbsp;=&nbsp;1:numel(stf)</td></tr>
-<tr><td>114</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;beamTarget&nbsp;=&nbsp;stf(fieldIx).isoCenter;</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;beamSource&nbsp;=&nbsp;stf(fieldIx).sourcePoint&nbsp;+&nbsp;stf(fieldIx).isoCenter;</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rotMat&nbsp;=&nbsp;matRad_getRotationMatrix(pln.propStf.gantryAngles(fieldIx),pln.propStf.couchAngles(fieldIx));</td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bixelWidth&nbsp;=&nbsp;stf(fieldIx).bixelWidth;</td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Accumulate&nbsp;ray&nbsp;positions&nbsp;in&nbsp;matrix</td></tr>
-<tr><td>121</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos&nbsp;=&nbsp;[stf(fieldIx).ray(:).rayPos_bev];</td></tr>
-<tr><td>122</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos&nbsp;=&nbsp;reshape(rayPos,[3&nbsp;numel(rayPos)/3])';</td></tr>
-<tr><td>123</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>124</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Compute&nbsp;a&nbsp;ray&nbsp;matrix&nbsp;with&nbsp;ones&nbsp;where&nbsp;a&nbsp;ray&nbsp;is</td></tr>
-<tr><td>125</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Maximum&nbsp;absolute&nbsp;values&nbsp;give&nbsp;extent&nbsp;in&nbsp;one&nbsp;direction</td></tr>
-<tr><td>126</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;symmMaxExtent&nbsp;=&nbsp;max([abs(min(rayPos));&nbsp;abs(max(rayPos))]);</td></tr>
-<tr><td>127</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%we&nbsp;want&nbsp;to&nbsp;have&nbsp;indices&nbsp;and&nbsp;not&nbsp;mm</td></tr>
-<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;symmMaxExtent&nbsp;=&nbsp;symmMaxExtent&nbsp;./&nbsp;bixelWidth;</td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%now&nbsp;make&nbsp;it&nbsp;symmetric</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;symmMaxExtent&nbsp;=&nbsp;2*symmMaxExtent&nbsp;+&nbsp;[1&nbsp;0&nbsp;1];</td></tr>
-<tr><td>131</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%extra&nbsp;padding&nbsp;of&nbsp;one&nbsp;element&nbsp;in&nbsp;each&nbsp;direction&nbsp;to&nbsp;handle&nbsp;contours&nbsp;right</td></tr>
-<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;symmMaxExtent&nbsp;=&nbsp;symmMaxExtent&nbsp;+&nbsp;[2&nbsp;0&nbsp;2];</td></tr>
-<tr><td>133</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Fill&nbsp;the&nbsp;ray&nbsp;matrix&nbsp;with&nbsp;ones&nbsp;at&nbsp;positions&nbsp;of&nbsp;rays</td></tr>
-<tr><td>135</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayMat&nbsp;=&nbsp;zeros(symmMaxExtent(1),symmMaxExtent(3));</td></tr>
-<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;rayIx&nbsp;=&nbsp;1:size(rayPos,1)</td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;centerMat&nbsp;=&nbsp;(size(rayMat)-1)&nbsp;./&nbsp;2&nbsp;+&nbsp;1;</td></tr>
-<tr><td>138</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;el2D&nbsp;=&nbsp;rayPos(rayIx,[1&nbsp;3]);</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;el2D&nbsp;=&nbsp;el2D&nbsp;./&nbsp;bixelWidth;</td></tr>
-<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;el2DIx&nbsp;=&nbsp;centerMat&nbsp;+&nbsp;el2D;</td></tr>
-<tr><td>141</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayMat(el2DIx(1),el2DIx(2))&nbsp;=&nbsp;1;</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Create&nbsp;contour&nbsp;of&nbsp;the&nbsp;field</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldContour2D&nbsp;=&nbsp;contourc(rayMat,1);</td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Column&nbsp;in&nbsp;the&nbsp;contour&nbsp;matrix</td></tr>
-<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cColumn&nbsp;=&nbsp;1;</td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contourIx&nbsp;=&nbsp;0;</td></tr>
-<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Orientate&nbsp;the&nbsp;contour&nbsp;in&nbsp;3D&nbsp;world&nbsp;space</td></tr>
-<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;cColumn&nbsp;&lt;=&nbsp;size(fieldContour2D,2)</td></tr>
-<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contourIx&nbsp;=&nbsp;contourIx&nbsp;+&nbsp;1;</td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>154</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Get&nbsp;contour&nbsp;data</td></tr>
-<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldContour3D(contourIx).level&nbsp;=&nbsp;fieldContour2D(1,cColumn);</td></tr>
-<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldContour3D(contourIx).numVertices&nbsp;=&nbsp;fieldContour2D(2,cColumn);</td></tr>
-<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldContour3D(contourIx).coord_bev&nbsp;=&nbsp;[&nbsp;fieldContour2D(2,cColumn+1:cColumn+fieldContour3D(contourIx).numVertices);&nbsp;...&nbsp;x</td></tr>
-<tr><td>158</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zeros(1,fieldContour3D(contourIx).numVertices);</td></tr>
-<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldContour2D(1,cColumn+1:cColumn+fieldContour3D(contourIx).numVertices)];&nbsp;...&nbsp;y];</td></tr>
-<tr><td>160</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>161</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldContour3D(contourIx).coord_bev&nbsp;=&nbsp;bsxfun(@minus,fieldContour3D(contourIx).coord_bev,symmMaxExtent'./2)&nbsp;*&nbsp;bixelWidth;</td></tr>
-<tr><td>162</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>163</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Transform&nbsp;to&nbsp;world&nbsp;space</td></tr>
-<tr><td>164</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;compute&nbsp;coordinates&nbsp;in&nbsp;lps&nbsp;coordinate&nbsp;system,&nbsp;i.e.&nbsp;rotate&nbsp;beam</td></tr>
-<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;geometry&nbsp;around&nbsp;fixed&nbsp;patient;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>166</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>167</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;v&nbsp;=&nbsp;1:fieldContour3D(contourIx).numVertices</td></tr>
-<tr><td>168</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldContour3D(contourIx).coord(1:3,v)&nbsp;=&nbsp;rotMat&nbsp;*&nbsp;fieldContour3D(contourIx).coord_bev(1:3,v)&nbsp;+&nbsp;beamTarget';</td></tr>
-<tr><td>169</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Draw&nbsp;the&nbsp;lines&nbsp;from&nbsp;the&nbsp;source&nbsp;point&nbsp;to&nbsp;the&nbsp;contour&nbsp;point</td></tr>
-<tr><td>170</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line('XData',[beamSource(1)&nbsp;fieldContour3D(contourIx).coord(1,v)],'YData',[beamSource(2)&nbsp;fieldContour3D(contourIx).coord(2,v)],'ZData',[beamSource(3)&nbsp;fieldContour3D(contourIx).coord(3,v)],'Parent',axesHandle,'LineWidth',1,'Color',beamColor);</td></tr>
-<tr><td>171</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>172</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>173</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Draw&nbsp;the&nbsp;contour&nbsp;in&nbsp;the&nbsp;isocenter&nbsp;(shows&nbsp;the&nbsp;field)</td></tr>
-<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line('XData',fieldContour3D(contourIx).coord(1,:),'YData',fieldContour3D(contourIx).coord(2,:),'ZData',fieldContour3D(contourIx).coord(3,:),'Parent',axesHandle,'LineWidth',2,'Color',beamColor);</td></tr>
-<tr><td>175</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cColumn&nbsp;=&nbsp;cColumn&nbsp;+&nbsp;fieldContour3D(contourIx).numVertices&nbsp;+&nbsp;1;</td></tr>
-<tr><td>177</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>178</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>179</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>180</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>181</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>182</td><td bgcolor="#FF0000">if&nbsp;~wasHold</td></tr>
-<tr><td>183</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold(axesHandle,'off');</td></tr>
-<tr><td>184</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>185</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>186</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>187</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

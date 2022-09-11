@@ -1,157 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\MCsquare\MatRad_MCsquareConfig.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\MCsquare\MatRad_MCsquareConfig.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">classdef&nbsp;MatRad_MCsquareConfig</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;MatRad_MCsquareConfig&nbsp;class&nbsp;definition</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2019&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;properties&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%%%&nbsp;Simulation&nbsp;parameters:</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Num_Threads&nbsp;&nbsp;&nbsp;=	0;		%&nbsp;Number&nbsp;of&nbsp;parallel&nbsp;calculation&nbsp;threads.&nbsp;Default:&nbsp;0&nbsp;=&nbsp;max&nbsp;available&nbsp;threads</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RNG_Seed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=	0;		%&nbsp;Seed&nbsp;for&nbsp;the&nbsp;random&nbsp;number&nbsp;generator&nbsp;(deterministic&nbsp;result&nbsp;only&nbsp;with&nbsp;single&nbsp;thread).&nbsp;Default:&nbsp;0&nbsp;=&nbsp;seed&nbsp;based&nbsp;on&nbsp;the&nbsp;time</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Num_Primaries&nbsp;=&nbsp;1e6;		%&nbsp;Number&nbsp;of&nbsp;primary&nbsp;protons&nbsp;to&nbsp;simulate.&nbsp;Default:&nbsp;1e7</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E_Cut_Pro&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=	0.5;		%&nbsp;Energy&nbsp;cut&nbsp;(in&nbsp;MeV)&nbsp;below&nbsp;which&nbsp;heavy&nbsp;charged&nbsp;particles&nbsp;are&nbsp;locally&nbsp;absorbed.&nbsp;Default:&nbsp;0.5</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D_Max	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=	0.2;		%&nbsp;Maximum&nbsp;distance&nbsp;between&nbsp;two&nbsp;step&nbsp;(cm).&nbsp;Default:&nbsp;0.2</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Epsilon_Max&nbsp;&nbsp;&nbsp;=	0.25;		%&nbsp;Fractional&nbsp;energy&nbsp;loss&nbsp;(dE/T)&nbsp;per&nbsp;step.&nbsp;Default:&nbsp;0.25</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Te_Min	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=	0.05;		%&nbsp;Threshold&nbsp;energy&nbsp;(MeV)&nbsp;for&nbsp;the&nbsp;production&nbsp;of&nbsp;secondary&nbsp;electrons&nbsp;(currently&nbsp;locally&nbsp;absorbed).&nbsp;Default:&nbsp;0.05</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;As&nbsp;a&nbsp;reference:&nbsp;200&nbsp;MeV&nbsp;protons&nbsp;can&nbsp;transfer&nbsp;a&nbsp;maximum&nbsp;energy&nbsp;of&nbsp;0.5&nbsp;MeV&nbsp;to&nbsp;?-electrons&nbsp;which&nbsp;correspond&nbsp;to&nbsp;a&nbsp;range&nbsp;of&nbsp;7&nbsp;mm&nbsp;in&nbsp;lung&nbsp;tissues.</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%%%&nbsp;Input&nbsp;files</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CT_File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'Patient.mhd';				%&nbsp;Name&nbsp;of&nbsp;the&nbsp;CT&nbsp;file.&nbsp;Default:&nbsp;CT.mhd</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HU_Density_Conversion_File	=&nbsp;'Scanners/matRad_water/HU_Density_Conversion.txt';	%&nbsp;Name&nbsp;of&nbsp;the&nbsp;file&nbsp;containing&nbsp;HU&nbsp;to&nbsp;density&nbsp;conversion&nbsp;data.&nbsp;Default:&nbsp;HU_Density_Conversion.txt</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HU_Material_Conversion_File	=&nbsp;'Scanners/matRad_water/HU_Material_Conversion.txt';	%&nbsp;Name&nbsp;of&nbsp;the&nbsp;file&nbsp;containing&nbsp;HU&nbsp;to&nbsp;material&nbsp;conversion&nbsp;data.&nbsp;Default:&nbsp;HU_Material_Conversion.txt</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDL_Machine_Parameter_File&nbsp;&nbsp;=&nbsp;'BDL/BDL_matrad.txt';			%&nbsp;Name&nbsp;of&nbsp;the&nbsp;machine&nbsp;parameter&nbsp;file&nbsp;for&nbsp;the&nbsp;beam&nbsp;data&nbsp;library.&nbsp;Default:&nbsp;BDL.txt</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BDL_Plan_File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'PlanPencil.txt';			%&nbsp;Name&nbsp;of&nbsp;the&nbsp;plan&nbsp;file&nbsp;for&nbsp;the&nbsp;beam&nbsp;data&nbsp;library.&nbsp;Default:&nbsp;Plan.txt</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%%%&nbsp;Physical&nbsp;parameters</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Simulate_Nuclear_Interactions&nbsp;=&nbsp;true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Enable/Disable&nbsp;the&nbsp;simulation&nbsp;of&nbsp;nuclear&nbsp;interactions.&nbsp;Default:&nbsp;True</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Simulate_Secondary_Protons	&nbsp;&nbsp;=&nbsp;true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Enable/Disable&nbsp;the&nbsp;simulation&nbsp;of&nbsp;secondary&nbsp;protons&nbsp;(emitted&nbsp;during&nbsp;nuclear&nbsp;interactions).&nbsp;Default:&nbsp;True</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Simulate_Secondary_Deuterons&nbsp;&nbsp;=&nbsp;true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Enable/Disable&nbsp;the&nbsp;simulation&nbsp;of&nbsp;secondary&nbsp;deuterons&nbsp;(emitted&nbsp;during&nbsp;nuclear&nbsp;interactions).&nbsp;Default:&nbsp;True</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Simulate_Secondary_Alphas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Enable/Disable&nbsp;the&nbsp;simulation&nbsp;of&nbsp;secondary&nbsp;alphas&nbsp;(emitted&nbsp;during&nbsp;nuclear&nbsp;interactions).&nbsp;Default:&nbsp;True</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%%%&nbsp;4D&nbsp;simulation</td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fourD_Mode			&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;4D&nbsp;simulation&nbsp;mode.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fourD_Dose_Accumulation&nbsp;=&nbsp;false;		%&nbsp;Enable/Disable&nbsp;the&nbsp;dose&nbsp;accumulation&nbsp;for&nbsp;all&nbsp;4D-CT&nbsp;phases.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'Velocity';	%&nbsp;Field&nbsp;type:&nbsp;Displacement&nbsp;or&nbsp;Velocity.&nbsp;Default:&nbsp;Velocity</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create_Ref_from_4DCT	=&nbsp;false;		%&nbsp;Create&nbsp;the&nbsp;reference&nbsp;phase&nbsp;image&nbsp;from&nbsp;4D&nbsp;CT&nbsp;images&nbsp;(True),&nbsp;or&nbsp;import&nbsp;the&nbsp;reference&nbsp;image&nbsp;(False).&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create_4DCT_from_Ref	=&nbsp;false;		%&nbsp;Create&nbsp;4D&nbsp;CT&nbsp;images&nbsp;by&nbsp;deforming&nbsp;the&nbsp;reference&nbsp;phase&nbsp;image&nbsp;(True),&nbsp;or&nbsp;import&nbsp;4D&nbsp;CT&nbsp;images&nbsp;(False).&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dynamic_delivery&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;false;		%&nbsp;Enable/Disable&nbsp;simulation&nbsp;of&nbsp;dynamic&nbsp;delivery&nbsp;(interplay&nbsp;simulation).&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Breathing_period&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;7.0;		%&nbsp;Period&nbsp;(in&nbsp;seconds)&nbsp;of&nbsp;the&nbsp;breathing&nbsp;motion.&nbsp;Default:&nbsp;7.0</td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>57</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%%%&nbsp;Robustness&nbsp;simulation</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Robustness_Mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;false;&nbsp;	%&nbsp;Enable/Disable&nbsp;the&nbsp;robustness&nbsp;verification&nbsp;mode.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Scenario_selection&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'All'		%&nbsp;Method&nbsp;for&nbsp;scenario&nbsp;selection:&nbsp;All&nbsp;(simulate&nbsp;all&nbsp;combinations),&nbsp;Random&nbsp;(randomly&nbsp;sample&nbsp;scenarios).&nbsp;Default:&nbsp;All</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Simulate_nominal_plan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;true;		%&nbsp;Simulate&nbsp;the&nbsp;nominal&nbsp;plan&nbsp;(without&nbsp;any&nbsp;systematic&nbsp;or&nbsp;random&nbsp;uncertainty).&nbsp;Default:&nbsp;True</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Systematic_Setup_Error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[0.25&nbsp;0.25&nbsp;0.25];	%&nbsp;Systematic&nbsp;error&nbsp;for&nbsp;the&nbsp;patient&nbsp;setup&nbsp;along&nbsp;the&nbsp;XYZ&nbsp;axes&nbsp;(cm).&nbsp;Default:&nbsp;0.25&nbsp;0.25&nbsp;0.25</td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Random_Setup_Error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[0.1&nbsp;&nbsp;0.1&nbsp;&nbsp;0.1];	%&nbsp;Standard&nbsp;deviation&nbsp;of&nbsp;the&nbsp;patient&nbsp;random&nbsp;setup&nbsp;error&nbsp;along&nbsp;the&nbsp;XYZ&nbsp;axes&nbsp;(cm).&nbsp;Default:&nbsp;0.1&nbsp;0.1&nbsp;0.1</td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Systematic_Range_Error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;3.0;		%&nbsp;Systematic&nbsp;error&nbsp;in&nbsp;percent&nbsp;of&nbsp;the&nbsp;proton&nbsp;range&nbsp;(%).&nbsp;Default:&nbsp;3.0</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Systematic_Amplitude_Error&nbsp;=&nbsp;5.0;		%&nbsp;Systematic&nbsp;error&nbsp;in&nbsp;percent&nbsp;of&nbsp;the&nbsp;breathing&nbsp;motion&nbsp;amplitude&nbsp;for&nbsp;4D&nbsp;simulations.&nbsp;Default:&nbsp;5.0</td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Random_Amplitude_Error	&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;5.0;		%&nbsp;Random&nbsp;error&nbsp;in&nbsp;percent&nbsp;of&nbsp;the&nbsp;breathing&nbsp;motion&nbsp;amplitude&nbsp;for&nbsp;4D&nbsp;simulations.&nbsp;Default:&nbsp;5.0</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Systematic_Period_Error	=&nbsp;5.0;		%&nbsp;Systematic&nbsp;error&nbsp;in&nbsp;percent&nbsp;of&nbsp;the&nbsp;breathing&nbsp;motion&nbsp;period&nbsp;for&nbsp;simulations&nbsp;of&nbsp;interplay&nbsp;with&nbsp;dynamic&nbsp;delivery.&nbsp;Default:&nbsp;5.0</td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Random_Period_Error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;5.0;		%&nbsp;Random&nbsp;error&nbsp;in&nbsp;percent&nbsp;of&nbsp;the&nbsp;breathing&nbsp;motion&nbsp;period&nbsp;for&nbsp;simulations&nbsp;of&nbsp;interplay&nbsp;with&nbsp;dynamic&nbsp;delivery.&nbsp;Default:&nbsp;5.0</td></tr>
-<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%%%&nbsp;Beamlet&nbsp;simulation</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Beamlet_Mode			=&nbsp;false;&nbsp;	%&nbsp;Enable/Disable&nbsp;the&nbsp;beamlet&nbsp;computation&nbsp;mode.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>73</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Beamlet_Parallelization&nbsp;=&nbsp;false;	%&nbsp;Parallelization&nbsp;on&nbsp;beamlet&nbsp;level&nbsp;is&nbsp;sometimes&nbsp;faster&nbsp;for&nbsp;beamlet&nbsp;simulation.&nbsp;This&nbsp;requires&nbsp;more&nbsp;memory.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>74</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%%%&nbsp;Output&nbsp;parameters</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output_Directory&nbsp;=&nbsp;&nbsp;'MCsquareOutput';	%&nbsp;Name&nbsp;of&nbsp;the&nbsp;output&nbsp;directory.&nbsp;Default:&nbsp;Outputs</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Energy_ASCII_Output	&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;Energy&nbsp;in&nbsp;ASCII&nbsp;format.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Energy_MHD_Output&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;Energy&nbsp;in&nbsp;MHD&nbsp;format.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Energy_Sparse_Output&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;Energy&nbsp;in&nbsp;Sparse&nbsp;matrix&nbsp;format.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dose_ASCII_Output	&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;Dose&nbsp;in&nbsp;ASCII&nbsp;format.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dose_MHD_Output		&nbsp;=&nbsp;true;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;Dose&nbsp;in&nbsp;MHD&nbsp;format.&nbsp;Default:&nbsp;True</td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dose_Sparse_Output	&nbsp;=&nbsp;true;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;Dose&nbsp;in&nbsp;Sparse&nbsp;matrix&nbsp;format.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LET_ASCII_Output&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;LET&nbsp;in&nbsp;ASCII&nbsp;format.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LET_MHD_Output		&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;LET&nbsp;in&nbsp;MHD&nbsp;format.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LET_Sparse_Output	&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;output&nbsp;of&nbsp;LET&nbsp;in&nbsp;Sparse&nbsp;matrix&nbsp;format.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Densities_Output&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;export&nbsp;of&nbsp;the&nbsp;density&nbsp;map&nbsp;(converted&nbsp;from&nbsp;the&nbsp;CT&nbsp;image).&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Materials_Output&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;export&nbsp;of&nbsp;the&nbsp;map&nbsp;of&nbsp;materials&nbsp;(converted&nbsp;from&nbsp;the&nbsp;CT&nbsp;image).&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compute_DVH&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;computation&nbsp;and&nbsp;export&nbsp;of&nbsp;DVH&nbsp;based&nbsp;on&nbsp;RT-Struct&nbsp;binary&nbsp;masks.&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dose_Sparse_Threshold	=&nbsp;0;	%&nbsp;The&nbsp;dose&nbsp;values&nbsp;above&nbsp;the&nbsp;threshold&nbsp;will&nbsp;be&nbsp;stored&nbsp;in&nbsp;the&nbsp;sparse&nbsp;matrix&nbsp;file.&nbsp;Default:&nbsp;0</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Energy_Sparse_Threshold	=&nbsp;0;	%&nbsp;The&nbsp;energy&nbsp;values&nbsp;above&nbsp;the&nbsp;threshold&nbsp;will&nbsp;be&nbsp;stored&nbsp;in&nbsp;the&nbsp;sparse&nbsp;matrix&nbsp;file.&nbsp;Default:&nbsp;0</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LET_Sparse_Threshold	=&nbsp;0;	%&nbsp;The&nbsp;LET&nbsp;values&nbsp;above&nbsp;the&nbsp;threshold&nbsp;will&nbsp;be&nbsp;stored&nbsp;in&nbsp;the&nbsp;sparse&nbsp;matrix&nbsp;file.&nbsp;Default:&nbsp;0</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Score_PromptGammas	=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;the&nbsp;scoring&nbsp;of&nbsp;Prompt&nbsp;Gammas&nbsp;(emitted&nbsp;during&nbsp;nuclear&nbsp;interactions).&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PG_LowEnergyCut&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0.0;	%&nbsp;Disable&nbsp;the&nbsp;scoring&nbsp;of&nbsp;Prompt&nbsp;Gammas&nbsp;with&nbsp;energy&nbsp;below&nbsp;this&nbsp;value&nbsp;(MeV).&nbsp;&nbsp;Default:&nbsp;0.0</td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PG_HighEnergyCut&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;50.0;	%&nbsp;Disable&nbsp;the&nbsp;scoring&nbsp;of&nbsp;Prompt&nbsp;Gammas&nbsp;with&nbsp;energy&nbsp;above&nbsp;this&nbsp;value&nbsp;(MeV).&nbsp;&nbsp;Default:&nbsp;50.0</td></tr>
-<tr><td>101</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Typical&nbsp;gamma&nbsp;camera&nbsp;would&nbsp;be&nbsp;sensitive&nbsp;between&nbsp;3.0&nbsp;and&nbsp;6.0&nbsp;MeV</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PG_Spectrum_NumBin&nbsp;&nbsp;=&nbsp;150;	%&nbsp;Number&nbsp;of&nbsp;bins&nbsp;to&nbsp;score&nbsp;the&nbsp;Prompt&nbsp;Gamma&nbsp;energy&nbsp;spectrum.&nbsp;&nbsp;Default:&nbsp;150</td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PG_Spectrum_Binning&nbsp;=&nbsp;0.1;	%&nbsp;Bin&nbsp;width&nbsp;(MeV)&nbsp;for&nbsp;the&nbsp;scoring&nbsp;of&nbsp;Prompt&nbsp;Gamma&nbsp;spectrum.&nbsp;&nbsp;Default:&nbsp;0.1</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>105</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LET_Calculation_Method	=&nbsp;'StopPow';&nbsp;%&nbsp;Select&nbsp;the&nbsp;method&nbsp;employed&nbsp;for&nbsp;the&nbsp;calculation&nbsp;of&nbsp;LET&nbsp;(DepositedEnergy,&nbsp;StopPow).&nbsp;Default:&nbsp;StopPow</td></tr>
-<tr><td>106</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Export_Beam_dose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'Disabled'&nbsp;%&nbsp;Export&nbsp;dose&nbsp;distribution&nbsp;for&nbsp;each&nbsp;beam&nbsp;(Enable)&nbsp;or&nbsp;entire&nbsp;plan&nbsp;(Disable).&nbsp;Default:&nbsp;Disable</td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dose_to_Water_conversion&nbsp;=&nbsp;'Disabled';&nbsp;%&nbsp;Select&nbsp;the&nbsp;method&nbsp;employed&nbsp;to&nbsp;convert&nbsp;simulation&nbsp;results&nbsp;(dose&nbsp;to&nbsp;medium)&nbsp;to&nbsp;dose&nbsp;to&nbsp;water&nbsp;(Disabled,&nbsp;PostProcessing,&nbsp;OnlineSPR).&nbsp;Default:&nbsp;Disabled</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dose_Segmentation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;false;	%&nbsp;Enable/Disable&nbsp;a&nbsp;segmentation&nbsp;of&nbsp;the&nbsp;dose&nbsp;map&nbsp;based&nbsp;on&nbsp;a&nbsp;density&nbsp;thresholding&nbsp;(remove&nbsp;dose&nbsp;artifacts&nbsp;in&nbsp;the&nbsp;air).&nbsp;Default:&nbsp;False</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Density_Threshold_for_Segmentation&nbsp;=&nbsp;0.01;	%&nbsp;Density&nbsp;threshold&nbsp;employed&nbsp;for&nbsp;the&nbsp;segmentation&nbsp;(in&nbsp;g/cm3).&nbsp;Default:&nbsp;0.01</td></tr>
-<tr><td>112</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;methods</td></tr>
-<tr><td>115</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;obj&nbsp;=&nbsp;MatRad_MCsquareConfig()</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%UNTITLED&nbsp;Construct&nbsp;an&nbsp;instance&nbsp;of&nbsp;this&nbsp;class</td></tr>
-<tr><td>117</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;Detailed&nbsp;explanation&nbsp;goes&nbsp;here</td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%obj.Property1&nbsp;=&nbsp;inputArg1&nbsp;+&nbsp;inputArg2;</td></tr>
-<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;write(obj,fid)</td></tr>
-<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MCsquareProperties&nbsp;=&nbsp;fieldnames(obj);</td></tr>
-<tr><td>124</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logicalString&nbsp;=&nbsp;{'False',&nbsp;'True'};</td></tr>
-<tr><td>126</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:numel(MCsquareProperties)</td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;modify&nbsp;fieldnames&nbsp;beginning&nbsp;with&nbsp;"4D"</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strncmp(MCsquareProperties{i},'fourD',5)</td></tr>
-<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;writeString&nbsp;=&nbsp;['4D'&nbsp;MCsquareProperties{i}(6:end)];</td></tr>
-<tr><td>132</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;writeString&nbsp;=&nbsp;MCsquareProperties{i};</td></tr>
-<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isa(obj.(MCsquareProperties{i}),'logical')</td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(fid,[writeString&nbsp;'&nbsp;'&nbsp;logicalString{obj.(MCsquareProperties{i})+1}&nbsp;'\n']);</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;isa(obj.(MCsquareProperties{i}),'double')</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(fid,[writeString&nbsp;'&nbsp;'&nbsp;num2str(obj.(MCsquareProperties{i}))&nbsp;'\n']);</td></tr>
-<tr><td>140</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;isa(obj.(MCsquareProperties{i}),'char')</td></tr>
-<tr><td>141</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(fid,[writeString&nbsp;'&nbsp;'&nbsp;obj.(MCsquareProperties{i})&nbsp;'\n']);</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>143</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('export&nbsp;not&nbsp;defined');</td></tr>
-<tr><td>144</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>151</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>152</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

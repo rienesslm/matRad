@@ -1,153 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcDoseInit.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_calcDoseInit.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>2</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;default:&nbsp;dose&nbsp;influence&nbsp;matrix&nbsp;computation</td></tr>
-<tr><td>5</td><td bgcolor="#FF0000">if&nbsp;~exist('calcDoseDirect','var')</td></tr>
-<tr><td>6</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;calcDoseDirect&nbsp;=&nbsp;false;</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;to&nbsp;guarantee&nbsp;downwards&nbsp;compatibility&nbsp;with&nbsp;data&nbsp;that&nbsp;does&nbsp;not&nbsp;have</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;ct.x/y/z</td></tr>
-<tr><td>11</td><td bgcolor="#FF0000">if&nbsp;~any(isfield(ct,{'x','y','z'}))</td></tr>
-<tr><td>12</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.x&nbsp;=&nbsp;ct.resolution.x*[0:ct.cubeDim(2)-1]-ct.resolution.x/2;</td></tr>
-<tr><td>13</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.y&nbsp;=&nbsp;ct.resolution.y*[0:ct.cubeDim(1)-1]-ct.resolution.y/2;</td></tr>
-<tr><td>14</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.z&nbsp;=&nbsp;ct.resolution.z*[0:ct.cubeDim(3)-1]-ct.resolution.z/2;</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;grids</td></tr>
-<tr><td>18</td><td bgcolor="#FF0000">if&nbsp;~isfield(pln,'propDoseCalc')&nbsp;||&nbsp;...</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;~isfield(pln.propDoseCalc,'doseGrid')&nbsp;||&nbsp;...</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;~isfield(pln.propDoseCalc.doseGrid,'resolution')</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;default&nbsp;values</td></tr>
-<tr><td>22</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.resolution&nbsp;=&nbsp;matRad_cfg.propDoseCalc.defaultResolution;</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;take&nbsp;values&nbsp;from&nbsp;pln&nbsp;strcut</td></tr>
-<tr><td>25</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.resolution.x&nbsp;=&nbsp;pln.propDoseCalc.doseGrid.resolution.x;</td></tr>
-<tr><td>26</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.resolution.y&nbsp;=&nbsp;pln.propDoseCalc.doseGrid.resolution.y;</td></tr>
-<tr><td>27</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.resolution.z&nbsp;=&nbsp;pln.propDoseCalc.doseGrid.resolution.z;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>30</td><td bgcolor="#FF0000">dij.doseGrid.x&nbsp;=&nbsp;ct.x(1):dij.doseGrid.resolution.x:ct.x(end);</td></tr>
-<tr><td>31</td><td bgcolor="#FF0000">dij.doseGrid.y&nbsp;=&nbsp;ct.y(1):dij.doseGrid.resolution.y:ct.y(end);</td></tr>
-<tr><td>32</td><td bgcolor="#FF0000">dij.doseGrid.z&nbsp;=&nbsp;ct.z(1):dij.doseGrid.resolution.z:ct.z(end);</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>34</td><td bgcolor="#FF0000">dij.doseGrid.dimensions&nbsp;&nbsp;=&nbsp;[numel(dij.doseGrid.y)&nbsp;numel(dij.doseGrid.x)&nbsp;numel(dij.doseGrid.z)];</td></tr>
-<tr><td>35</td><td bgcolor="#FF0000">dij.doseGrid.numOfVoxels&nbsp;=&nbsp;prod(dij.doseGrid.dimensions);</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">dij.ctGrid.resolution.x&nbsp;=&nbsp;ct.resolution.x;</td></tr>
-<tr><td>38</td><td bgcolor="#FF0000">dij.ctGrid.resolution.y&nbsp;=&nbsp;ct.resolution.y;</td></tr>
-<tr><td>39</td><td bgcolor="#FF0000">dij.ctGrid.resolution.z&nbsp;=&nbsp;ct.resolution.z;</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">dij.ctGrid.x&nbsp;=&nbsp;ct.x;</td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">dij.ctGrid.y&nbsp;=&nbsp;ct.y;</td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">dij.ctGrid.z&nbsp;=&nbsp;ct.z;</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">dij.ctGrid.dimensions&nbsp;&nbsp;=&nbsp;[numel(dij.ctGrid.y)&nbsp;numel(dij.ctGrid.x)&nbsp;numel(dij.ctGrid.z)];</td></tr>
-<tr><td>46</td><td bgcolor="#FF0000">dij.ctGrid.numOfVoxels&nbsp;=&nbsp;prod(dij.ctGrid.dimensions);</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF">%&nbsp;adjust&nbsp;isocenter&nbsp;internally&nbsp;for&nbsp;different&nbsp;dose&nbsp;grid</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">offset&nbsp;=&nbsp;[dij.doseGrid.resolution.x&nbsp;-&nbsp;dij.ctGrid.resolution.x&nbsp;...</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.resolution.y&nbsp;-&nbsp;dij.ctGrid.resolution.y&nbsp;...</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.resolution.z&nbsp;-&nbsp;dij.ctGrid.resolution.z];</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numel(stf)</td></tr>
-<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).isoCenter&nbsp;=&nbsp;stf(i).isoCenter&nbsp;+&nbsp;offset;</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>57</td><td bgcolor="#FFFFFF">%set&nbsp;up&nbsp;HU&nbsp;to&nbsp;rED&nbsp;or&nbsp;rSP&nbsp;conversion</td></tr>
-<tr><td>58</td><td bgcolor="#FF0000">if&nbsp;~isfield(pln,'propDoseCalc')&nbsp;||&nbsp;~isfield(pln.propDoseCalc,'useGivenEqDensityCube')</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;disableHUconversion&nbsp;=&nbsp;matRad_cfg.propDoseCalc.defaultUseGivenEqDensityCube;</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;disableHUconversion&nbsp;=&nbsp;pln.propDoseCalc.useGivenEqDensityCube;</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF">%If&nbsp;we&nbsp;want&nbsp;to&nbsp;omit&nbsp;HU&nbsp;conversion&nbsp;check&nbsp;if&nbsp;we&nbsp;have&nbsp;a&nbsp;ct.cube&nbsp;ready</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">if&nbsp;disableHUconversion&nbsp;&amp;&amp;&nbsp;~isfield(ct,'cube')</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispWarning('HU&nbsp;Conversion&nbsp;requested&nbsp;to&nbsp;be&nbsp;omitted&nbsp;but&nbsp;no&nbsp;ct.cube&nbsp;exists!&nbsp;Will&nbsp;override&nbsp;and&nbsp;do&nbsp;the&nbsp;conversion&nbsp;anyway!');</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;disableHUconversion&nbsp;=&nbsp;false;</td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>69</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;rED&nbsp;or&nbsp;rSP&nbsp;from&nbsp;HU</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">if&nbsp;disableHUconversion</td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispInfo('Omitting&nbsp;HU&nbsp;to&nbsp;rED/rSP&nbsp;conversion&nbsp;and&nbsp;using&nbsp;existing&nbsp;ct.cube!\n');</td></tr>
-<tr><td>73</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;=&nbsp;matRad_calcWaterEqD(ct,&nbsp;pln);</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF">%&nbsp;meta&nbsp;information&nbsp;for&nbsp;dij</td></tr>
-<tr><td>78</td><td bgcolor="#FF0000">dij.numOfBeams&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;pln.propStf.numOfBeams;</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">dij.numOfScenarios&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;1;</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">dij.numOfRaysPerBeam&nbsp;&nbsp;&nbsp;=&nbsp;[stf(:).numOfRays];</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">dij.totalNumOfBixels&nbsp;&nbsp;&nbsp;=&nbsp;sum([stf(:).totalNumOfBixels]);</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">dij.totalNumOfRays&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;sum(dij.numOfRaysPerBeam);</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;if&nbsp;full&nbsp;dose&nbsp;influence&nbsp;data&nbsp;is&nbsp;required</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">if&nbsp;calcDoseDirect&nbsp;</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numOfColumnsDij&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;length(stf);</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numOfBixelsContainer&nbsp;=&nbsp;1;</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numOfColumnsDij&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;dij.totalNumOfBixels;</td></tr>
-<tr><td>90</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numOfBixelsContainer&nbsp;=&nbsp;ceil(dij.totalNumOfBixels/10);</td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;up&nbsp;arrays&nbsp;for&nbsp;book&nbsp;keeping</td></tr>
-<tr><td>94</td><td bgcolor="#FF0000">dij.bixelNum&nbsp;=&nbsp;NaN*ones(numOfColumnsDij,1);</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">dij.rayNum&nbsp;&nbsp;&nbsp;=&nbsp;NaN*ones(numOfColumnsDij,1);</td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">dij.beamNum&nbsp;&nbsp;=&nbsp;NaN*ones(numOfColumnsDij,1);</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF">%&nbsp;Allocate&nbsp;space&nbsp;for&nbsp;dij.physicalDose&nbsp;sparse&nbsp;matrix</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:dij.numOfScenarios</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;dij.physicalDose{i}&nbsp;=&nbsp;spalloc(dij.doseGrid.numOfVoxels,numOfColumnsDij,1);</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">%&nbsp;Allocate&nbsp;memory&nbsp;for&nbsp;dose_temp&nbsp;cell&nbsp;array</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">doseTmpContainer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;cell(numOfBixelsContainer,dij.numOfScenarios);</td></tr>
-<tr><td>106</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF">%&nbsp;take&nbsp;only&nbsp;voxels&nbsp;inside&nbsp;patient</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">VctGrid&nbsp;=&nbsp;[cst{:,4}];</td></tr>
-<tr><td>109</td><td bgcolor="#FF0000">VctGrid&nbsp;=&nbsp;unique(vertcat(VctGrid{:}));</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">%&nbsp;ignore&nbsp;densities&nbsp;outside&nbsp;of&nbsp;contours</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">if&nbsp;~isfield(pln,'propDoseCalc')&nbsp;||&nbsp;~isfield(pln.propDoseCalc,'ignoreOutsideDensities')</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ignoreOutsideDensities&nbsp;=&nbsp;matRad_cfg.propDoseCalc.defaultIgnoreOutsideDensities;</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ignoreOutsideDensities&nbsp;=&nbsp;pln.propDoseCalc.ignoreOutsideDensities;</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>117</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>118</td><td bgcolor="#FF0000">if&nbsp;ignoreOutsideDensities</td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;eraseCtDensMask&nbsp;=&nbsp;ones(prod(ct.cubeDim),1);</td></tr>
-<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;eraseCtDensMask(VctGrid)&nbsp;=&nbsp;0;</td></tr>
-<tr><td>121</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:ct.numOfCtScen</td></tr>
-<tr><td>122</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct.cube{i}(eraseCtDensMask&nbsp;==&nbsp;1)&nbsp;=&nbsp;0;</td></tr>
-<tr><td>123</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>124</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>125</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>126</td><td bgcolor="#FFFFFF">%&nbsp;Convert&nbsp;CT&nbsp;subscripts&nbsp;to&nbsp;linear&nbsp;indices.</td></tr>
-<tr><td>127</td><td bgcolor="#FF0000">[yCoordsV_vox,&nbsp;xCoordsV_vox,&nbsp;zCoordsV_vox]&nbsp;=&nbsp;ind2sub(ct.cubeDim,VctGrid);</td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">%&nbsp;receive&nbsp;linear&nbsp;indices&nbsp;and&nbsp;grid&nbsp;locations&nbsp;from&nbsp;the&nbsp;dose&nbsp;grid</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">tmpCube&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;zeros(ct.cubeDim);</td></tr>
-<tr><td>131</td><td bgcolor="#FF0000">tmpCube(VctGrid)&nbsp;=&nbsp;1;</td></tr>
-<tr><td>132</td><td bgcolor="#FFFFFF">%&nbsp;interpolate&nbsp;cube</td></tr>
-<tr><td>133</td><td bgcolor="#FF0000">VdoseGrid&nbsp;=&nbsp;find(matRad_interp3(dij.ctGrid.x,&nbsp;&nbsp;dij.ctGrid.y,&nbsp;&nbsp;&nbsp;dij.ctGrid.z,tmpCube,&nbsp;...</td></tr>
-<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dij.doseGrid.x,dij.doseGrid.y',dij.doseGrid.z,'nearest'));</td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>136</td><td bgcolor="#FFFFFF">%&nbsp;Convert&nbsp;CT&nbsp;subscripts&nbsp;to&nbsp;coarse&nbsp;linear&nbsp;indices.</td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">[yCoordsV_voxDoseGrid,&nbsp;xCoordsV_voxDoseGrid,&nbsp;zCoordsV_voxDoseGrid]&nbsp;=&nbsp;ind2sub(dij.doseGrid.dimensions,VdoseGrid);</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>139</td><td bgcolor="#FFFFFF">%&nbsp;load&nbsp;base&nbsp;data%&nbsp;load&nbsp;machine&nbsp;file</td></tr>
-<tr><td>140</td><td bgcolor="#FF0000">fileName&nbsp;=&nbsp;[pln.radiationMode&nbsp;'_'&nbsp;pln.machine];</td></tr>
-<tr><td>141</td><td bgcolor="#FF0000">try</td></tr>
-<tr><td>142</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;load([fileparts(mfilename('fullpath'))&nbsp;filesep&nbsp;'basedata'&nbsp;filesep&nbsp;fileName]);</td></tr>
-<tr><td>143</td><td bgcolor="#FF0000">catch</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Could&nbsp;not&nbsp;find&nbsp;the&nbsp;following&nbsp;machine&nbsp;file:&nbsp;%s\n',fileName);&nbsp;</td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF">%&nbsp;compute&nbsp;SSDs</td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">stf&nbsp;=&nbsp;matRad_computeSSD(stf,ct);</td></tr>
-<tr><td>149</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

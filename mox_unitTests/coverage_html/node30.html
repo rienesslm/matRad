@@ -1,743 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_importDicomGUI.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\dicom\matRad_importDicomGUI.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;varargout&nbsp;=&nbsp;matRad_importDicomGUI(varargin)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;MATRAD_IMPORTDICOMGUI&nbsp;MATLAB&nbsp;code&nbsp;for&nbsp;matRad_importDicomGUI.fig</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MATRAD_IMPORTDICOMGUI,&nbsp;by&nbsp;itself,&nbsp;creates&nbsp;a&nbsp;new&nbsp;MATRAD_IMPORTDICOMGUI&nbsp;or&nbsp;raises&nbsp;the&nbsp;existing</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;singleton*.</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H&nbsp;=&nbsp;MATRAD_IMPORTDICOMGUI&nbsp;returns&nbsp;the&nbsp;handle&nbsp;to&nbsp;a&nbsp;new&nbsp;MATRAD_IMPORTDICOMGUI&nbsp;or&nbsp;the&nbsp;handle&nbsp;to</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;existing&nbsp;singleton*.</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MATRAD_IMPORTDICOMGUI('CALLBACK',hObject,eventData,handles,...)&nbsp;calls&nbsp;the&nbsp;local</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;named&nbsp;CALLBACK&nbsp;in&nbsp;MATRAD_IMPORTDICOMGUI.M&nbsp;with&nbsp;the&nbsp;given&nbsp;input&nbsp;arguments.</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MATRAD_IMPORTDICOMGUI('Property','Value',...)&nbsp;creates&nbsp;a&nbsp;new&nbsp;MATRAD_IMPORTDICOMGUI&nbsp;or&nbsp;raises&nbsp;the</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;existing&nbsp;singleton*.&nbsp;&nbsp;Starting&nbsp;from&nbsp;the&nbsp;left,&nbsp;property&nbsp;value&nbsp;pairs&nbsp;are</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;applied&nbsp;to&nbsp;the&nbsp;GUI&nbsp;before&nbsp;matRad_importDicomGUI_OpeningFcn&nbsp;gets&nbsp;called.&nbsp;&nbsp;An</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unrecognized&nbsp;property&nbsp;name&nbsp;or&nbsp;invalid&nbsp;value&nbsp;makes&nbsp;property&nbsp;application</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stop.&nbsp;&nbsp;All&nbsp;inputs&nbsp;are&nbsp;passed&nbsp;to&nbsp;matRad_importDicomGUI_OpeningFcn&nbsp;via&nbsp;varargin.</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*See&nbsp;GUI&nbsp;Options&nbsp;on&nbsp;GUIDE's&nbsp;Tools&nbsp;menu.&nbsp;&nbsp;Choose&nbsp;"GUI&nbsp;allows&nbsp;only&nbsp;one</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instance&nbsp;to&nbsp;run&nbsp;(singleton)".</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;See&nbsp;also:&nbsp;GUIDE,&nbsp;GUIDATA,&nbsp;GUIHANDLES</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;Edit&nbsp;the&nbsp;above&nbsp;text&nbsp;to&nbsp;modify&nbsp;the&nbsp;response&nbsp;to&nbsp;help&nbsp;matRad_importDicomGUI</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;Last&nbsp;Modified&nbsp;by&nbsp;GUIDE&nbsp;v2.5&nbsp;02-Jun-2017&nbsp;00:45:04</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;Begin&nbsp;initialization&nbsp;code&nbsp;-&nbsp;DO&nbsp;NOT&nbsp;EDIT</td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">gui_Singleton&nbsp;=&nbsp;1;</td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">gui_State&nbsp;=&nbsp;struct('gui_Name',&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mfilename,&nbsp;...</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;'gui_Singleton',&nbsp;&nbsp;gui_Singleton,&nbsp;...</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;'gui_OpeningFcn',&nbsp;@matRad_importDicomGUI_OpeningFcn,&nbsp;...</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;'gui_OutputFcn',&nbsp;&nbsp;@matRad_importDicomGUI_OutputFcn,&nbsp;...</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;'gui_LayoutFcn',&nbsp;&nbsp;[]&nbsp;,&nbsp;...</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;'gui_Callback',&nbsp;&nbsp;&nbsp;[]);</td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&amp;&amp;&nbsp;ischar(varargin{1})</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;gui_State.gui_Callback&nbsp;=&nbsp;str2func(varargin{1});</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">%&nbsp;if&nbsp;nargout</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[varargout{1:nargout}]&nbsp;=&nbsp;gui_mainfcn(gui_State,&nbsp;varargin{:});</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">%&nbsp;else</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gui_mainfcn(gui_State,&nbsp;varargin{:});</td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;end</td></tr>
-<tr><td>57</td><td bgcolor="#FFFFFF">%&nbsp;End&nbsp;initialization&nbsp;code&nbsp;-&nbsp;DO&nbsp;NOT&nbsp;EDIT</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;just&nbsp;before&nbsp;matRad_importDicomGUI&nbsp;is&nbsp;made&nbsp;visible.</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">function&nbsp;matRad_importDicomGUI_OpeningFcn(hObject,&nbsp;eventdata,&nbsp;handles,&nbsp;varargin)</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;function&nbsp;has&nbsp;no&nbsp;output&nbsp;args,&nbsp;see&nbsp;OutputFcn.</td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;figure</td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF">%&nbsp;varargin&nbsp;&nbsp;&nbsp;command&nbsp;line&nbsp;arguments&nbsp;to&nbsp;matRad_importDicomGUI&nbsp;(see&nbsp;VARARGIN)</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF">%&nbsp;Choose&nbsp;default&nbsp;command&nbsp;line&nbsp;output&nbsp;for&nbsp;matRad_importDicomGUI</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">handles.output&nbsp;=&nbsp;hObject;</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">axes(handles.axesMatRadLogo)</td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">[im,&nbsp;~,&nbsp;alpha]&nbsp;=&nbsp;imread('matrad_logo.png');</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">q&nbsp;=&nbsp;image(im);</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">axis&nbsp;equal&nbsp;off</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">set(q,&nbsp;'AlphaData',&nbsp;alpha);</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">%&nbsp;show&nbsp;dkfz&nbsp;logo</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">axes(handles.axesDKFZLogo)</td></tr>
-<tr><td>78</td><td bgcolor="#FF0000">[im,&nbsp;~,&nbsp;alpha]&nbsp;=&nbsp;imread('DKFZ_Logo.png');</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">p&nbsp;=&nbsp;image(im);</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">axis&nbsp;equal&nbsp;off</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">set(p,&nbsp;'AlphaData',&nbsp;alpha);</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF">%&nbsp;Update&nbsp;handles&nbsp;structure</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">guidata(hObject,&nbsp;handles);</td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF">%&nbsp;UIWAIT&nbsp;makes&nbsp;matRad_importDicomGUI&nbsp;wait&nbsp;for&nbsp;user&nbsp;response&nbsp;(see&nbsp;UIRESUME)</td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF">%&nbsp;uiwait(handles.figure1);</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Outputs&nbsp;from&nbsp;this&nbsp;function&nbsp;are&nbsp;returned&nbsp;to&nbsp;the&nbsp;command&nbsp;line.</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">function&nbsp;varargout&nbsp;=&nbsp;matRad_importDicomGUI_OutputFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">%&nbsp;varargout&nbsp;&nbsp;cell&nbsp;array&nbsp;for&nbsp;returning&nbsp;output&nbsp;args&nbsp;(see&nbsp;VARARGOUT);</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;figure</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF">%&nbsp;Get&nbsp;default&nbsp;command&nbsp;line&nbsp;output&nbsp;from&nbsp;handles&nbsp;structure</td></tr>
-<tr><td>97</td><td bgcolor="#FF0000">varargout{1}&nbsp;=&nbsp;handles.output;</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;button&nbsp;press&nbsp;in&nbsp;browse_button.</td></tr>
-<tr><td>101</td><td bgcolor="#FFFFFF">function&nbsp;patDir&nbsp;=&nbsp;browse_button_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;browse_button&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>105</td><td bgcolor="#FFFFFF">%uiwait(warndlg('Choose&nbsp;the&nbsp;input&nbsp;directory'));</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">patDir&nbsp;=&nbsp;uigetdir('',&nbsp;'Choose&nbsp;the&nbsp;input&nbsp;directory...');</td></tr>
-<tr><td>107</td><td bgcolor="#FF0000">if&nbsp;patDir&nbsp;~=&nbsp;0</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patDir&nbsp;=&nbsp;[patDir&nbsp;filesep];</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%handles.dir_path_field.String&nbsp;=&nbsp;patDir;</td></tr>
-<tr><td>110</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.dir_path_field,'String',patDir);</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Update&nbsp;handles&nbsp;structure</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;guidata(hObject,&nbsp;handles);</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;scan(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>115</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">function&nbsp;scan(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>117</td><td bgcolor="#FF0000">[fileList,&nbsp;patient_listbox]&nbsp;=&nbsp;matRad_scanDicomImportFolder(get(handles.dir_path_field,'String'));</td></tr>
-<tr><td>118</td><td bgcolor="#FF0000">if&nbsp;iscell(patient_listbox)</td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;handles.fileList&nbsp;=&nbsp;&nbsp;fileList;</td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%handles.patient_listbox.String&nbsp;=&nbsp;patient_listbox;</td></tr>
-<tr><td>121</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.patient_listbox,'String',patient_listbox,'Value',1);</td></tr>
-<tr><td>122</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;guidata(hObject,&nbsp;handles);</td></tr>
-<tr><td>123</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>124</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>125</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;selection&nbsp;change&nbsp;in&nbsp;patient_listbox.</td></tr>
-<tr><td>126</td><td bgcolor="#FFFFFF">function&nbsp;patient_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>127</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;patient_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>129</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>130</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>131</td><td bgcolor="#FFFFFF">%&nbsp;Hints:&nbsp;contents&nbsp;=&nbsp;cellstr(get(hObject,'String'))&nbsp;returns&nbsp;patient_listbox&nbsp;contents&nbsp;as&nbsp;cell&nbsp;array</td></tr>
-<tr><td>132</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents{get(hObject,'Value')}&nbsp;returns&nbsp;selected&nbsp;item&nbsp;from&nbsp;patient_listbox</td></tr>
-<tr><td>133</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>134</td><td bgcolor="#FF0000">if&nbsp;~isempty(get(hObject,'String'))</td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;enable&nbsp;Import&nbsp;button</td></tr>
-<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.import_button,'Enable','on');</td></tr>
-<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;handles.filelist:</td></tr>
-<tr><td>139</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;1.&nbsp;Filepath</td></tr>
-<tr><td>140</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;2.&nbsp;Modality</td></tr>
-<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;3.&nbsp;PatientID</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;4.&nbsp;SeriesUID</td></tr>
-<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;5.&nbsp;SeriesNumber</td></tr>
-<tr><td>144</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;9.&nbsp;res_x</td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;10.&nbsp;res_y</td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;11.&nbsp;res_z</td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;12.&nbsp;detailed&nbsp;dose&nbsp;description&nbsp;-&nbsp;currently&nbsp;not&nbsp;in&nbsp;use&nbsp;for&nbsp;GUI&nbsp;user</td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patient_listbox&nbsp;=&nbsp;get(handles.patient_listbox,'String');</td></tr>
-<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selected_patient&nbsp;=&nbsp;patient_listbox(get(handles.patient_listbox,'Value'));</td></tr>
-<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;this&nbsp;gets&nbsp;a&nbsp;list&nbsp;of&nbsp;rtss&nbsp;series&nbsp;for&nbsp;this&nbsp;patient</td></tr>
-<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.rtseries_listbox,'Value',1);&nbsp;%&nbsp;set&nbsp;dummy&nbsp;value&nbsp;to&nbsp;one</td></tr>
-<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.rtseries_listbox,'String',handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'RTSTRUCT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),4));</td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;this&nbsp;gets&nbsp;a&nbsp;list&nbsp;of&nbsp;rt&nbsp;plan&nbsp;series&nbsp;for&nbsp;this&nbsp;patient</td></tr>
-<tr><td>154</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.rtplan_listbox,'Value',[]);&nbsp;%&nbsp;set&nbsp;dummy&nbsp;value&nbsp;to&nbsp;none</td></tr>
-<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.rtplan_listbox,'String',handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'RTPLAN')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),4));</td></tr>
-<tr><td>156</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;this&nbsp;gets&nbsp;a&nbsp;list&nbsp;of&nbsp;dose&nbsp;series&nbsp;for&nbsp;this&nbsp;patient</td></tr>
-<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.doseseries_listbox,'Value',[]);&nbsp;%&nbsp;set&nbsp;dummy&nbsp;value&nbsp;to&nbsp;none</td></tr>
-<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.doseseries_listbox,'String',handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'RTDOSE')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),4));</td></tr>
-<tr><td>159</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;selectedDose</td></tr>
-<tr><td>160</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>161</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;get(handles.SeriesUID_radiobutton,'Value')&nbsp;==&nbsp;1</td></tr>
-<tr><td>162</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;this&nbsp;gets&nbsp;a&nbsp;list&nbsp;of&nbsp;ct&nbsp;series&nbsp;for&nbsp;this&nbsp;patient</td></tr>
-<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.ctseries_listbox,'Value',1);&nbsp;%&nbsp;set&nbsp;dummy&nbsp;value&nbsp;to&nbsp;one</td></tr>
-<tr><td>164</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.ctseries_listbox,'String',unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),4)));</td></tr>
-<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>166</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectedDoseSeriesString&nbsp;=&nbsp;get(handles.doseseries_listbox,'String');</td></tr>
-<tr><td>167</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;this&nbsp;gets&nbsp;a&nbsp;resolution&nbsp;for&nbsp;this&nbsp;patient</td></tr>
-<tr><td>168</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectedCtSeriesString&nbsp;=&nbsp;get(handles.ctseries_listbox,'String');</td></tr>
-<tr><td>169</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(selectedCtSeriesString)</td></tr>
-<tr><td>170</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),9));</td></tr>
-<tr><td>171</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_y&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),10));</td></tr>
-<tr><td>172</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_z&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),11));</td></tr>
-<tr><td>173</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;NaN;&nbsp;res_y&nbsp;=&nbsp;NaN;&nbsp;res_z&nbsp;=&nbsp;NaN;</td></tr>
-<tr><td>175</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>176</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.ctseries_listbox,'Value',1);&nbsp;%&nbsp;set&nbsp;dummy&nbsp;value&nbsp;to&nbsp;one</td></tr>
-<tr><td>178</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.ctseries_listbox,'String',unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),5)));</td></tr>
-<tr><td>179</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectedCtSeriesString&nbsp;=&nbsp;get(handles.ctseries_listbox,'String');</td></tr>
-<tr><td>180</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(selectedCtSeriesString)</td></tr>
-<tr><td>181</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),9));</td></tr>
-<tr><td>182</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_y&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),10));</td></tr>
-<tr><td>183</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_z&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),11));</td></tr>
-<tr><td>184</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>185</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;NaN;&nbsp;res_y&nbsp;=&nbsp;NaN;&nbsp;res_z&nbsp;=&nbsp;NaN;</td></tr>
-<tr><td>186</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>187</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>188</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resx_edit,'String',res_x);</td></tr>
-<tr><td>189</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resy_edit,'String',res_y);</td></tr>
-<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(res_z)&nbsp;&gt;&nbsp;1</td></tr>
-<tr><td>191</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'String','not&nbsp;equi');</td></tr>
-<tr><td>192</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>193</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'String',res_z);</td></tr>
-<tr><td>194</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>195</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Update&nbsp;handles&nbsp;structure</td></tr>
-<tr><td>196</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;guidata(hObject,&nbsp;handles);</td></tr>
-<tr><td>197</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>198</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>199</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>200</td><td bgcolor="#FFFFFF">function&nbsp;patient_listbox_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>201</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;patient_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>202</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>203</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>204</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>205</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;listbox&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>206</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>207</td><td bgcolor="#FF0000">if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>208</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>209</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>210</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>211</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>212</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;selection&nbsp;change&nbsp;in&nbsp;ctseries_listbox.</td></tr>
-<tr><td>213</td><td bgcolor="#FFFFFF">function&nbsp;ctseries_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>214</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;ctseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>215</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>216</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>217</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>218</td><td bgcolor="#FFFFFF">%&nbsp;Hints:&nbsp;contents&nbsp;=&nbsp;cellstr(get(hObject,'String'))&nbsp;returns&nbsp;ctseries_listbox&nbsp;contents&nbsp;as&nbsp;cell&nbsp;array</td></tr>
-<tr><td>219</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents{get(hObject,'Value')}&nbsp;returns&nbsp;selected&nbsp;item&nbsp;from&nbsp;ctseries_listbox</td></tr>
-<tr><td>220</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>221</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>222</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>223</td><td bgcolor="#FFFFFF">function&nbsp;ctseries_listbox_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>224</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;ctseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>225</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>226</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>227</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>228</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;listbox&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>229</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>230</td><td bgcolor="#FF0000">if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>231</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>232</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>233</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>234</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>235</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;selection&nbsp;change&nbsp;in&nbsp;rtseries_listbox.</td></tr>
-<tr><td>236</td><td bgcolor="#FFFFFF">function&nbsp;rtseries_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>237</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;rtseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>238</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>239</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>240</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>241</td><td bgcolor="#FFFFFF">%&nbsp;Hints:&nbsp;contents&nbsp;=&nbsp;cellstr(get(hObject,'String'))&nbsp;returns&nbsp;rtseries_listbox&nbsp;contents&nbsp;as&nbsp;cell&nbsp;array</td></tr>
-<tr><td>242</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents{get(hObject,'Value')}&nbsp;returns&nbsp;selected&nbsp;item&nbsp;from&nbsp;rtseries_listbox</td></tr>
-<tr><td>243</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>244</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>245</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>246</td><td bgcolor="#FFFFFF">function&nbsp;rtseries_listbox_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>247</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;rtseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>248</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>249</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>250</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>251</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;listbox&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>252</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>253</td><td bgcolor="#FF0000">if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>254</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>255</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>256</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>257</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>258</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;button&nbsp;press&nbsp;in&nbsp;import_button.</td></tr>
-<tr><td>259</td><td bgcolor="#FFFFFF">function&nbsp;import_button_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>260</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;import_button&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>261</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>262</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>263</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>264</td><td bgcolor="#FF0000">patient_listbox&nbsp;=&nbsp;get(handles.patient_listbox,'String');</td></tr>
-<tr><td>265</td><td bgcolor="#FF0000">ctseries_listbox&nbsp;=&nbsp;get(handles.ctseries_listbox,'String');</td></tr>
-<tr><td>266</td><td bgcolor="#FF0000">rtplan_listbox&nbsp;=&nbsp;get(handles.rtplan_listbox,'String');</td></tr>
-<tr><td>267</td><td bgcolor="#FF0000">doseseries_listbox&nbsp;=&nbsp;get(handles.rtplan_listbox,'String');</td></tr>
-<tr><td>268</td><td bgcolor="#FF0000">if&nbsp;~isempty(patient_listbox)</td></tr>
-<tr><td>269</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selected_patient&nbsp;=&nbsp;patient_listbox(get(handles.patient_listbox,'Value'));</td></tr>
-<tr><td>270</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>271</td><td bgcolor="#FF0000">if&nbsp;~isempty(ctseries_listbox)</td></tr>
-<tr><td>272</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selected_ctseries&nbsp;=&nbsp;ctseries_listbox(get(handles.ctseries_listbox,'Value'));</td></tr>
-<tr><td>273</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>274</td><td bgcolor="#FF0000">if&nbsp;~isempty(rtplan_listbox)</td></tr>
-<tr><td>275</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selected_rtplan&nbsp;=&nbsp;rtplan_listbox(get(handles.rtplan_listbox,'Value'));</td></tr>
-<tr><td>276</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>277</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>278</td><td bgcolor="#FF0000">if&nbsp;get(handles.SeriesUID_radiobutton,'Value')&nbsp;==&nbsp;1</td></tr>
-<tr><td>279</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;files.ct&nbsp;=&nbsp;handles.fileList(strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;...</td></tr>
-<tr><td>280</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selected_ctseries),:);</td></tr>
-<tr><td>281</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>282</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%files.rtss&nbsp;=&nbsp;handles.fileList(strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;...</td></tr>
-<tr><td>283</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selected_rtseries),:);</td></tr>
-<tr><td>284</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>285</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;files.ct&nbsp;=&nbsp;handles.fileList(strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;...</td></tr>
-<tr><td>286</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selected_ctseries)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,2),'CT'),:);&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>287</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>288</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%files.rtss&nbsp;=&nbsp;handles.fileList(strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;...</td></tr>
-<tr><td>289</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selected_rtseries),:);</td></tr>
-<tr><td>290</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>291</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>292</td><td bgcolor="#FF0000">allRtss&nbsp;=&nbsp;handles.fileList(strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,2),'RTSTRUCT'),:);</td></tr>
-<tr><td>293</td><td bgcolor="#FF0000">if&nbsp;~isempty(allRtss)</td></tr>
-<tr><td>294</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;files.rtss&nbsp;=&nbsp;allRtss(get(handles.rtseries_listbox,'Value'),:);</td></tr>
-<tr><td>295</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>296</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;files.rtss&nbsp;=&nbsp;[];</td></tr>
-<tr><td>297</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>298</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>299</td><td bgcolor="#FF0000">files.resx&nbsp;=&nbsp;str2double(get(handles.resx_edit,'String'));</td></tr>
-<tr><td>300</td><td bgcolor="#FF0000">files.resy&nbsp;=&nbsp;str2double(get(handles.resy_edit,'String'));</td></tr>
-<tr><td>301</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;if&nbsp;valid&nbsp;assignment&nbsp;is&nbsp;made&nbsp;when&nbsp;z&nbsp;slices&nbsp;are&nbsp;not&nbsp;equi-distant</td></tr>
-<tr><td>302</td><td bgcolor="#FF0000">if&nbsp;strcmp(get(handles.resz_edit,'String'),'not&nbsp;equi')</td></tr>
-<tr><td>303</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;msgbox('Ct&nbsp;data&nbsp;not&nbsp;sliced&nbsp;equi-distantly&nbsp;in&nbsp;z&nbsp;direction!&nbsp;Chose&nbsp;uniform&nbsp;resolution.',&nbsp;'Error','error');</td></tr>
-<tr><td>304</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
-<tr><td>305</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>306</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;files.resz&nbsp;=&nbsp;str2double(get(handles.resz_edit,'String'));</td></tr>
-<tr><td>307</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>308</td><td bgcolor="#FFFFFF">%&nbsp;selected&nbsp;RT&nbsp;Plan</td></tr>
-<tr><td>309</td><td bgcolor="#FF0000">rtplan&nbsp;=&nbsp;handles.fileList(strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,2),'RTPLAN'),:);</td></tr>
-<tr><td>310</td><td bgcolor="#FF0000">if&nbsp;~isempty(rtplan)&nbsp;&amp;&amp;&nbsp;~isempty(get(handles.rtplan_listbox,'Value'))</td></tr>
-<tr><td>311</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;files.rtplan&nbsp;=&nbsp;rtplan(get(handles.rtplan_listbox,'Value'),:);</td></tr>
-<tr><td>312</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>313</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>314</td><td bgcolor="#FFFFFF">%&nbsp;selected&nbsp;RT&nbsp;Dose</td></tr>
-<tr><td>315</td><td bgcolor="#FF0000">rtdose&nbsp;=&nbsp;handles.fileList(strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,2),'RTDOSE'),:);</td></tr>
-<tr><td>316</td><td bgcolor="#FF0000">if&nbsp;~isempty(rtdose)&nbsp;&amp;&amp;&nbsp;~isempty(get(handles.doseseries_listbox,'Value'))</td></tr>
-<tr><td>317</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selectedRtDose&nbsp;&nbsp;&nbsp;=&nbsp;get(handles.doseseries_listbox,'String');</td></tr>
-<tr><td>318</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selectedRtDoseIx&nbsp;=&nbsp;NaN*ones(1,numel(selectedRtDose));</td></tr>
-<tr><td>319</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:numel(selectedRtDose)</td></tr>
-<tr><td>320</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectedRtDoseIx(i)&nbsp;=&nbsp;find(strcmp(rtdose(:,4),selectedRtDose{i}));</td></tr>
-<tr><td>321</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>322</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;files.rtdose&nbsp;=&nbsp;rtdose(selectedRtDoseIx,:);</td></tr>
-<tr><td>323</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>324</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>325</td><td bgcolor="#FFFFFF">%&nbsp;check&nbsp;if&nbsp;we&nbsp;should&nbsp;use&nbsp;the&nbsp;dose&nbsp;grid&nbsp;resolution</td></tr>
-<tr><td>326</td><td bgcolor="#FF0000">files.useDoseGrid&nbsp;=&nbsp;get(handles.checkbox3,'Value');</td></tr>
-<tr><td>327</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>328</td><td bgcolor="#FFFFFF">%&nbsp;dicomMetaBool:&nbsp;store&nbsp;complete&nbsp;DICOM&nbsp;information&nbsp;and&nbsp;patientName&nbsp;or&nbsp;not</td></tr>
-<tr><td>329</td><td bgcolor="#FF0000">dicomMetaBool&nbsp;=&nbsp;logical(get(handles.checkPatientName,'Value'));</td></tr>
-<tr><td>330</td><td bgcolor="#FF0000">matRad_importDicom(files,&nbsp;dicomMetaBool);</td></tr>
-<tr><td>331</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>332</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>333</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;button&nbsp;press&nbsp;in&nbsp;cancel_button.</td></tr>
-<tr><td>334</td><td bgcolor="#FFFFFF">function&nbsp;cancel_button_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>335</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;cancel_button&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>336</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>337</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>338</td><td bgcolor="#FF0000">close(handles.figure1);</td></tr>
-<tr><td>339</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>340</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>341</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;button&nbsp;press&nbsp;in&nbsp;rescan_button.</td></tr>
-<tr><td>342</td><td bgcolor="#FFFFFF">function&nbsp;rescan_button_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>343</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;rescan_button&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>344</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>345</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>346</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>347</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>348</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;mouse&nbsp;press&nbsp;over&nbsp;figure&nbsp;background.</td></tr>
-<tr><td>349</td><td bgcolor="#FFFFFF">function&nbsp;figure1_ButtonDownFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>350</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;figure1&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>351</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>352</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>353</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>354</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>355</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>356</td><td bgcolor="#FFFFFF">function&nbsp;dir_path_field_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>357</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;dir_path_field&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>358</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>359</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>360</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>361</td><td bgcolor="#FFFFFF">%&nbsp;Hints:&nbsp;get(hObject,'String')&nbsp;returns&nbsp;contents&nbsp;of&nbsp;dir_path_field&nbsp;as&nbsp;text</td></tr>
-<tr><td>362</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;str2double(get(hObject,'String'))&nbsp;returns&nbsp;contents&nbsp;of&nbsp;dir_path_field&nbsp;as&nbsp;a&nbsp;double</td></tr>
-<tr><td>363</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>364</td><td bgcolor="#FF0000">patDir&nbsp;=&nbsp;get(handles.dir_path_field,'String');</td></tr>
-<tr><td>365</td><td bgcolor="#FF0000">if&nbsp;patDir(end)&nbsp;~=&nbsp;filesep;</td></tr>
-<tr><td>366</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patDir&nbsp;=&nbsp;[patDir&nbsp;filesep];</td></tr>
-<tr><td>367</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.dir_path_field,'String',patDir);</td></tr>
-<tr><td>368</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;guidata(hObject,&nbsp;handles);</td></tr>
-<tr><td>369</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>370</td><td bgcolor="#FF0000">scan(hObject,&nbsp;eventdata,&nbsp;handles);</td></tr>
-<tr><td>371</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>372</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>373</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;button&nbsp;press&nbsp;in&nbsp;SeriesUID_radiobutton.</td></tr>
-<tr><td>374</td><td bgcolor="#FFFFFF">function&nbsp;SeriesUID_radiobutton_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>375</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;SeriesUID_radiobutton&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>376</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>377</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>378</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>379</td><td bgcolor="#FF0000">if&nbsp;get(hObject,'Value')&nbsp;==&nbsp;1</td></tr>
-<tr><td>380</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.SeriesNumber_radiobutton,'Value',0);</td></tr>
-<tr><td>381</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>382</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'Value',1);</td></tr>
-<tr><td>383</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.SeriesNumber_radiobutton,'Value',0);</td></tr>
-<tr><td>384</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>385</td><td bgcolor="#FF0000">if&nbsp;isfield(handles,&nbsp;'fileList')</td></tr>
-<tr><td>386</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patient_listbox&nbsp;=&nbsp;get(handles.patient_listbox,'String');</td></tr>
-<tr><td>387</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selected_patient&nbsp;=&nbsp;patient_listbox(get(handles.patient_listbox,'Value'));</td></tr>
-<tr><td>388</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.ctseries_listbox,'String',unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),4)));</td></tr>
-<tr><td>389</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.rtseries_listbox,'String',unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'RTSTRUCT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),4)));</td></tr>
-<tr><td>390</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.doseseries_listbox,'String',handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'RTDOSE')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),4));</td></tr>
-<tr><td>391</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.rtplan_listbox,'String',unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'RTPLAN')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),4)));</td></tr>
-<tr><td>392</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>393</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fprintf('No&nbsp;patient&nbsp;loaded,&nbsp;so&nbsp;just&nbsp;switching&nbsp;default&nbsp;display&nbsp;option&nbsp;to&nbsp;SeriesUID.&nbsp;\n');</td></tr>
-<tr><td>394</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>395</td><td bgcolor="#FF0000">guidata(hObject,&nbsp;handles);</td></tr>
-<tr><td>396</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>397</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;button&nbsp;press&nbsp;in&nbsp;SeriesNumber_radiobutton.</td></tr>
-<tr><td>398</td><td bgcolor="#FFFFFF">function&nbsp;SeriesNumber_radiobutton_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>399</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;SeriesNumber_radiobutton&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>400</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>401</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>402</td><td bgcolor="#FF0000">if&nbsp;get(hObject,'Value')&nbsp;==&nbsp;1</td></tr>
-<tr><td>403</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.SeriesUID_radiobutton,'Value',0);</td></tr>
-<tr><td>404</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>405</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'Value',1);</td></tr>
-<tr><td>406</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.SeriesUID_radiobutton,'Value',0);</td></tr>
-<tr><td>407</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>408</td><td bgcolor="#FF0000">if&nbsp;isfield(handles,&nbsp;'fileList')</td></tr>
-<tr><td>409</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patient_listbox&nbsp;=&nbsp;get(handles.patient_listbox,'String');</td></tr>
-<tr><td>410</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selected_patient&nbsp;=&nbsp;patient_listbox(get(handles.patient_listbox,'Value'));</td></tr>
-<tr><td>411</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.ctseries_listbox,'String',unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient),5)));</td></tr>
-<tr><td>412</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>413</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;fprintf('No&nbsp;patient&nbsp;loaded,&nbsp;so&nbsp;just&nbsp;switching&nbsp;default&nbsp;display&nbsp;option&nbsp;to&nbsp;SeriesNumber.&nbsp;\n');</td></tr>
-<tr><td>414</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>415</td><td bgcolor="#FF0000">guidata(hObject,&nbsp;handles);</td></tr>
-<tr><td>416</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>417</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>418</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>419</td><td bgcolor="#FFFFFF">function&nbsp;resx_edit_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>420</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;resx_edit&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>421</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>422</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>423</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>424</td><td bgcolor="#FFFFFF">%&nbsp;Hints:&nbsp;get(hObject,'String')&nbsp;returns&nbsp;contents&nbsp;of&nbsp;resx_edit&nbsp;as&nbsp;text</td></tr>
-<tr><td>425</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;str2double(get(hObject,'String'))&nbsp;returns&nbsp;contents&nbsp;of&nbsp;resx_edit&nbsp;as&nbsp;a&nbsp;double</td></tr>
-<tr><td>426</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>427</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>428</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>429</td><td bgcolor="#FFFFFF">function&nbsp;resx_edit_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>430</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;resx_edit&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>431</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>432</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>433</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>434</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;edit&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>435</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>436</td><td bgcolor="#FF0000">if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>437</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>438</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>439</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>440</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>441</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>442</td><td bgcolor="#FFFFFF">function&nbsp;resy_edit_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>443</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;resy_edit&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>444</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>445</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>446</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>447</td><td bgcolor="#FFFFFF">%&nbsp;Hints:&nbsp;get(hObject,'String')&nbsp;returns&nbsp;contents&nbsp;of&nbsp;resy_edit&nbsp;as&nbsp;text</td></tr>
-<tr><td>448</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;str2double(get(hObject,'String'))&nbsp;returns&nbsp;contents&nbsp;of&nbsp;resy_edit&nbsp;as&nbsp;a&nbsp;double</td></tr>
-<tr><td>449</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>450</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>451</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>452</td><td bgcolor="#FFFFFF">function&nbsp;resy_edit_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>453</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;resy_edit&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>454</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>455</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>456</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>457</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;edit&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>458</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>459</td><td bgcolor="#FF0000">if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>460</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>461</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>462</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>463</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>464</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>465</td><td bgcolor="#FFFFFF">function&nbsp;resz_edit_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>466</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;resz_edit&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>467</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>468</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>469</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>470</td><td bgcolor="#FFFFFF">%&nbsp;Hints:&nbsp;get(hObject,'String')&nbsp;returns&nbsp;contents&nbsp;of&nbsp;resz_edit&nbsp;as&nbsp;text</td></tr>
-<tr><td>471</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;str2double(get(hObject,'String'))&nbsp;returns&nbsp;contents&nbsp;of&nbsp;resz_edit&nbsp;as&nbsp;a&nbsp;double</td></tr>
-<tr><td>472</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>473</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>474</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>475</td><td bgcolor="#FFFFFF">function&nbsp;resz_edit_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>476</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;resz_edit&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>477</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>478</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>479</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>480</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;edit&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>481</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>482</td><td bgcolor="#FF0000">if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>483</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>484</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>485</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>486</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>487</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;selection&nbsp;change&nbsp;in&nbsp;ctseries_listbox.</td></tr>
-<tr><td>488</td><td bgcolor="#FFFFFF">%&nbsp;function&nbsp;ctseries_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>489</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;ctseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>490</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>491</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>492</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>493</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;Hints:&nbsp;contents&nbsp;=&nbsp;cellstr(get(hObject,'String'))&nbsp;returns&nbsp;ctseries_listbox&nbsp;contents&nbsp;as&nbsp;cell&nbsp;array</td></tr>
-<tr><td>494</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents{get(hObject,'Value')}&nbsp;returns&nbsp;selected&nbsp;item&nbsp;from&nbsp;ctseries_listbox</td></tr>
-<tr><td>495</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>496</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>497</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>498</td><td bgcolor="#FFFFFF">%&nbsp;function&nbsp;ctseries_listbox_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>499</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;ctseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>500</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>501</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>502</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>503</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;Hint:&nbsp;listbox&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>504</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>505</td><td bgcolor="#FFFFFF">%&nbsp;if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>506</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>507</td><td bgcolor="#FFFFFF">%&nbsp;end</td></tr>
-<tr><td>508</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>509</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>510</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;selection&nbsp;change&nbsp;in&nbsp;rtseries_listbox.</td></tr>
-<tr><td>511</td><td bgcolor="#FFFFFF">%&nbsp;function&nbsp;rtseries_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>512</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;rtseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>513</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>514</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>515</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>516</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;Hints:&nbsp;contents&nbsp;=&nbsp;cellstr(get(hObject,'String'))&nbsp;returns&nbsp;rtseries_listbox&nbsp;contents&nbsp;as&nbsp;cell&nbsp;array</td></tr>
-<tr><td>517</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents{get(hObject,'Value')}&nbsp;returns&nbsp;selected&nbsp;item&nbsp;from&nbsp;rtseries_listbox</td></tr>
-<tr><td>518</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>519</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>520</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>521</td><td bgcolor="#FFFFFF">%&nbsp;function&nbsp;rtseries_listbox_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>522</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;rtseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>523</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>524</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>525</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>526</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;Hint:&nbsp;listbox&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>527</td><td bgcolor="#FFFFFF">%&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>528</td><td bgcolor="#FFFFFF">%&nbsp;if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>529</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>530</td><td bgcolor="#FFFFFF">%&nbsp;end</td></tr>
-<tr><td>531</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>532</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>533</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;selection&nbsp;change&nbsp;in&nbsp;doseseries_listbox.</td></tr>
-<tr><td>534</td><td bgcolor="#FFFFFF">function&nbsp;doseseries_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>535</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;doseseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>536</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>537</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>538</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>539</td><td bgcolor="#FFFFFF">%&nbsp;Hints:&nbsp;contents&nbsp;=&nbsp;cellstr(get(hObject,'String'))&nbsp;returns&nbsp;doseseries_listbox&nbsp;contents&nbsp;as&nbsp;cell&nbsp;array</td></tr>
-<tr><td>540</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents{get(hObject,'Value')}&nbsp;returns&nbsp;selected&nbsp;item&nbsp;from&nbsp;doseseries_listbox</td></tr>
-<tr><td>541</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>542</td><td bgcolor="#FF0000">if&nbsp;~isempty(get(hObject,'Value'))</td></tr>
-<tr><td>543</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.checkbox3,'Enable','on');</td></tr>
-<tr><td>544</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>545</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.checkbox3,'Value',0);</td></tr>
-<tr><td>546</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.checkbox3,'Enable','off');</td></tr>
-<tr><td>547</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;retrieve&nbsp;and&nbsp;display&nbsp;resolution&nbsp;for&nbsp;DICOM&nbsp;ct&nbsp;cube</td></tr>
-<tr><td>548</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patient_listbox&nbsp;=&nbsp;get(handles.patient_listbox,'String');</td></tr>
-<tr><td>549</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selected_patient&nbsp;=&nbsp;patient_listbox(get(handles.patient_listbox,'Value'));</td></tr>
-<tr><td>550</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selectedCtSeriesString&nbsp;=&nbsp;get(handles.ctseries_listbox,'String');</td></tr>
-<tr><td>551</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;get(handles.SeriesUID_radiobutton,'Value')&nbsp;==&nbsp;1</td></tr>
-<tr><td>552</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(selectedCtSeriesString)</td></tr>
-<tr><td>553</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),9));</td></tr>
-<tr><td>554</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_y&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),10));</td></tr>
-<tr><td>555</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_z&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),11));</td></tr>
-<tr><td>556</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>557</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;NaN;&nbsp;res_y&nbsp;=&nbsp;NaN;&nbsp;res_z&nbsp;=&nbsp;NaN;</td></tr>
-<tr><td>558</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>559</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>560</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(selectedCtSeriesString)</td></tr>
-<tr><td>561</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),9));</td></tr>
-<tr><td>562</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_y&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),10));</td></tr>
-<tr><td>563</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_z&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),11));</td></tr>
-<tr><td>564</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>565</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;NaN;&nbsp;res_y&nbsp;=&nbsp;NaN;&nbsp;res_z&nbsp;=&nbsp;NaN;</td></tr>
-<tr><td>566</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>567</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>568</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resx_edit,'String',res_x);</td></tr>
-<tr><td>569</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resy_edit,'String',res_y);</td></tr>
-<tr><td>570</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(res_z)&nbsp;&gt;&nbsp;1</td></tr>
-<tr><td>571</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'String','not&nbsp;equi');</td></tr>
-<tr><td>572</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>573</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'String',res_z);</td></tr>
-<tr><td>574</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>575</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>576</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>577</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>578</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>579</td><td bgcolor="#FFFFFF">function&nbsp;doseseries_listbox_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>580</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;doseseries_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>581</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>582</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>583</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>584</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;listbox&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>585</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>586</td><td bgcolor="#FF0000">if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>587</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>588</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>589</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>590</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;selection&nbsp;change&nbsp;in&nbsp;rtplan_listbox.</td></tr>
-<tr><td>591</td><td bgcolor="#FFFFFF">function&nbsp;rtplan_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>592</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;rtplan_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>593</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>594</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>595</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>596</td><td bgcolor="#FF0000">contents&nbsp;=&nbsp;cellstr(get(hObject,'String'));</td></tr>
-<tr><td>597</td><td bgcolor="#FF0000">if&nbsp;~isempty(get(hObject,'Value'))&nbsp;&amp;&amp;&nbsp;numel(get(hObject,'Value'))&nbsp;==&nbsp;1</td></tr>
-<tr><td>598</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>599</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selectedPlan&nbsp;=&nbsp;contents{get(hObject,'Value')};</td></tr>
-<tr><td>600</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;point&nbsp;at&nbsp;plan&nbsp;in&nbsp;listbox</td></tr>
-<tr><td>601</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selectedPlanLoc&nbsp;=&nbsp;strcmp(handles.fileList(:,4),selectedPlan);</td></tr>
-<tr><td>602</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>603</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;show&nbsp;only&nbsp;the&nbsp;doses&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;plan</td></tr>
-<tr><td>604</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;corrDoses&nbsp;=&nbsp;[handles.fileList{selectedPlanLoc,13}];</td></tr>
-<tr><td>605</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;numOfDoses&nbsp;=&nbsp;numel(corrDoses);</td></tr>
-<tr><td>606</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;corrDosesLoc&nbsp;=&nbsp;zeros(size(handles.fileList(:,1),1),1);</td></tr>
-<tr><td>607</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:numOfDoses</td></tr>
-<tr><td>608</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isnan(corrDoses{j})</td></tr>
-<tr><td>609</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;corrDosesLoc&nbsp;=&nbsp;corrDosesLoc&nbsp;|&nbsp;strcmp(handles.fileList(:,4),corrDoses{j});</td></tr>
-<tr><td>610</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>611</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>612</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>613</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;sum(corrDosesLoc)&nbsp;==&nbsp;0</td></tr>
-<tr><td>614</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warndlg('no&nbsp;rt&nbsp;dose&nbsp;file&nbsp;directly&nbsp;associated&nbsp;to&nbsp;plan&nbsp;file.&nbsp;showing&nbsp;all&nbsp;rt&nbsp;dose&nbsp;files.');</td></tr>
-<tr><td>615</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;corrDosesLoc&nbsp;=&nbsp;strcmp(handles.fileList(:,2),'RTDOSE');</td></tr>
-<tr><td>616</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>617</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>618</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.doseseries_listbox,'Value',[]);&nbsp;%&nbsp;set&nbsp;dummy&nbsp;value&nbsp;to&nbsp;one</td></tr>
-<tr><td>619</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.doseseries_listbox,'String',handles.fileList(corrDosesLoc,4));</td></tr>
-<tr><td>620</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>621</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;disable&nbsp;checkbox&nbsp;for&nbsp;use&nbsp;dose&nbsp;grid&nbsp;is&nbsp;currently&nbsp;checked</td></tr>
-<tr><td>622</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;get(handles.checkbox3,'Value')&nbsp;==&nbsp;1</td></tr>
-<tr><td>623</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.checkbox3,'Value',0);</td></tr>
-<tr><td>624</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkbox3_Callback(handles.checkbox3,[],&nbsp;handles);</td></tr>
-<tr><td>625</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>626</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.checkbox3,'Enable','off');</td></tr>
-<tr><td>627</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>628</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>629</td><td bgcolor="#FFFFFF">elseif&nbsp;numel(get(hObject,'Value'))&nbsp;&gt;=2</td></tr>
-<tr><td>630</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;warning('More&nbsp;than&nbsp;one&nbsp;RTPLAN&nbsp;selected.&nbsp;Unsetting&nbsp;selection&nbsp;...');</td></tr>
-<tr><td>631</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patient_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>632</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>633</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patient_listbox_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>634</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>635</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>636</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>637</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;during&nbsp;object&nbsp;creation,&nbsp;after&nbsp;setting&nbsp;all&nbsp;properties.</td></tr>
-<tr><td>638</td><td bgcolor="#FFFFFF">function&nbsp;rtplan_listbox_CreateFcn(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>639</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;rtplan_listbox&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>640</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>641</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;empty&nbsp;-&nbsp;handles&nbsp;not&nbsp;created&nbsp;until&nbsp;after&nbsp;all&nbsp;CreateFcns&nbsp;called</td></tr>
-<tr><td>642</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>643</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;listbox&nbsp;controls&nbsp;usually&nbsp;have&nbsp;a&nbsp;white&nbsp;background&nbsp;on&nbsp;Windows.</td></tr>
-<tr><td>644</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;ISPC&nbsp;and&nbsp;COMPUTER.</td></tr>
-<tr><td>645</td><td bgcolor="#FF0000">if&nbsp;ispc&nbsp;&amp;&amp;&nbsp;isequal(get(hObject,'BackgroundColor'),&nbsp;get(0,'defaultUicontrolBackgroundColor'))</td></tr>
-<tr><td>646</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'BackgroundColor','white');</td></tr>
-<tr><td>647</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>648</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>649</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>650</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;button&nbsp;press&nbsp;in&nbsp;checkPatientName.</td></tr>
-<tr><td>651</td><td bgcolor="#FFFFFF">function&nbsp;checkPatientName_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>652</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;checkPatientName&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>653</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>654</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>655</td><td bgcolor="#FFFFFF">%A&nbsp;=&nbsp;get(hObject,'Value');</td></tr>
-<tr><td>656</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>657</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;get(hObject,'Value')&nbsp;returns&nbsp;toggle&nbsp;state&nbsp;of&nbsp;checkPatientName</td></tr>
-<tr><td>658</td><td bgcolor="#FFFFFF">%guidata(hObject,&nbsp;handles);</td></tr>
-<tr><td>659</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>660</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>661</td><td bgcolor="#FFFFFF">%&nbsp;---&nbsp;Executes&nbsp;on&nbsp;button&nbsp;press&nbsp;in&nbsp;checkbox3.</td></tr>
-<tr><td>662</td><td bgcolor="#FFFFFF">function&nbsp;checkbox3_Callback(hObject,&nbsp;eventdata,&nbsp;handles)</td></tr>
-<tr><td>663</td><td bgcolor="#FFFFFF">%&nbsp;hObject&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;checkbox3&nbsp;(see&nbsp;GCBO)</td></tr>
-<tr><td>664</td><td bgcolor="#FFFFFF">%&nbsp;eventdata&nbsp;&nbsp;reserved&nbsp;-&nbsp;to&nbsp;be&nbsp;defined&nbsp;in&nbsp;a&nbsp;future&nbsp;version&nbsp;of&nbsp;MATLAB</td></tr>
-<tr><td>665</td><td bgcolor="#FFFFFF">%&nbsp;handles&nbsp;&nbsp;&nbsp;&nbsp;structure&nbsp;with&nbsp;handles&nbsp;and&nbsp;user&nbsp;data&nbsp;(see&nbsp;GUIDATA)</td></tr>
-<tr><td>666</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>667</td><td bgcolor="#FFFFFF">%&nbsp;Hint:&nbsp;get(hObject,'Value')&nbsp;returns&nbsp;toggle&nbsp;state&nbsp;of&nbsp;checkbox3</td></tr>
-<tr><td>668</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>669</td><td bgcolor="#FF0000">if&nbsp;get(hObject,'Value')</td></tr>
-<tr><td>670</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resx_edit,'Enable',&nbsp;'off');</td></tr>
-<tr><td>671</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resy_edit,'Enable',&nbsp;'off');</td></tr>
-<tr><td>672</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'Enable',&nbsp;'off');</td></tr>
-<tr><td>673</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;retrieve&nbsp;and&nbsp;display&nbsp;resolution&nbsp;for&nbsp;DICOM&nbsp;dose&nbsp;cube</td></tr>
-<tr><td>674</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;doseFilesInList&nbsp;=&nbsp;get(handles.doseseries_listbox,'String');</td></tr>
-<tr><td>675</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selectedDoseFiles&nbsp;=&nbsp;get(handles.doseseries_listbox,'Value');</td></tr>
-<tr><td>676</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(selectedDoseFiles)</td></tr>
-<tr><td>677</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(hObject,'Value',0)</td></tr>
-<tr><td>678</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;errordlg('no&nbsp;dose&nbsp;file&nbsp;selected');</td></tr>
-<tr><td>679</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
-<tr><td>680</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>681</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;1:numel(selectedDoseFiles)</td></tr>
-<tr><td>682</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selectedDoseFile&nbsp;=&nbsp;doseFilesInList{selectedDoseFiles(i)};</td></tr>
-<tr><td>683</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;verLessThan('matlab','9')</td></tr>
-<tr><td>684</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dicomDoseInfo&nbsp;=&nbsp;dicominfo(handles.fileList{find(strcmp(handles.fileList(:,4),selectedDoseFile)),1});</td></tr>
-<tr><td>685</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>686</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dicomDoseInfo&nbsp;=&nbsp;dicominfo(handles.fileList{find(strcmp(handles.fileList(:,4),selectedDoseFile)),1},'UseDictionaryVR',true);</td></tr>
-<tr><td>687</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>688</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x{i}&nbsp;=&nbsp;dicomDoseInfo.PixelSpacing(1);</td></tr>
-<tr><td>689</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_y{i}&nbsp;=&nbsp;dicomDoseInfo.PixelSpacing(2);</td></tr>
-<tr><td>690</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_z{i}&nbsp;=&nbsp;dicomDoseInfo.SliceThickness;</td></tr>
-<tr><td>691</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>692</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>693</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(unique(cell2mat(res_x)))*numel(unique(cell2mat(res_y)))*numel(unique(cell2mat(res_z)))&nbsp;~=&nbsp;1</td></tr>
-<tr><td>694</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.checkbox3,'Value',0);</td></tr>
-<tr><td>695</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warndlg('Different&nbsp;resolutions&nbsp;in&nbsp;dose&nbsp;file(s)');</td></tr>
-<tr><td>696</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resx_edit,'Enable',&nbsp;'on');</td></tr>
-<tr><td>697</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resy_edit,'Enable',&nbsp;'on');</td></tr>
-<tr><td>698</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'Enable',&nbsp;'on');</td></tr>
-<tr><td>699</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>700</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resx_edit,'String',num2str(res_x{1}));</td></tr>
-<tr><td>701</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resy_edit,'String',num2str(res_y{1}));</td></tr>
-<tr><td>702</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'String',num2str(res_z{1}));</td></tr>
-<tr><td>703</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>704</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>705</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>706</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resx_edit,'Enable',&nbsp;'on');</td></tr>
-<tr><td>707</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resy_edit,'Enable',&nbsp;'on');</td></tr>
-<tr><td>708</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'Enable',&nbsp;'on');</td></tr>
-<tr><td>709</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;retrieve&nbsp;and&nbsp;display&nbsp;resolution&nbsp;for&nbsp;DICOM&nbsp;ct&nbsp;cube</td></tr>
-<tr><td>710</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;patient_listbox&nbsp;=&nbsp;get(handles.patient_listbox,'String');</td></tr>
-<tr><td>711</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selected_patient&nbsp;=&nbsp;patient_listbox(get(handles.patient_listbox,'Value'));</td></tr>
-<tr><td>712</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;selectedCtSeriesString&nbsp;=&nbsp;get(handles.ctseries_listbox,'String');</td></tr>
-<tr><td>713</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;get(handles.SeriesUID_radiobutton,'Value')&nbsp;==&nbsp;1</td></tr>
-<tr><td>714</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(selectedCtSeriesString)</td></tr>
-<tr><td>715</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),9));</td></tr>
-<tr><td>716</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_y&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),10));</td></tr>
-<tr><td>717</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_z&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,4),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),11));</td></tr>
-<tr><td>718</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>719</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;NaN;&nbsp;res_y&nbsp;=&nbsp;NaN;&nbsp;res_z&nbsp;=&nbsp;NaN;</td></tr>
-<tr><td>720</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>721</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>722</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(selectedCtSeriesString)</td></tr>
-<tr><td>723</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),9));</td></tr>
-<tr><td>724</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_y&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),10));</td></tr>
-<tr><td>725</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_z&nbsp;=&nbsp;unique(handles.fileList(strcmp(handles.fileList(:,2),&nbsp;'CT')&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,3),&nbsp;selected_patient)&nbsp;&amp;&nbsp;strcmp(handles.fileList(:,5),&nbsp;selectedCtSeriesString{get(handles.ctseries_listbox,'Value')}),11));</td></tr>
-<tr><td>726</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>727</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res_x&nbsp;=&nbsp;NaN;&nbsp;res_y&nbsp;=&nbsp;NaN;&nbsp;res_z&nbsp;=&nbsp;NaN;</td></tr>
-<tr><td>728</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>729</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>730</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resx_edit,'String',res_x);</td></tr>
-<tr><td>731</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resy_edit,'String',res_y);</td></tr>
-<tr><td>732</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(res_z)&nbsp;&gt;&nbsp;1</td></tr>
-<tr><td>733</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'String','not&nbsp;equi');</td></tr>
-<tr><td>734</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>735</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(handles.resz_edit,'String',res_z);</td></tr>
-<tr><td>736</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>737</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>738</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>739</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

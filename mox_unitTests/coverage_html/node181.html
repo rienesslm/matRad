@@ -1,173 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\tools\matRad_plotSliceWrapper.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\tools\matRad_plotSliceWrapper.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice,thresh,alpha,contourColorMap,...</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseColorMap,doseWindow,doseIsoLevels,voiSelection,colorBarLabel,boolPlotLegend,varargin)</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;tool&nbsp;function&nbsp;to&nbsp;directly&nbsp;plot&nbsp;a&nbsp;complete&nbsp;slice&nbsp;of&nbsp;a&nbsp;ct&nbsp;with&nbsp;dose</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;including&nbsp;contours&nbsp;and&nbsp;isolines.</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice)</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice,thresh)</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice,alpha)</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice,contourColorMap)</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice,doseColorMap)</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice,doseWindow)</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice,doseIsoLevels)</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;[hCMap,hDose,hCt,hContour,hIsoDose]&nbsp;=&nbsp;matRad_plotSliceWrapper(axesHandle,ct,cst,cubeIdx,dose,plane,slice,thresh,alpha,contourColorMap,...</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;doseColorMap,doseWindow,doseIsoLevels,voiSelection,colorBarLabel,boolPlotLegend,...)</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;input&nbsp;(required)</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;axesHandle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;axes&nbsp;the&nbsp;slice&nbsp;should&nbsp;be&nbsp;displayed&nbsp;in</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;ct&nbsp;struct</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cubeIdx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Index&nbsp;of&nbsp;the&nbsp;desired&nbsp;cube&nbsp;in&nbsp;the&nbsp;ct&nbsp;struct</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;dose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dose&nbsp;cube</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;plane&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plane&nbsp;view&nbsp;(coronal=1,sagittal=2,axial=3)</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;slice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;slice&nbsp;in&nbsp;the&nbsp;selected&nbsp;plane&nbsp;of&nbsp;the&nbsp;3D&nbsp;cube</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;input&nbsp;(optional&nbsp;/&nbsp;empty)</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;thresh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threshold&nbsp;for&nbsp;display&nbsp;of&nbsp;dose&nbsp;values</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;alpha&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alpha&nbsp;value&nbsp;for&nbsp;the&nbsp;dose&nbsp;overlay</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;contourColorMap&nbsp;colormap&nbsp;for&nbsp;the&nbsp;VOI&nbsp;contours</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;doseColorMap&nbsp;&nbsp;&nbsp;&nbsp;colormap&nbsp;for&nbsp;the&nbsp;dose</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;doseWindow&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dose&nbsp;value&nbsp;window</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;doseIsoLevels&nbsp;&nbsp;&nbsp;levels&nbsp;defining&nbsp;the&nbsp;isodose&nbsp;contours</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;voiSelection&nbsp;&nbsp;&nbsp;&nbsp;logicals&nbsp;defining&nbsp;the&nbsp;current&nbsp;selection&nbsp;of&nbsp;contours</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;should&nbsp;be&nbsp;plotted.&nbsp;Can&nbsp;be&nbsp;set&nbsp;to&nbsp;[]&nbsp;to&nbsp;plot</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;non-ignored&nbsp;contours.</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;colorBarLabel&nbsp;&nbsp;&nbsp;string&nbsp;defining&nbsp;the&nbsp;yLabel&nbsp;of&nbsp;the&nbsp;colorBar</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;boolPlotLegend&nbsp;&nbsp;boolean&nbsp;if&nbsp;legend&nbsp;should&nbsp;be&nbsp;plottet&nbsp;or&nbsp;not</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;varargin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;additional&nbsp;input&nbsp;parameters&nbsp;that&nbsp;are&nbsp;passed&nbsp;on&nbsp;to</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;individual&nbsp;plotting&nbsp;functions&nbsp;(e.g.&nbsp;'LineWidth',1.5)</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;hCMap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;the&nbsp;colormap</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;hDose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;the&nbsp;dose&nbsp;plot</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;hCt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;the&nbsp;ct&nbsp;plot</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;hContour&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;the&nbsp;contour&nbsp;plot</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;hIsoDose&nbsp;&nbsp;&nbsp;&nbsp;handle&nbsp;to&nbsp;iso&nbsp;dose&nbsp;contours</td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>53</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>57</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF">%&nbsp;Handle&nbsp;the&nbsp;argument&nbsp;list</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">if&nbsp;~exist('thresh','var')&nbsp;||&nbsp;isempty(thresh)</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;thresh&nbsp;=&nbsp;[];</td></tr>
-<tr><td>69</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">if&nbsp;~exist('alpha','var')&nbsp;||&nbsp;isempty(alpha)</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;alpha&nbsp;=&nbsp;[];</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">if&nbsp;~exist('contourColorMap','var')&nbsp;||&nbsp;isempty(contourColorMap)</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;contourColorMap&nbsp;=&nbsp;[];</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">if&nbsp;~exist('doseColorMap','var')&nbsp;||&nbsp;isempty(doseColorMap)</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;doseColorMap&nbsp;=&nbsp;[];</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">if&nbsp;~exist('doseWindow','var')&nbsp;||&nbsp;isempty(doseWindow)</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;doseWindow&nbsp;=&nbsp;[];</td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">if&nbsp;~exist('doseIsoLevels','var')&nbsp;||&nbsp;isempty(doseIsoLevels)</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;doseIsoLevels&nbsp;=&nbsp;[];</td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">if&nbsp;~exist('voiSelection','var')&nbsp;||&nbsp;isempty(voiSelection)</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;voiSelection&nbsp;=&nbsp;[];</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>90</td><td bgcolor="#FF0000">if&nbsp;~exist('colorBarLabel','var')&nbsp;||&nbsp;isempty(colorBarLabel)</td></tr>
-<tr><td>91</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;colorBarLabel&nbsp;=&nbsp;[];</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>94</td><td bgcolor="#FF0000">if&nbsp;~exist('boolPlotLegend','var')&nbsp;||&nbsp;isempty(boolPlotLegend)</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;boolPlotLegend&nbsp;=&nbsp;false;</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>98</td><td bgcolor="#FF0000">if&nbsp;~exist('cst','var')&nbsp;||&nbsp;isempty(cst)</td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;cst&nbsp;=&nbsp;[];</td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>101</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>102</td><td bgcolor="#FF0000">set(axesHandle,'YDir','Reverse');</td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF">%&nbsp;plot&nbsp;ct&nbsp;slice</td></tr>
-<tr><td>104</td><td bgcolor="#FF0000">hCt&nbsp;=&nbsp;matRad_plotCtSlice(axesHandle,ct.cubeHU,cubeIdx,plane,slice);&nbsp;</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">hold&nbsp;on;</td></tr>
-<tr><td>106</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF">%&nbsp;plot&nbsp;dose</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">[hDose,doseColorMap,doseWindow]&nbsp;=&nbsp;matRad_plotDoseSlice(axesHandle,dose,plane,slice,thresh,alpha,doseColorMap,doseWindow);</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">%&nbsp;plot&nbsp;iso&nbsp;dose&nbsp;lines</td></tr>
-<tr><td>111</td><td bgcolor="#FF0000">if&nbsp;~isempty(doseIsoLevels)</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hIsoDose&nbsp;=&nbsp;matRad_plotIsoDoseLines(axesHandle,dose,[],doseIsoLevels,false,plane,slice,doseColorMap,doseWindow,varargin{:});</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on;</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hIsoDose&nbsp;=&nbsp;[];</td></tr>
-<tr><td>116</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>117</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF">%plot&nbsp;VOI&nbsp;contours</td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">if&nbsp;&nbsp;~isempty(cst)</td></tr>
-<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hContour&nbsp;=&nbsp;matRad_plotVoiContourSlice(axesHandle,cst,ct.cubeHU,cubeIdx,voiSelection,plane,slice,contourColorMap,varargin{:});</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>122</td><td bgcolor="#FF0000">if&nbsp;boolPlotLegend</td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;visibleOnSlice&nbsp;=&nbsp;(~cellfun(@isempty,hContour));</td></tr>
-<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;ixLegend&nbsp;=&nbsp;find(voiSelection);</td></tr>
-<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;hContourTmp&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;cellfun(@(X)&nbsp;X(1),hContour(visibleOnSlice),'UniformOutput',false);</td></tr>
-<tr><td>126</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(voiSelection)</td></tr>
-<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hLegend&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;legend(axesHandle,[hContourTmp{:}],[cst(ixLegend(visibleOnSlice),2)],'AutoUpdate','off');</td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hLegend&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;legend(axesHandle,[hContourTmp{:}],[cst(visibleOnSlice,2)],'AutoUpdate','off');</td></tr>
-<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;set(hLegend,'Box','Off');</td></tr>
-<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;set(hLegend,'TextColor',[1&nbsp;1&nbsp;1]);</td></tr>
-<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;set(hLegend,'FontSize',12);</td></tr>
-<tr><td>134</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>136</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hContour&nbsp;=&nbsp;[];</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>139</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>140</td><td bgcolor="#FF0000">axis(axesHandle,'tight');</td></tr>
-<tr><td>141</td><td bgcolor="#FF0000">set(axesHandle,'xtick',[],'ytick',[]);</td></tr>
-<tr><td>142</td><td bgcolor="#FF0000">colormap(axesHandle,doseColorMap);</td></tr>
-<tr><td>143</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">matRad_plotAxisLabels(axesHandle,ct,plane,slice,[])</td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">%&nbsp;set&nbsp;axis&nbsp;ratio</td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">ratios&nbsp;=&nbsp;[1/ct.resolution.x&nbsp;1/ct.resolution.y&nbsp;1/ct.resolution.z];</td></tr>
-<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>150</td><td bgcolor="#FF0000">set(axesHandle,'DataAspectRatioMode','manual');</td></tr>
-<tr><td>151</td><td bgcolor="#FF0000">if&nbsp;plane&nbsp;==&nbsp;1&nbsp;</td></tr>
-<tr><td>152</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res&nbsp;=&nbsp;[ratios(3)&nbsp;ratios(2)]./max([ratios(3)&nbsp;ratios(2)]);&nbsp;&nbsp;</td></tr>
-<tr><td>153</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(axesHandle,'DataAspectRatio',[res&nbsp;1])</td></tr>
-<tr><td>154</td><td bgcolor="#FFFFFF">elseif&nbsp;plane&nbsp;==&nbsp;2&nbsp;%&nbsp;sagittal&nbsp;plane</td></tr>
-<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res&nbsp;=&nbsp;[ratios(3)&nbsp;ratios(1)]./max([ratios(3)&nbsp;ratios(1)]);&nbsp;&nbsp;</td></tr>
-<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(axesHandle,'DataAspectRatio',[res&nbsp;1])&nbsp;</td></tr>
-<tr><td>157</td><td bgcolor="#FFFFFF">elseif&nbsp;&nbsp;plane&nbsp;==&nbsp;3&nbsp;%&nbsp;Axial&nbsp;plane</td></tr>
-<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res&nbsp;=&nbsp;[ratios(2)&nbsp;ratios(1)]./max([ratios(2)&nbsp;ratios(1)]);&nbsp;&nbsp;</td></tr>
-<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(axesHandle,'DataAspectRatio',[res&nbsp;1])</td></tr>
-<tr><td>160</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>161</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>162</td><td bgcolor="#FF0000">hCMap&nbsp;=&nbsp;matRad_plotColorbar(axesHandle,doseColorMap,doseWindow,'Location','EastOutside');</td></tr>
-<tr><td>163</td><td bgcolor="#FF0000">if&nbsp;~isempty(colorBarLabel)</td></tr>
-<tr><td>164</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;set(get(hCMap,'YLabel'),'String',&nbsp;colorBarLabel,'FontSize',14);</td></tr>
-<tr><td>165</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>166</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>167</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>168</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>169</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

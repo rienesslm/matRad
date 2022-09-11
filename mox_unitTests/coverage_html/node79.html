@@ -1,511 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_generateStf.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_generateStf.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;stf&nbsp;=&nbsp;matRad_generateStf(ct,cst,pln,visMode)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;steering&nbsp;information&nbsp;generation</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf&nbsp;=&nbsp;matRad_generateStf(ct,cst,pln,visMode)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;cube</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;cst&nbsp;struct</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;pln:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;plan&nbsp;meta&nbsp;information&nbsp;struct</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;visMode:&nbsp;&nbsp;&nbsp;&nbsp;toggle&nbsp;on/off&nbsp;different&nbsp;visualizations&nbsp;by&nbsp;setting&nbsp;this&nbsp;value&nbsp;to&nbsp;1,2,3&nbsp;(optional)</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;stf:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;steering&nbsp;information&nbsp;struct</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>32</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>34</td><td bgcolor="#FF0000">matRad_cfg.dispInfo('matRad:&nbsp;Generating&nbsp;stf&nbsp;struct...&nbsp;');</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>36</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;4</td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;visMode&nbsp;=&nbsp;0;</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">if&nbsp;numel(pln.propStf.gantryAngles)&nbsp;~=&nbsp;numel(pln.propStf.couchAngles)</td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Inconsistent&nbsp;number&nbsp;of&nbsp;gantry&nbsp;and&nbsp;couch&nbsp;angles.');</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>44</td><td bgcolor="#FF0000">if&nbsp;~isnumeric(pln.propStf.bixelWidth)&nbsp;||&nbsp;pln.propStf.bixelWidth&nbsp;&lt;&nbsp;0&nbsp;||&nbsp;~isfinite(pln.propStf.bixelWidth)</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('bixel&nbsp;width&nbsp;(spot&nbsp;distance)&nbsp;needs&nbsp;to&nbsp;be&nbsp;a&nbsp;real&nbsp;number&nbsp;[mm]&nbsp;larger&nbsp;than&nbsp;zero.');</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF">%&nbsp;find&nbsp;all&nbsp;target&nbsp;voxels&nbsp;from&nbsp;cst&nbsp;cell&nbsp;array</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">V&nbsp;=&nbsp;[];</td></tr>
-<tr><td>50</td><td bgcolor="#FF0000">for&nbsp;i=1:size(cst,1)</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isequal(cst{i,3},'TARGET')&nbsp;&amp;&amp;&nbsp;~isempty(cst{i,6})</td></tr>
-<tr><td>52</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;V&nbsp;=&nbsp;[V;vertcat(cst{i,4}{:})];</td></tr>
-<tr><td>53</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;Remove&nbsp;double&nbsp;voxels</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">V&nbsp;=&nbsp;unique(V);</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">%&nbsp;generate&nbsp;voi&nbsp;cube&nbsp;for&nbsp;targets</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">voiTarget&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;zeros(ct.cubeDim);</td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">voiTarget(V)&nbsp;=&nbsp;1;</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">%&nbsp;add&nbsp;margin</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">addmarginBool&nbsp;=&nbsp;matRad_cfg.propStf.defaultAddMargin;</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">if&nbsp;isfield(pln,'propStf')&nbsp;&amp;&amp;&nbsp;isfield(pln.propStf,'addMargin')</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;addmarginBool&nbsp;=&nbsp;pln.propStf.addMargin;&nbsp;</td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">if&nbsp;addmarginBool</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;voiTarget&nbsp;=&nbsp;matRad_addMargin(voiTarget,cst,ct.resolution,ct.resolution,true);</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;V&nbsp;&nbsp;&nbsp;=&nbsp;find(voiTarget&gt;0);</td></tr>
-<tr><td>71</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>73</td><td bgcolor="#FFFFFF">%&nbsp;throw&nbsp;error&nbsp;message&nbsp;if&nbsp;no&nbsp;target&nbsp;is&nbsp;found</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">if&nbsp;isempty(V)</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Could&nbsp;not&nbsp;find&nbsp;target.');</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">%&nbsp;Convert&nbsp;linear&nbsp;indices&nbsp;to&nbsp;3D&nbsp;voxel&nbsp;coordinates</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">[coordsY_vox,&nbsp;coordsX_vox,&nbsp;coordsZ_vox]&nbsp;=&nbsp;ind2sub(ct.cubeDim,V);</td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF">%&nbsp;prepare&nbsp;structures&nbsp;necessary&nbsp;for&nbsp;particles</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">fileName&nbsp;=&nbsp;[pln.radiationMode&nbsp;'_'&nbsp;pln.machine];</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">try</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;load([fileparts(mfilename('fullpath'))&nbsp;filesep&nbsp;'basedata'&nbsp;filesep&nbsp;fileName]);</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;SAD&nbsp;=&nbsp;machine.meta.SAD;</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">catch</td></tr>
-<tr><td>87</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Could&nbsp;not&nbsp;find&nbsp;the&nbsp;following&nbsp;machine&nbsp;file:&nbsp;%s',fileName);&nbsp;</td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>90</td><td bgcolor="#FF0000">if&nbsp;strcmp(pln.radiationMode,'protons')&nbsp;||&nbsp;strcmp(pln.radiationMode,'carbon')</td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;availableEnergies&nbsp;=&nbsp;[machine.data.energy];</td></tr>
-<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;availablePeakPos&nbsp;&nbsp;=&nbsp;[machine.data.peakPos]&nbsp;+&nbsp;[machine.data.offset];</td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;sum(availablePeakPos&lt;0)&gt;0</td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('at&nbsp;least&nbsp;one&nbsp;available&nbsp;peak&nbsp;position&nbsp;is&nbsp;negative&nbsp;-&nbsp;inconsistent&nbsp;machine&nbsp;file')&nbsp;</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%clear&nbsp;machine;</td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>100</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>101</td><td bgcolor="#FFFFFF">%&nbsp;calculate&nbsp;rED&nbsp;or&nbsp;rSP&nbsp;from&nbsp;HU</td></tr>
-<tr><td>102</td><td bgcolor="#FF0000">ct&nbsp;=&nbsp;matRad_calcWaterEqD(ct,&nbsp;pln);</td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">%&nbsp;take&nbsp;only&nbsp;voxels&nbsp;inside&nbsp;patient</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">V&nbsp;=&nbsp;[cst{:,4}];</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">V&nbsp;=&nbsp;unique(vertcat(V{:}));</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF">%&nbsp;ignore&nbsp;densities&nbsp;outside&nbsp;of&nbsp;contours</td></tr>
-<tr><td>109</td><td bgcolor="#FF0000">eraseCtDensMask&nbsp;=&nbsp;ones(prod(ct.cubeDim),1);</td></tr>
-<tr><td>110</td><td bgcolor="#FF0000">eraseCtDensMask(V)&nbsp;=&nbsp;0;</td></tr>
-<tr><td>111</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:ct.numOfCtScen</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.cube{i}(eraseCtDensMask&nbsp;==&nbsp;1)&nbsp;=&nbsp;0;</td></tr>
-<tr><td>113</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>115</td><td bgcolor="#FFFFFF">%&nbsp;Define&nbsp;steering&nbsp;file&nbsp;like&nbsp;struct.&nbsp;Prellocating&nbsp;for&nbsp;speed.</td></tr>
-<tr><td>116</td><td bgcolor="#FF0000">stf&nbsp;=&nbsp;struct;</td></tr>
-<tr><td>117</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF">%&nbsp;loop&nbsp;over&nbsp;all&nbsp;angles</td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:length(pln.propStf.gantryAngles)</td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Correct&nbsp;for&nbsp;iso&nbsp;center&nbsp;position.&nbsp;Whit&nbsp;this&nbsp;correction&nbsp;Isocenter&nbsp;is</td></tr>
-<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;(0,0,0)&nbsp;[mm]</td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;coordsX&nbsp;=&nbsp;coordsX_vox*ct.resolution.x&nbsp;-&nbsp;pln.propStf.isoCenter(i,1);</td></tr>
-<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;coordsY&nbsp;=&nbsp;coordsY_vox*ct.resolution.y&nbsp;-&nbsp;pln.propStf.isoCenter(i,2);</td></tr>
-<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;coordsZ&nbsp;=&nbsp;coordsZ_vox*ct.resolution.z&nbsp;-&nbsp;pln.propStf.isoCenter(i,3);</td></tr>
-<tr><td>126</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>127</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;meta&nbsp;information&nbsp;for&nbsp;treatment&nbsp;plan</td></tr>
-<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).gantryAngle&nbsp;&nbsp;&nbsp;=&nbsp;pln.propStf.gantryAngles(i);</td></tr>
-<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).couchAngle&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;pln.propStf.couchAngles(i);</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).bixelWidth&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).radiationMode&nbsp;=&nbsp;pln.radiationMode;</td></tr>
-<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).SAD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;SAD;</td></tr>
-<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).isoCenter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;pln.propStf.isoCenter(i,:);</td></tr>
-<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>135</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Get&nbsp;the&nbsp;(active)&nbsp;rotation&nbsp;matrix.&nbsp;We&nbsp;perform&nbsp;a&nbsp;passive/system&nbsp;</td></tr>
-<tr><td>136</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;rotation&nbsp;with&nbsp;row&nbsp;vector&nbsp;coordinates,&nbsp;which&nbsp;would&nbsp;introduce&nbsp;two&nbsp;</td></tr>
-<tr><td>137</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;inversions&nbsp;/&nbsp;transpositions&nbsp;of&nbsp;the&nbsp;matrix,&nbsp;thus&nbsp;no&nbsp;changes&nbsp;to&nbsp;the</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;rotation&nbsp;matrix&nbsp;are&nbsp;necessary</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rotMat_system_T&nbsp;=&nbsp;matRad_getRotationMatrix(pln.propStf.gantryAngles(i),pln.propStf.couchAngles(i));</td></tr>
-<tr><td>140</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>141</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rot_coords&nbsp;=&nbsp;[coordsX&nbsp;coordsY&nbsp;coordsZ]*rotMat_system_T;</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>143</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;project&nbsp;x&nbsp;and&nbsp;z&nbsp;coordinates&nbsp;to&nbsp;isocenter</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;coordsAtIsoCenterPlane(:,1)&nbsp;=&nbsp;(rot_coords(:,1)*SAD)./(SAD&nbsp;+&nbsp;rot_coords(:,2));</td></tr>
-<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;coordsAtIsoCenterPlane(:,2)&nbsp;=&nbsp;(rot_coords(:,3)*SAD)./(SAD&nbsp;+&nbsp;rot_coords(:,2));</td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Take&nbsp;unique&nbsp;rows&nbsp;values&nbsp;for&nbsp;beamlets&nbsp;positions.&nbsp;Calculate&nbsp;position&nbsp;of</td></tr>
-<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;central&nbsp;ray&nbsp;for&nbsp;every&nbsp;bixel&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rayPos&nbsp;=&nbsp;unique(pln.propStf.bixelWidth*round([&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coordsAtIsoCenterPlane(:,1)&nbsp;...&nbsp;</td></tr>
-<tr><td>150</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zeros(size(coordsAtIsoCenterPlane,1),1)&nbsp;...</td></tr>
-<tr><td>151</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coordsAtIsoCenterPlane(:,2)]/pln.propStf.bixelWidth),'rows');</td></tr>
-<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;pad&nbsp;ray&nbsp;position&nbsp;array&nbsp;if&nbsp;resolution&nbsp;of&nbsp;target&nbsp;voxel&nbsp;grid&nbsp;not&nbsp;sufficient</td></tr>
-<tr><td>154</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maxCtResolution&nbsp;=&nbsp;max([ct.resolution.x&nbsp;ct.resolution.y&nbsp;ct.resolution.z]);</td></tr>
-<tr><td>155</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;pln.propStf.bixelWidth&nbsp;&lt;&nbsp;maxCtResolution</td></tr>
-<tr><td>156</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;origRayPos&nbsp;=&nbsp;rayPos;</td></tr>
-<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;-floor(maxCtResolution/pln.propStf.bixelWidth):floor(maxCtResolution/pln.propStf.bixelWidth)</td></tr>
-<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;-floor(maxCtResolution/pln.propStf.bixelWidth):floor(maxCtResolution/pln.propStf.bixelWidth)</td></tr>
-<tr><td>159</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;abs(j)+abs(k)==0</td></tr>
-<tr><td>160</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
-<tr><td>161</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>162</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos&nbsp;=&nbsp;[rayPos;&nbsp;origRayPos(:,1)+j*pln.propStf.bixelWidth&nbsp;origRayPos(:,2)&nbsp;origRayPos(:,3)+k*pln.propStf.bixelWidth];</td></tr>
-<tr><td>163</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>164</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>165</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>166</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>167</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;remove&nbsp;spaces&nbsp;within&nbsp;rows&nbsp;of&nbsp;bixels&nbsp;for&nbsp;DAO</td></tr>
-<tr><td>168</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;pln.propOpt.runDAO</td></tr>
-<tr><td>169</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;create&nbsp;single&nbsp;x,y,z&nbsp;vectors</td></tr>
-<tr><td>170</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;=&nbsp;rayPos(:,1);</td></tr>
-<tr><td>171</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y&nbsp;=&nbsp;rayPos(:,2);</td></tr>
-<tr><td>172</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;=&nbsp;rayPos(:,3);</td></tr>
-<tr><td>173</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uniZ&nbsp;=&nbsp;unique(z);</td></tr>
-<tr><td>174</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:numel(uniZ)</td></tr>
-<tr><td>175</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x_loc&nbsp;=&nbsp;x(z&nbsp;==&nbsp;uniZ(j));</td></tr>
-<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x_min&nbsp;=&nbsp;min(x_loc);</td></tr>
-<tr><td>177</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x_max&nbsp;=&nbsp;max(x_loc);</td></tr>
-<tr><td>178</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;=&nbsp;[x;&nbsp;[x_min:pln.propStf.bixelWidth:x_max]'];</td></tr>
-<tr><td>179</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y&nbsp;=&nbsp;[y;&nbsp;zeros((x_max-x_min)/pln.propStf.bixelWidth+1,1)];</td></tr>
-<tr><td>180</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;=&nbsp;[z;&nbsp;uniZ(j)*ones((x_max-x_min)/pln.propStf.bixelWidth+1,1)];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>181</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>182</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>183</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos&nbsp;=&nbsp;[x,y,z];</td></tr>
-<tr><td>184</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>185</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>186</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;remove&nbsp;double&nbsp;rays</td></tr>
-<tr><td>187</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rayPos&nbsp;=&nbsp;unique(rayPos,'rows');</td></tr>
-<tr><td>188</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>189</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;the&nbsp;number&nbsp;of&nbsp;rays</td></tr>
-<tr><td>190</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).numOfRays&nbsp;=&nbsp;size(rayPos,1);</td></tr>
-<tr><td>191</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>192</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;ray&nbsp;and&nbsp;target&nbsp;position&nbsp;in&nbsp;beam&nbsp;eye's&nbsp;view&nbsp;(bev)</td></tr>
-<tr><td>193</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays</td></tr>
-<tr><td>194</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).rayPos_bev&nbsp;=&nbsp;rayPos(j,:);</td></tr>
-<tr><td>195</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).targetPoint_bev&nbsp;=&nbsp;[2*stf(i).ray(j).rayPos_bev(1)&nbsp;...</td></tr>
-<tr><td>196</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAD&nbsp;...</td></tr>
-<tr><td>197</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2*stf(i).ray(j).rayPos_bev(3)];</td></tr>
-<tr><td>198</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>199</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>200</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;source&nbsp;position&nbsp;in&nbsp;bev</td></tr>
-<tr><td>201</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).sourcePoint_bev&nbsp;=&nbsp;[0&nbsp;-SAD&nbsp;0];</td></tr>
-<tr><td>202</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>203</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;(active)&nbsp;rotation&nbsp;matrix&nbsp;</td></tr>
-<tr><td>204</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;transpose&nbsp;matrix&nbsp;because&nbsp;we&nbsp;are&nbsp;working&nbsp;with&nbsp;row&nbsp;vectors</td></tr>
-<tr><td>205</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rotMat_vectors_T&nbsp;=&nbsp;transpose(matRad_getRotationMatrix(pln.propStf.gantryAngles(i),pln.propStf.couchAngles(i)));</td></tr>
-<tr><td>206</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>207</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>208</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).sourcePoint&nbsp;=&nbsp;stf(i).sourcePoint_bev*rotMat_vectors_T;</td></tr>
-<tr><td>209</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>210</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;ray&nbsp;and&nbsp;target&nbsp;position&nbsp;in&nbsp;lps&nbsp;system.</td></tr>
-<tr><td>211</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays</td></tr>
-<tr><td>212</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).rayPos&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;stf(i).ray(j).rayPos_bev*rotMat_vectors_T;</td></tr>
-<tr><td>213</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).targetPoint&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev*rotMat_vectors_T;</td></tr>
-<tr><td>214</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(pln.radiationMode,'photons')&nbsp;</td></tr>
-<tr><td>215</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).beamletCornersAtIso&nbsp;=&nbsp;[rayPos(j,:)&nbsp;+&nbsp;[+stf(i).bixelWidth/2,0,+stf(i).bixelWidth/2];...</td></tr>
-<tr><td>216</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos(j,:)&nbsp;+&nbsp;[-stf(i).bixelWidth/2,0,+stf(i).bixelWidth/2];...</td></tr>
-<tr><td>217</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos(j,:)&nbsp;+&nbsp;[-stf(i).bixelWidth/2,0,-stf(i).bixelWidth/2];...</td></tr>
-<tr><td>218</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos(j,:)&nbsp;+&nbsp;[+stf(i).bixelWidth/2,0,-stf(i).bixelWidth/2]]*rotMat_vectors_T;</td></tr>
-<tr><td>219</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).rayCorners_SCD&nbsp;=&nbsp;(repmat([0,&nbsp;machine.meta.SCD&nbsp;-&nbsp;SAD,&nbsp;0],4,1)+&nbsp;(machine.meta.SCD/SAD)&nbsp;*&nbsp;...</td></tr>
-<tr><td>220</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[rayPos(j,:)&nbsp;+&nbsp;[+stf(i).bixelWidth/2,0,+stf(i).bixelWidth/2];...</td></tr>
-<tr><td>221</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos(j,:)&nbsp;+&nbsp;[-stf(i).bixelWidth/2,0,+stf(i).bixelWidth/2];...</td></tr>
-<tr><td>222</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos(j,:)&nbsp;+&nbsp;[-stf(i).bixelWidth/2,0,-stf(i).bixelWidth/2];...</td></tr>
-<tr><td>223</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rayPos(j,:)&nbsp;+&nbsp;[+stf(i).bixelWidth/2,0,-stf(i).bixelWidth/2]])*rotMat_vectors_T;</td></tr>
-<tr><td>224</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>225</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>226</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>227</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;loop&nbsp;over&nbsp;all&nbsp;rays&nbsp;to&nbsp;determine&nbsp;meta&nbsp;information&nbsp;for&nbsp;each&nbsp;ray&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>228</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).numOfBixelsPerRay&nbsp;=&nbsp;ones(1,stf(i).numOfRays);</td></tr>
-<tr><td>229</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>230</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;stf(i).numOfRays:-1:1</td></tr>
-<tr><td>231</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>232</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;ray&nbsp;tracing&nbsp;necessary&nbsp;to&nbsp;determine&nbsp;depth&nbsp;of&nbsp;the&nbsp;target</td></tr>
-<tr><td>233</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[~,l,rho,~,~]&nbsp;=&nbsp;matRad_siddonRayTracer(stf(i).isoCenter,&nbsp;...</td></tr>
-<tr><td>234</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct.resolution,&nbsp;...</td></tr>
-<tr><td>235</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).sourcePoint,&nbsp;...</td></tr>
-<tr><td>236</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).targetPoint,&nbsp;...</td></tr>
-<tr><td>237</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[{ct.cube{1}}&nbsp;{voiTarget}]);</td></tr>
-<tr><td>238</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>239</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;appropriate&nbsp;energies&nbsp;for&nbsp;particles</td></tr>
-<tr><td>240</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(stf(i).radiationMode,'protons')&nbsp;||&nbsp;strcmp(stf(i).radiationMode,'carbon')</td></tr>
-<tr><td>241</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>242</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;target&nbsp;hit</td></tr>
-<tr><td>243</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;sum(rho{2})&nbsp;&gt;&nbsp;0&nbsp;</td></tr>
-<tr><td>244</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>245</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;compute&nbsp;radiological&nbsp;depths</td></tr>
-<tr><td>246</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;http://www.ncbi.nlm.nih.gov/pubmed/4000088,&nbsp;eq&nbsp;14</td></tr>
-<tr><td>247</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;radDepths&nbsp;=&nbsp;cumsum(l&nbsp;.*&nbsp;rho{1});&nbsp;</td></tr>
-<tr><td>248</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>249</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;target&nbsp;entry&nbsp;&amp;&nbsp;exit</td></tr>
-<tr><td>250</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;diff_voi&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;diff([rho{2}]);</td></tr>
-<tr><td>251</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetEntry&nbsp;=&nbsp;radDepths(diff_voi&nbsp;==&nbsp;1);</td></tr>
-<tr><td>252</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetExit&nbsp;&nbsp;=&nbsp;radDepths(diff_voi&nbsp;==&nbsp;-1);</td></tr>
-<tr><td>253</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>254</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(targetEntry)&nbsp;~=&nbsp;numel(targetExit)</td></tr>
-<tr><td>255</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Inconsistency&nbsp;during&nbsp;ray&nbsp;tracing.&nbsp;Please&nbsp;check&nbsp;correct&nbsp;assignment&nbsp;and&nbsp;overlap&nbsp;priorities&nbsp;of&nbsp;structure&nbsp;types&nbsp;OAR&nbsp;&amp;&nbsp;TARGET.');</td></tr>
-<tr><td>256</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>257</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>258</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).energy&nbsp;=&nbsp;[];</td></tr>
-<tr><td>259</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>260</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Save&nbsp;energies&nbsp;in&nbsp;stf&nbsp;struct</td></tr>
-<tr><td>261</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:numel(targetEntry)</td></tr>
-<tr><td>262</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).energy&nbsp;=&nbsp;[stf(i).ray(j).energy&nbsp;availableEnergies(availablePeakPos&gt;=targetEntry(k)&amp;availablePeakPos&lt;=targetExit(k))];</td></tr>
-<tr><td>263</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>264</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;</td></tr>
-<tr><td>265</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;book&nbsp;keeping&nbsp;&amp;&nbsp;calculate&nbsp;focus&nbsp;index</td></tr>
-<tr><td>266</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).numOfBixelsPerRay(j)&nbsp;=&nbsp;numel([stf(i).ray(j).energy]);</td></tr>
-<tr><td>267</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currentMinimumFWHM&nbsp;=&nbsp;matRad_interp1(machine.meta.LUT_bxWidthminFWHM(1,:)',...</td></tr>
-<tr><td>268</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;machine.meta.LUT_bxWidthminFWHM(2,:)',...</td></tr>
-<tr><td>269</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pln.propStf.bixelWidth);</td></tr>
-<tr><td>270</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;focusIx&nbsp;&nbsp;=&nbsp;&nbsp;ones(stf(i).numOfBixelsPerRay(j),1);</td></tr>
-<tr><td>271</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[~,&nbsp;vEnergyIx]&nbsp;=&nbsp;min(abs(bsxfun(@minus,[machine.data.energy]',...</td></tr>
-<tr><td>272</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;repmat(stf(i).ray(j).energy,length([machine.data]),1))));</td></tr>
-<tr><td>273</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>274</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;for&nbsp;each&nbsp;spot&nbsp;the&nbsp;focus&nbsp;index</td></tr>
-<tr><td>275</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:stf(i).numOfBixelsPerRay(j)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>276</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;focusIx(k)&nbsp;=&nbsp;find(machine.data(vEnergyIx(k)).initFocus.SisFWHMAtIso&nbsp;&gt;&nbsp;currentMinimumFWHM,1,'first');</td></tr>
-<tr><td>277</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>278</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>279</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).focusIx&nbsp;=&nbsp;focusIx';</td></tr>
-<tr><td>280</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>281</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;%&nbsp;target&nbsp;not&nbsp;hit</td></tr>
-<tr><td>282</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
-<tr><td>283</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).numOfBixelsPerRay(j)&nbsp;=&nbsp;[];</td></tr>
-<tr><td>284</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>285</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>286</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;strcmp(stf(i).radiationMode,'photons')</td></tr>
-<tr><td>287</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>288</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;book&nbsp;keeping&nbsp;for&nbsp;photons</td></tr>
-<tr><td>289</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).energy&nbsp;=&nbsp;machine.data.energy;</td></tr>
-<tr><td>290</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>291</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>292</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad_cfg.dispError('Error&nbsp;generating&nbsp;stf&nbsp;struct:&nbsp;invalid&nbsp;radiation&nbsp;modality.');</td></tr>
-<tr><td>293</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>294</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>295</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>296</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>297</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;store&nbsp;total&nbsp;number&nbsp;of&nbsp;rays&nbsp;for&nbsp;beam-i</td></tr>
-<tr><td>298</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).numOfRays&nbsp;=&nbsp;size(stf(i).ray,2);</td></tr>
-<tr><td>299</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>300</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;post&nbsp;processing&nbsp;for&nbsp;particle&nbsp;remove&nbsp;energy&nbsp;slices</td></tr>
-<tr><td>301</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(stf(i).radiationMode,'protons')&nbsp;||&nbsp;strcmp(stf(i).radiationMode,'carbon')</td></tr>
-<tr><td>302</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>303</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;minimum&nbsp;energy&nbsp;per&nbsp;field</td></tr>
-<tr><td>304</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minEnergy&nbsp;=&nbsp;min([stf(i).ray.energy]);</td></tr>
-<tr><td>305</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxEnergy&nbsp;=&nbsp;max([stf(i).ray.energy]);</td></tr>
-<tr><td>306</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>307</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;get&nbsp;corresponding&nbsp;peak&nbsp;position</td></tr>
-<tr><td>308</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;availableEnergies&nbsp;=&nbsp;[machine.data.energy];</td></tr>
-<tr><td>309</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minPeakPos&nbsp;&nbsp;=&nbsp;machine.data(minEnergy&nbsp;==&nbsp;availableEnergies).peakPos;</td></tr>
-<tr><td>310</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxPeakPos&nbsp;&nbsp;=&nbsp;machine.data(maxEnergy&nbsp;==&nbsp;availableEnergies).peakPos;</td></tr>
-<tr><td>311</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>312</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;find&nbsp;set&nbsp;of&nbsp;energyies&nbsp;with&nbsp;adequate&nbsp;spacing</td></tr>
-<tr><td>313</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isfield(pln.propStf,&nbsp;'longitudinalSpotSpacing')</td></tr>
-<tr><td>314</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;longitudinalSpotSpacing&nbsp;=&nbsp;matRad_cfg.propStf.defaultLongitudinalSpotSpacing;</td></tr>
-<tr><td>315</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>316</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;longitudinalSpotSpacing&nbsp;=&nbsp;pln.propStf.longitudinalSpotSpacing;</td></tr>
-<tr><td>317</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>318</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>319</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).longitudinalSpotSpacing&nbsp;=&nbsp;longitudinalSpotSpacing;</td></tr>
-<tr><td>320</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>321</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tolerance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;longitudinalSpotSpacing/10;</td></tr>
-<tr><td>322</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;availablePeakPos&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[machine.data.peakPos];</td></tr>
-<tr><td>323</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>324</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;useEnergyBool&nbsp;=&nbsp;availablePeakPos&nbsp;&gt;=&nbsp;minPeakPos&nbsp;&amp;&nbsp;availablePeakPos&nbsp;&lt;=&nbsp;maxPeakPos;</td></tr>
-<tr><td>325</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>326</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ixCurr&nbsp;=&nbsp;find(useEnergyBool,1,'first');</td></tr>
-<tr><td>327</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ixRun&nbsp;&nbsp;=&nbsp;ixCurr&nbsp;+&nbsp;1;</td></tr>
-<tr><td>328</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ixEnd&nbsp;&nbsp;=&nbsp;find(useEnergyBool,1,'last');</td></tr>
-<tr><td>329</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>330</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;ixRun&nbsp;&lt;=&nbsp;ixEnd</td></tr>
-<tr><td>331</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;abs(availablePeakPos(ixRun)-availablePeakPos(ixCurr))&nbsp;&lt;&nbsp;...</td></tr>
-<tr><td>332</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;longitudinalSpotSpacing&nbsp;-&nbsp;tolerance</td></tr>
-<tr><td>333</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;useEnergyBool(ixRun)&nbsp;=&nbsp;0;</td></tr>
-<tr><td>334</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>335</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ixCurr&nbsp;=&nbsp;ixRun;</td></tr>
-<tr><td>336</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>337</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ixRun&nbsp;=&nbsp;ixRun&nbsp;+&nbsp;1;</td></tr>
-<tr><td>338</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>339</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>340</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;stf(i).numOfRays:-1:1</td></tr>
-<tr><td>341</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;stf(i).numOfBixelsPerRay(j):-1:1</td></tr>
-<tr><td>342</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maskEnergy&nbsp;=&nbsp;stf(i).ray(j).energy(k)&nbsp;==&nbsp;availableEnergies;</td></tr>
-<tr><td>343</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~useEnergyBool(maskEnergy)</td></tr>
-<tr><td>344</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).energy(k)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
-<tr><td>345</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).focusIx(k)&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
-<tr><td>346</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).numOfBixelsPerRay(j)&nbsp;=&nbsp;stf(i).numOfBixelsPerRay(j)&nbsp;-&nbsp;1;</td></tr>
-<tr><td>347</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>348</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>349</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;isempty(stf(i).ray(j).energy)</td></tr>
-<tr><td>350</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j)&nbsp;=&nbsp;[];</td></tr>
-<tr><td>351</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).numOfBixelsPerRay(j)&nbsp;=&nbsp;[];</td></tr>
-<tr><td>352</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).numOfRays&nbsp;=&nbsp;stf(i).numOfRays&nbsp;-&nbsp;1;</td></tr>
-<tr><td>353</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>354</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>355</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>356</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>357</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>358</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;save&nbsp;total&nbsp;number&nbsp;of&nbsp;bixels</td></tr>
-<tr><td>359</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;stf(i).totalNumOfBixels&nbsp;=&nbsp;sum(stf(i).numOfBixelsPerRay);</td></tr>
-<tr><td>360</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>361</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Show&nbsp;progress</td></tr>
-<tr><td>362</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;matRad_progress(i,length(pln.propStf.gantryAngles));</td></tr>
-<tr><td>363</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>364</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%%&nbsp;visualization</td></tr>
-<tr><td>365</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;visMode&nbsp;&gt;&nbsp;0</td></tr>
-<tr><td>366</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>367</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clf;</td></tr>
-<tr><td>368</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;first&nbsp;subplot:&nbsp;visualization&nbsp;in&nbsp;bev</td></tr>
-<tr><td>369</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subplot(1,2,1)</td></tr>
-<tr><td>370</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on</td></tr>
-<tr><td>371</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>372</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;plot&nbsp;rotated&nbsp;target&nbsp;coordinates</td></tr>
-<tr><td>373</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3(rot_coords(:,1),rot_coords(:,2),rot_coords(:,3),'r.')</td></tr>
-<tr><td>374</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>375</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;surface&nbsp;rendering</td></tr>
-<tr><td>376</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;visMode&nbsp;==&nbsp;2</td></tr>
-<tr><td>377</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>378</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;generate&nbsp;a&nbsp;3D&nbsp;rectangular&nbsp;grid&nbsp;centered&nbsp;at&nbsp;isocenter&nbsp;in</td></tr>
-<tr><td>379</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;voxel&nbsp;coordinates</td></tr>
-<tr><td>380</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[X,Y,Z]&nbsp;=&nbsp;meshgrid((1:ct.cubeDim(2))-stf(i).isoCenter(1)/ct.resolution.x,&nbsp;...</td></tr>
-<tr><td>381</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1:ct.cubeDim(1))-stf(i).isoCenter(2)/ct.resolution.y,&nbsp;...</td></tr>
-<tr><td>382</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1:ct.cubeDim(3))-stf(i).isoCenter(3)/ct.resolution.z);</td></tr>
-<tr><td>383</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>384</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;computes&nbsp;surface</td></tr>
-<tr><td>385</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;patSurfCube&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;0*ct.cube{1};</td></tr>
-<tr><td>386</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;[cst{:,4}];</td></tr>
-<tr><td>387</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;unique(vertcat(idx{:}));</td></tr>
-<tr><td>388</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;patSurfCube(idx)&nbsp;=&nbsp;1;</td></tr>
-<tr><td>389</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>390</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[f,v]&nbsp;=&nbsp;isosurface(X,Y,Z,patSurfCube,.5);</td></tr>
-<tr><td>391</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>392</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;convert&nbsp;isosurface&nbsp;from&nbsp;voxel&nbsp;to&nbsp;[mm]</td></tr>
-<tr><td>393</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v(:,1)&nbsp;=&nbsp;v(:,1)*ct.resolution.x;</td></tr>
-<tr><td>394</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v(:,2)&nbsp;=&nbsp;v(:,2)*ct.resolution.y;</td></tr>
-<tr><td>395</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v(:,3)&nbsp;=&nbsp;v(:,3)*ct.resolution.z;</td></tr>
-<tr><td>396</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>397</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;rotate&nbsp;surface</td></tr>
-<tr><td>398</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rotated_surface&nbsp;=&nbsp;v*rotMat_system_T;</td></tr>
-<tr><td>399</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>400</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;surface&nbsp;rendering</td></tr>
-<tr><td>401</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;surface&nbsp;=&nbsp;patch('Faces',f,'Vertices',rotated_surface);</td></tr>
-<tr><td>402</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(surface,'FaceColor',[0&nbsp;0&nbsp;1],'EdgeColor','none','FaceAlpha',.4);</td></tr>
-<tr><td>403</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lighting&nbsp;gouraud;</td></tr>
-<tr><td>404</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>405</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>406</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>407</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;plot&nbsp;projection&nbsp;matrix:&nbsp;coordinates&nbsp;at&nbsp;isocenter</td></tr>
-<tr><td>408</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3(rayPos(:,1),rayPos(:,2),rayPos(:,3),'k.');</td></tr>
-<tr><td>409</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>410</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;matrix&nbsp;border&nbsp;of&nbsp;matrix&nbsp;at&nbsp;isocenter</td></tr>
-<tr><td>411</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays</td></tr>
-<tr><td>412</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>413</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Compute&nbsp;border&nbsp;for&nbsp;every&nbsp;bixels</td></tr>
-<tr><td>414</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_X_1&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,1)&nbsp;+&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>415</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_Y_1&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,2);</td></tr>
-<tr><td>416</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_Z_1&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,3)&nbsp;+&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>417</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>418</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_X_2&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,1)&nbsp;+&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>419</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_Y_2&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,2);</td></tr>
-<tr><td>420</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_Z_2&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,3)&nbsp;-&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>421</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>422</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_X_3&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,1)&nbsp;-&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>423</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_Y_3&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,2);</td></tr>
-<tr><td>424</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_Z_3&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,3)&nbsp;-&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>425</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>426</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_X_4&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,1)&nbsp;-&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>427</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_Y_4&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,2);</td></tr>
-<tr><td>428</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_Z_4&nbsp;=&nbsp;stf(i).ray(j).targetPoint_bev(:,3)&nbsp;+&nbsp;pln.propStf.bixelWidth;</td></tr>
-<tr><td>429</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>430</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;plot</td></tr>
-<tr><td>431</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3([stf(i).sourcePoint_bev(1)&nbsp;targetPoint_vox_X_1],[stf(i).sourcePoint_bev(2)&nbsp;targetPoint_vox_Y_1],[stf(i).sourcePoint_bev(3)&nbsp;targetPoint_vox_Z_1],'g')</td></tr>
-<tr><td>432</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3([stf(i).sourcePoint_bev(1)&nbsp;targetPoint_vox_X_2],[stf(i).sourcePoint_bev(2)&nbsp;targetPoint_vox_Y_2],[stf(i).sourcePoint_bev(3)&nbsp;targetPoint_vox_Z_2],'g')</td></tr>
-<tr><td>433</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3([stf(i).sourcePoint_bev(1)&nbsp;targetPoint_vox_X_3],[stf(i).sourcePoint_bev(2)&nbsp;targetPoint_vox_Y_3],[stf(i).sourcePoint_bev(3)&nbsp;targetPoint_vox_Z_3],'g')</td></tr>
-<tr><td>434</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3([stf(i).sourcePoint_bev(1)&nbsp;targetPoint_vox_X_4],[stf(i).sourcePoint_bev(2)&nbsp;targetPoint_vox_Y_4],[stf(i).sourcePoint_bev(3)&nbsp;targetPoint_vox_Z_4],'g')</td></tr>
-<tr><td>435</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>436</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>437</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>438</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;properties</td></tr>
-<tr><td>439</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;daspect([1&nbsp;1&nbsp;1]);</td></tr>
-<tr><td>440</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view(0,-90);</td></tr>
-<tr><td>441</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel&nbsp;'X&nbsp;[mm]'</td></tr>
-<tr><td>442</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ylabel&nbsp;'Y&nbsp;[mm]'</td></tr>
-<tr><td>443</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zlabel&nbsp;'Z&nbsp;[mm]'</td></tr>
-<tr><td>444</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title&nbsp;('Beam''s&nbsp;eye&nbsp;view')</td></tr>
-<tr><td>445</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;axis([-300&nbsp;300&nbsp;-300&nbsp;300&nbsp;-300&nbsp;300]);</td></tr>
-<tr><td>446</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>447</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;second&nbsp;subplot:&nbsp;visualization&nbsp;in&nbsp;lps&nbsp;coordinate&nbsp;system</td></tr>
-<tr><td>448</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subplot(1,2,2)</td></tr>
-<tr><td>449</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>450</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;target&nbsp;coordinates&nbsp;whitout&nbsp;any&nbsp;rotation</td></tr>
-<tr><td>451</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3(coordsX,coordsY,coordsZ,'r.')</td></tr>
-<tr><td>452</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on;</td></tr>
-<tr><td>453</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>454</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Rotated&nbsp;projection&nbsp;matrix&nbsp;at&nbsp;isocenter</td></tr>
-<tr><td>455</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isocenter_plane_coor&nbsp;=&nbsp;rayPos*rotMat_vectors_T;</td></tr>
-<tr><td>456</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>457</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;isocenter&nbsp;plane</td></tr>
-<tr><td>458</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3(isocenter_plane_coor(:,1),isocenter_plane_coor(:,2),isocenter_plane_coor(:,3),'y.');</td></tr>
-<tr><td>459</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>460</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;rotated&nbsp;bixels&nbsp;border.</td></tr>
-<tr><td>461</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays</td></tr>
-<tr><td>462</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Generate&nbsp;rotated&nbsp;projection&nbsp;target&nbsp;points.</td></tr>
-<tr><td>463</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_1_rotated&nbsp;=&nbsp;[stf(i).ray(j).targetPoint_bev(:,1)&nbsp;+&nbsp;pln.propStf.bixelWidth,stf(i).ray(j).targetPoint_bev(:,2),stf(i).ray(j).targetPoint_bev(:,3)&nbsp;+&nbsp;pln.propStf.bixelWidth]*rotMat_vectors_T;</td></tr>
-<tr><td>464</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_2_rotated&nbsp;=&nbsp;[stf(i).ray(j).targetPoint_bev(:,1)&nbsp;+&nbsp;pln.propStf.bixelWidth,stf(i).ray(j).targetPoint_bev(:,2),stf(i).ray(j).targetPoint_bev(:,3)&nbsp;-&nbsp;pln.propStf.bixelWidth]*rotMat_vectors_T;</td></tr>
-<tr><td>465</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_3_rotated&nbsp;=&nbsp;[stf(i).ray(j).targetPoint_bev(:,1)&nbsp;-&nbsp;pln.propStf.bixelWidth,stf(i).ray(j).targetPoint_bev(:,2),stf(i).ray(j).targetPoint_bev(:,3)&nbsp;-&nbsp;pln.propStf.bixelWidth]*rotMat_vectors_T;</td></tr>
-<tr><td>466</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint_vox_4_rotated&nbsp;=&nbsp;[stf(i).ray(j).targetPoint_bev(:,1)&nbsp;-&nbsp;pln.propStf.bixelWidth,stf(i).ray(j).targetPoint_bev(:,2),stf(i).ray(j).targetPoint_bev(:,3)&nbsp;+&nbsp;pln.propStf.bixelWidth]*rotMat_vectors_T;</td></tr>
-<tr><td>467</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>468</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Plot&nbsp;rotated&nbsp;target&nbsp;points.</td></tr>
-<tr><td>469</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3([stf(i).sourcePoint(1)&nbsp;targetPoint_vox_1_rotated(:,1)],[stf(i).sourcePoint(2)&nbsp;targetPoint_vox_1_rotated(:,2)],[stf(i).sourcePoint(3)&nbsp;targetPoint_vox_1_rotated(:,3)],'g')</td></tr>
-<tr><td>470</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3([stf(i).sourcePoint(1)&nbsp;targetPoint_vox_2_rotated(:,1)],[stf(i).sourcePoint(2)&nbsp;targetPoint_vox_2_rotated(:,2)],[stf(i).sourcePoint(3)&nbsp;targetPoint_vox_2_rotated(:,3)],'g')</td></tr>
-<tr><td>471</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3([stf(i).sourcePoint(1)&nbsp;targetPoint_vox_3_rotated(:,1)],[stf(i).sourcePoint(2)&nbsp;targetPoint_vox_3_rotated(:,2)],[stf(i).sourcePoint(3)&nbsp;targetPoint_vox_3_rotated(:,3)],'g')</td></tr>
-<tr><td>472</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plot3([stf(i).sourcePoint(1)&nbsp;targetPoint_vox_4_rotated(:,1)],[stf(i).sourcePoint(2)&nbsp;targetPoint_vox_4_rotated(:,2)],[stf(i).sourcePoint(3)&nbsp;targetPoint_vox_4_rotated(:,3)],'g')</td></tr>
-<tr><td>473</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>474</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>475</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;surface&nbsp;rendering</td></tr>
-<tr><td>476</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;visMode&nbsp;==&nbsp;2</td></tr>
-<tr><td>477</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;surface&nbsp;=&nbsp;patch('Faces',f,'Vertices',v);</td></tr>
-<tr><td>478</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(surface,'FaceColor',[0&nbsp;0&nbsp;1],'EdgeColor','none','FaceAlpha',.4);</td></tr>
-<tr><td>479</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lighting&nbsp;gouraud;</td></tr>
-<tr><td>480</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>481</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>482</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;labels&nbsp;etc.</td></tr>
-<tr><td>483</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;daspect([1&nbsp;1&nbsp;1]);</td></tr>
-<tr><td>484</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view(0,-90);</td></tr>
-<tr><td>485</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xlabel&nbsp;'X&nbsp;[mm]'</td></tr>
-<tr><td>486</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ylabel&nbsp;'Y&nbsp;[mm]'</td></tr>
-<tr><td>487</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zlabel&nbsp;'Z&nbsp;[mm]'</td></tr>
-<tr><td>488</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title&nbsp;'lps&nbsp;coordinate&nbsp;system'</td></tr>
-<tr><td>489</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;axis([-300&nbsp;300&nbsp;-300&nbsp;300&nbsp;-300&nbsp;300]);</td></tr>
-<tr><td>490</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%pause(1);</td></tr>
-<tr><td>491</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>492</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>493</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;include&nbsp;rangeshifter&nbsp;data&nbsp;if&nbsp;not&nbsp;yet&nbsp;available&nbsp;</td></tr>
-<tr><td>494</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;strcmp(pln.radiationMode,&nbsp;'protons')&nbsp;||&nbsp;strcmp(pln.radiationMode,&nbsp;'carbon')</td></tr>
-<tr><td>495</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:stf(i).numOfRays</td></tr>
-<tr><td>496</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;=&nbsp;1:numel(stf(i).ray(j).energy)</td></tr>
-<tr><td>497</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).rangeShifter(k).ID&nbsp;=&nbsp;0;</td></tr>
-<tr><td>498</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).rangeShifter(k).eqThickness&nbsp;=&nbsp;0;</td></tr>
-<tr><td>499</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stf(i).ray(j).rangeShifter(k).sourceRashiDistance&nbsp;=&nbsp;0;</td></tr>
-<tr><td>500</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>501</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>502</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>503</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>504</td><td bgcolor="#FFFFFF">end&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>505</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>506</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>507</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

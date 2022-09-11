@@ -1,53 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\optimization\@matRad_OptimizationProblemDAO\matRad_OptimizationProblemDAO.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\optimization\@matRad_OptimizationProblemDAO\matRad_OptimizationProblemDAO.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">classdef&nbsp;matRad_OptimizationProblemDAO&nbsp;&lt;&nbsp;matRad_OptimizationProblem</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%matRad_OptimizationProblemDAO&nbsp;Optimization&nbsp;Problem&nbsp;for&nbsp;Direct&nbsp;Aperture&nbsp;Optimization</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;Adapts&nbsp;the&nbsp;beamlet&nbsp;weights,&nbsp;manages&nbsp;the&nbsp;aperture&nbsp;and&nbsp;adds&nbsp;leaf</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;constraints&nbsp;to&nbsp;the&nbsp;standard&nbsp;fluence&nbsp;optimization&nbsp;problem</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2020&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;properties</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apertureInfo&nbsp;%Structure&nbsp;storing&nbsp;the&nbsp;current&nbsp;aperture/shape&nbsp;information</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;methods&nbsp;(Static)</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%In&nbsp;External&nbsp;Files</td></tr>
-<tr><td>28</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updatedInfo&nbsp;=&nbsp;matRad_daoVec2ApertureInfo(apertureInfo,apertureInfoVect);</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[apertureInfoVec,&nbsp;mappingMx,&nbsp;limMx]&nbsp;=&nbsp;matRad_daoApertureInfo2Vec(apertureInfo);</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;methods</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;obj&nbsp;=&nbsp;matRad_OptimizationProblemDAO(backProjection,apertureInfo)</td></tr>
-<tr><td>35</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj&nbsp;=&nbsp;obj@matRad_OptimizationProblem(backProjection);</td></tr>
-<tr><td>36</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj.apertureInfo&nbsp;=&nbsp;apertureInfo;</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;lb&nbsp;=&nbsp;lowerBounds(obj,w)</td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lb&nbsp;=&nbsp;obj.apertureInfo.limMx(:,1);&nbsp;&nbsp;%&nbsp;Lower&nbsp;bound&nbsp;on&nbsp;the&nbsp;variables.&nbsp;</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;ub&nbsp;=&nbsp;upperBounds(obj,w)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>44</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ub&nbsp;=&nbsp;obj.apertureInfo.limMx(:,2);</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

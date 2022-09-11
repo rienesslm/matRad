@@ -1,115 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_writeMHA.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_writeMHA.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;matRad_writeMHA(filepath,cube,metadata)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;to&nbsp;write&nbsp;mha&nbsp;files</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;matRad_writeMHA(filepath,cube,metadata)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;filepath:&nbsp;&nbsp;&nbsp;full&nbsp;filename&nbsp;(with&nbsp;extension)</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cube:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3D&nbsp;array&nbsp;to&nbsp;be&nbsp;written&nbsp;into&nbsp;file</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;metadata:&nbsp;&nbsp;&nbsp;struct&nbsp;of&nbsp;metadata.&nbsp;Writer&nbsp;will&nbsp;wrap&nbsp;the&nbsp;existing&nbsp;metadata&nbsp;</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;MHA&nbsp;standard-specific&nbsp;fields&nbsp;</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Necessary&nbsp;fieldnames&nbsp;are:</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;resolution:&nbsp;[x&nbsp;y&nbsp;z]</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;datatype:&nbsp;numeric&nbsp;MATLAB-Datatype</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;file&nbsp;will&nbsp;be&nbsp;written&nbsp;to&nbsp;disk</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;https://itk.org/Wiki/MetaIO/Documentation</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%Sanity&nbsp;checks&nbsp;and&nbsp;restrictions</td></tr>
-<tr><td>36</td><td bgcolor="#FF0000">dimensions&nbsp;=&nbsp;size(cube);</td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">if&nbsp;numel(dimensions)&nbsp;~=&nbsp;3</td></tr>
-<tr><td>38</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Sorry!&nbsp;matRad&nbsp;only&nbsp;supports&nbsp;3-dimensional&nbsp;MHA&nbsp;output');</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>41</td><td bgcolor="#FF0000">fid&nbsp;=&nbsp;fopen(filepath,&nbsp;'wb');</td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">if&nbsp;fid&nbsp;&lt;=&nbsp;0</td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;error('Could&nbsp;not&nbsp;open&nbsp;MHA&nbsp;destination&nbsp;file!');</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">cleaner&nbsp;=&nbsp;onCleanup(@()&nbsp;fclose(fid));</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">%We&nbsp;perform&nbsp;the&nbsp;permutation</td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">if&nbsp;isfield(metadata,'axisPermutation')</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cube&nbsp;=&nbsp;permute(cube,metadata.axisPermutation);</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">%The&nbsp;transformation&nbsp;matrix&nbsp;is&nbsp;now&nbsp;the&nbsp;unit&nbsp;matrix</td></tr>
-<tr><td>52</td><td bgcolor="#FF0000">transformMatrix&nbsp;=&nbsp;diag(ones(1,numel(dimensions)));</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">tmString&nbsp;=&nbsp;sprintf('&nbsp;%d',transformMatrix(:));</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">%Determine&nbsp;the&nbsp;endian</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">[~,~,endian]&nbsp;=&nbsp;computer;</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">switch&nbsp;endian</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'L'</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byteOrderMSB&nbsp;=&nbsp;'True';</td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'B'</td></tr>
-<tr><td>61</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byteOrderMSB&nbsp;=&nbsp;'False';</td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;otherwise</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error('Unknown&nbsp;endian!');</td></tr>
-<tr><td>64</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'ObjectType&nbsp;=&nbsp;Image\n');</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'NDims&nbsp;=&nbsp;%d\n',numel(dimensions));</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'BinaryData&nbsp;=&nbsp;True\n');</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'BinaryDataByteOrderMSB&nbsp;=&nbsp;%s\n',byteOrderMSB);&nbsp;%Not&nbsp;sure&nbsp;about&nbsp;this&nbsp;field</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'ElementByteOrderMSB&nbsp;=&nbsp;%s\n',byteOrderMSB);&nbsp;%Not&nbsp;sure&nbsp;about&nbsp;this&nbsp;field</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'TransformMatrix&nbsp;=%s\n',tmString);</td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'Offset&nbsp;=&nbsp;%f&nbsp;%f&nbsp;%f\n',metadata.imageOrigin(1),metadata.imageOrigin(2),metadata.imageOrigin(3));</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'AnatomicalOrientation&nbsp;=&nbsp;RAI\n');&nbsp;%Did&nbsp;not&nbsp;double&nbsp;check&nbsp;this&nbsp;line</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'ElementSpacing&nbsp;=&nbsp;%f&nbsp;%f&nbsp;%f\n',metadata.resolution(1),metadata.resolution(2),metadata.resolution(3));</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'DimSize&nbsp;=&nbsp;%d&nbsp;%d&nbsp;%d\n',dimensions(1),dimensions(2),dimensions(3));</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'ElementType&nbsp;=&nbsp;%s\n',matlabTypeToMHAtype(metadata.datatype));</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">fprintf(fid,&nbsp;'ElementDataFile&nbsp;=&nbsp;LOCAL\n');</td></tr>
-<tr><td>78</td><td bgcolor="#FF0000">fwrite(fid,cube,metadata.datatype,'b');</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">fclose(fid);</td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>81</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>82</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">function&nbsp;newType&nbsp;=&nbsp;matlabTypeToMHAtype(datatype)</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">switch&nbsp;datatype</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'single','float'}</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_FLOAT';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'double'</td></tr>
-<tr><td>88</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_DOUBLE';</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'uchar','uint8'}</td></tr>
-<tr><td>90</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_UCHAR';</td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;{'logical','int8','char'}</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_CHAR';</td></tr>
-<tr><td>93</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'int16'</td></tr>
-<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_SHORT';</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'uint16'</td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_USHORT';</td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'int32'</td></tr>
-<tr><td>98</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_INT';</td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'int64'</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_LONG';</td></tr>
-<tr><td>101</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'uint32'</td></tr>
-<tr><td>102</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_UINT';</td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;'uint64'</td></tr>
-<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newType&nbsp;=&nbsp;'MET_ULONG';</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;otherwise</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error(['Datatype&nbsp;'&nbsp;datatype&nbsp;'&nbsp;not&nbsp;supported&nbsp;by&nbsp;MHA&nbsp;exporter!']);</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

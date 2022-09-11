@@ -1,224 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_siddonRayTracer.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\matRad_siddonRayTracer.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[alphas,l,rho,d12,ix]&nbsp;=&nbsp;matRad_siddonRayTracer(isocenter,&nbsp;...</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolution,&nbsp;...</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sourcePoint,&nbsp;...</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint,&nbsp;...</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cubes)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;siddon&nbsp;ray&nbsp;tracing&nbsp;through&nbsp;3D&nbsp;cube&nbsp;to&nbsp;calculate&nbsp;the&nbsp;radiological&nbsp;depth&nbsp;</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;according&nbsp;to&nbsp;Siddon&nbsp;1985&nbsp;Medical&nbsp;Physics</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[alphas,l,rho,d12,vis]&nbsp;=&nbsp;matRad_siddonRayTracer(isocenter,&nbsp;...</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolution,&nbsp;...</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sourcePoint,&nbsp;...</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;targetPoint,&nbsp;...</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cubes)</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isocenter:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isocenter&nbsp;within&nbsp;cube&nbsp;[voxels]</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;resolution:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolution&nbsp;of&nbsp;the&nbsp;cubes&nbsp;[mm/voxel]</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;sourcePoint:&nbsp;&nbsp;&nbsp;&nbsp;source&nbsp;point&nbsp;of&nbsp;ray&nbsp;tracing</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;targetPoint:&nbsp;&nbsp;&nbsp;&nbsp;target&nbsp;point&nbsp;of&nbsp;ray&nbsp;tracing</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cubes:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cell&nbsp;array&nbsp;of&nbsp;cubes&nbsp;for&nbsp;ray&nbsp;tracing&nbsp;(it&nbsp;is&nbsp;possible&nbsp;to&nbsp;pass</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiple&nbsp;cubes&nbsp;for&nbsp;ray&nbsp;tracing&nbsp;to&nbsp;save&nbsp;computation&nbsp;time)</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;output&nbsp;(see&nbsp;Siddon&nbsp;1985&nbsp;Medical&nbsp;Physics&nbsp;for&nbsp;a&nbsp;detailed&nbsp;description&nbsp;of&nbsp;the</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;variales)</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;alphas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;relative&nbsp;distance&nbsp;between&nbsp;start&nbsp;and&nbsp;endpoint&nbsp;for&nbsp;the&nbsp;</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intersections&nbsp;with&nbsp;the&nbsp;cube</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lengths&nbsp;of&nbsp;intersestions&nbsp;with&nbsp;cubes</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;rho&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;densities&nbsp;extracted&nbsp;from&nbsp;cubes</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;d12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distance&nbsp;between&nbsp;start&nbsp;and&nbsp;endpoint&nbsp;of&nbsp;ray&nbsp;tracing</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ix&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;indices&nbsp;of&nbsp;hit&nbsp;voxels</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[1]&nbsp;http://www.ncbi.nlm.nih.gov/pubmed/4000088</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>49</td><td bgcolor="#FFFFFF">%&nbsp;Add&nbsp;isocenter&nbsp;to&nbsp;source&nbsp;and&nbsp;target&nbsp;point.&nbsp;Because&nbsp;the&nbsp;algorithm&nbsp;does&nbsp;not</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF">%&nbsp;works&nbsp;with&nbsp;negatives&nbsp;values.&nbsp;This&nbsp;put&nbsp;(resolution.x,resolution.y,resolution.z)</td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">%&nbsp;in&nbsp;the&nbsp;center&nbsp;of&nbsp;first&nbsp;voxel</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">sourcePoint&nbsp;=&nbsp;sourcePoint&nbsp;+&nbsp;isocenter;</td></tr>
-<tr><td>54</td><td bgcolor="#FF0000">targetPoint&nbsp;=&nbsp;targetPoint&nbsp;+&nbsp;isocenter;</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>56</td><td bgcolor="#FFFFFF">%&nbsp;Save&nbsp;the&nbsp;numbers&nbsp;of&nbsp;planes.</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">[yNumPlanes,&nbsp;xNumPlanes,&nbsp;zNumPlanes]&nbsp;=&nbsp;size(cubes{1});</td></tr>
-<tr><td>58</td><td bgcolor="#FF0000">xNumPlanes&nbsp;=&nbsp;xNumPlanes&nbsp;+&nbsp;1;</td></tr>
-<tr><td>59</td><td bgcolor="#FF0000">yNumPlanes&nbsp;=&nbsp;yNumPlanes&nbsp;+&nbsp;1;</td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">zNumPlanes&nbsp;=&nbsp;zNumPlanes&nbsp;+&nbsp;1;</td></tr>
-<tr><td>61</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;11</td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF">%&nbsp;Calculate&nbsp;the&nbsp;distance&nbsp;from&nbsp;source&nbsp;to&nbsp;target&nbsp;point.</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">d12&nbsp;=&nbsp;norm(sourcePoint-targetPoint);</td></tr>
-<tr><td>65</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>66</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;3</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF">%&nbsp;Position&nbsp;of&nbsp;first&nbsp;planes&nbsp;in&nbsp;millimeter.&nbsp;0.5&nbsp;because&nbsp;the&nbsp;central&nbsp;position</td></tr>
-<tr><td>68</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;first&nbsp;voxel&nbsp;is&nbsp;at&nbsp;[resolution.x&nbsp;resolution.y&nbsp;resolution.z]</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">xPlane_1&nbsp;=&nbsp;.5*resolution.x;</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">yPlane_1&nbsp;=&nbsp;.5*resolution.y;</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">zPlane_1&nbsp;=&nbsp;.5*resolution.z;</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>73</td><td bgcolor="#FFFFFF">%&nbsp;Position&nbsp;of&nbsp;last&nbsp;planes&nbsp;in&nbsp;milimiter</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">xPlane_end&nbsp;=&nbsp;(xNumPlanes&nbsp;-&nbsp;.5)*resolution.x;</td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">yPlane_end&nbsp;=&nbsp;(yNumPlanes&nbsp;-&nbsp;.5)*resolution.y;</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">zPlane_end&nbsp;=&nbsp;(zNumPlanes&nbsp;-&nbsp;.5)*resolution.z;</td></tr>
-<tr><td>77</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;4</td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">%&nbsp;Calculate&nbsp;parametrics&nbsp;values&nbsp;of&nbsp;\alpha_{min}&nbsp;and&nbsp;\alpha_{max}&nbsp;for&nbsp;every</td></tr>
-<tr><td>80</td><td bgcolor="#FFFFFF">%&nbsp;axis,&nbsp;intersecting&nbsp;the&nbsp;ray&nbsp;with&nbsp;the&nbsp;sides&nbsp;of&nbsp;the&nbsp;CT.&nbsp;</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">if&nbsp;targetPoint(1)&nbsp;~=&nbsp;sourcePoint(1)</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aX_1&nbsp;&nbsp;&nbsp;=&nbsp;(xPlane_1&nbsp;-&nbsp;sourcePoint(1))&nbsp;/&nbsp;(targetPoint(1)&nbsp;-&nbsp;sourcePoint(1));</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aX_end&nbsp;=&nbsp;(xPlane_end&nbsp;-&nbsp;sourcePoint(1))&nbsp;/&nbsp;(targetPoint(1)&nbsp;-&nbsp;sourcePoint(1));</td></tr>
-<tr><td>84</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>85</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aX_1&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aX_end&nbsp;=&nbsp;[];</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>88</td><td bgcolor="#FF0000">if&nbsp;targetPoint(2)&nbsp;~=&nbsp;sourcePoint(2)</td></tr>
-<tr><td>89</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aY_1&nbsp;&nbsp;&nbsp;=&nbsp;(yPlane_1&nbsp;-&nbsp;sourcePoint(2))&nbsp;/&nbsp;(targetPoint(2)&nbsp;-&nbsp;sourcePoint(2));</td></tr>
-<tr><td>90</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aY_end&nbsp;=&nbsp;(yPlane_end&nbsp;-&nbsp;sourcePoint(2))&nbsp;/&nbsp;(targetPoint(2)&nbsp;-&nbsp;sourcePoint(2));</td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aY_1&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
-<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aY_end&nbsp;=&nbsp;[];</td></tr>
-<tr><td>94</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>95</td><td bgcolor="#FF0000">if&nbsp;targetPoint(3)&nbsp;~=&nbsp;sourcePoint(3)</td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aZ_1&nbsp;&nbsp;&nbsp;=&nbsp;(zPlane_1&nbsp;-&nbsp;sourcePoint(3))&nbsp;/&nbsp;(targetPoint(3)&nbsp;-&nbsp;sourcePoint(3));</td></tr>
-<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aZ_end&nbsp;=&nbsp;(zPlane_end&nbsp;-&nbsp;sourcePoint(3))&nbsp;/&nbsp;(targetPoint(3)&nbsp;-&nbsp;sourcePoint(3));</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aZ_1&nbsp;&nbsp;&nbsp;=&nbsp;[];</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;aZ_end&nbsp;=&nbsp;[];</td></tr>
-<tr><td>101</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;5</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">%&nbsp;Compute&nbsp;the&nbsp;\alpha_{min}&nbsp;and&nbsp;\alpha_{max}&nbsp;in&nbsp;terms&nbsp;of&nbsp;parametric&nbsp;values</td></tr>
-<tr><td>105</td><td bgcolor="#FFFFFF">%&nbsp;given&nbsp;by&nbsp;equation&nbsp;4.</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">alpha_min&nbsp;=&nbsp;max([0&nbsp;min(aX_1,aX_end)&nbsp;min(aY_1,aY_end)&nbsp;min(aZ_1,aZ_end)]);</td></tr>
-<tr><td>107</td><td bgcolor="#FF0000">alpha_max&nbsp;=&nbsp;min([1&nbsp;max(aX_1,aX_end)&nbsp;max(aY_1,aY_end)&nbsp;max(aZ_1,aZ_end)]);</td></tr>
-<tr><td>108</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;6</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">%&nbsp;Calculate&nbsp;the&nbsp;range&nbsp;of&nbsp;indeces&nbsp;who&nbsp;gives&nbsp;parametric&nbsp;values&nbsp;for</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">%&nbsp;intersected&nbsp;planes.</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">if&nbsp;targetPoint(1)&nbsp;==&nbsp;sourcePoint(1)</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_min&nbsp;=&nbsp;[];&nbsp;i_max&nbsp;=&nbsp;[];</td></tr>
-<tr><td>114</td><td bgcolor="#FFFFFF">elseif&nbsp;targetPoint(1)&nbsp;&gt;&nbsp;sourcePoint(1)</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_min&nbsp;=&nbsp;xNumPlanes&nbsp;-&nbsp;(xPlane_end&nbsp;-&nbsp;alpha_min&nbsp;*&nbsp;(targetPoint(1)&nbsp;-&nbsp;sourcePoint(1))&nbsp;-&nbsp;sourcePoint(1))/resolution.x;</td></tr>
-<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_max&nbsp;=&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;(sourcePoint(1)&nbsp;+&nbsp;alpha_max&nbsp;*&nbsp;(targetPoint(1)&nbsp;-&nbsp;sourcePoint(1))&nbsp;-&nbsp;xPlane_1)/resolution.x;</td></tr>
-<tr><td>117</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;rounding</td></tr>
-<tr><td>118</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_min&nbsp;=&nbsp;ceil(1/1000*(round(1000*i_min)));</td></tr>
-<tr><td>119</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_max&nbsp;=&nbsp;floor(1/1000*(round(1000*i_max)));</td></tr>
-<tr><td>120</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>121</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_min&nbsp;=&nbsp;xNumPlanes&nbsp;-&nbsp;(xPlane_end&nbsp;-&nbsp;alpha_max&nbsp;*&nbsp;(targetPoint(1)&nbsp;-&nbsp;sourcePoint(1))&nbsp;-&nbsp;sourcePoint(1))/resolution.x;</td></tr>
-<tr><td>122</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_max&nbsp;=&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;(sourcePoint(1)&nbsp;+&nbsp;alpha_min&nbsp;*&nbsp;(targetPoint(1)&nbsp;-&nbsp;sourcePoint(1))&nbsp;-&nbsp;xPlane_1)/resolution.x;</td></tr>
-<tr><td>123</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_min&nbsp;=&nbsp;ceil(1/1000*(round(1000*i_min)));</td></tr>
-<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;i_max&nbsp;=&nbsp;floor(1/1000*(round(1000*i_max)));</td></tr>
-<tr><td>125</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>126</td><td bgcolor="#FF0000">if&nbsp;targetPoint(2)&nbsp;==&nbsp;sourcePoint(2)</td></tr>
-<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_min&nbsp;=&nbsp;[];&nbsp;j_max&nbsp;=&nbsp;[];</td></tr>
-<tr><td>128</td><td bgcolor="#FFFFFF">elseif&nbsp;targetPoint(2)&nbsp;&gt;&nbsp;sourcePoint(2)</td></tr>
-<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_min&nbsp;=&nbsp;yNumPlanes&nbsp;-&nbsp;(yPlane_end&nbsp;-&nbsp;alpha_min&nbsp;*&nbsp;(targetPoint(2)&nbsp;-&nbsp;sourcePoint(2))&nbsp;-&nbsp;sourcePoint(2))/resolution.y;</td></tr>
-<tr><td>130</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_max&nbsp;=&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;(sourcePoint(2)&nbsp;+&nbsp;alpha_max&nbsp;*&nbsp;(targetPoint(2)&nbsp;-&nbsp;sourcePoint(2))&nbsp;-&nbsp;yPlane_1)/resolution.y;</td></tr>
-<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_min&nbsp;=&nbsp;ceil(1/1000*(round(1000*j_min)));</td></tr>
-<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_max&nbsp;=&nbsp;floor(1/1000*(round(1000*j_max)));</td></tr>
-<tr><td>133</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>134</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_min&nbsp;=&nbsp;yNumPlanes&nbsp;-&nbsp;(yPlane_end&nbsp;-&nbsp;alpha_max&nbsp;*&nbsp;(targetPoint(2)&nbsp;-&nbsp;sourcePoint(2))&nbsp;-&nbsp;sourcePoint(2))/resolution.y;</td></tr>
-<tr><td>135</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_max&nbsp;=&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;(sourcePoint(2)&nbsp;+&nbsp;alpha_min&nbsp;*&nbsp;(targetPoint(2)&nbsp;-&nbsp;sourcePoint(2))&nbsp;-&nbsp;yPlane_1)/resolution.y;</td></tr>
-<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_min&nbsp;=&nbsp;ceil(1/1000*(round(1000*j_min)));</td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;j_max&nbsp;=&nbsp;floor(1/1000*(round(1000*j_max)));</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">if&nbsp;targetPoint(3)&nbsp;==&nbsp;sourcePoint(3)</td></tr>
-<tr><td>140</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_min&nbsp;=&nbsp;[];&nbsp;k_max&nbsp;=&nbsp;[];</td></tr>
-<tr><td>141</td><td bgcolor="#FFFFFF">elseif&nbsp;targetPoint(3)&nbsp;&gt;=&nbsp;sourcePoint(3)</td></tr>
-<tr><td>142</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_min&nbsp;=&nbsp;zNumPlanes&nbsp;-&nbsp;(zPlane_end&nbsp;-&nbsp;alpha_min&nbsp;*&nbsp;(targetPoint(3)&nbsp;-&nbsp;sourcePoint(3))&nbsp;-&nbsp;sourcePoint(3))/resolution.z;</td></tr>
-<tr><td>143</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_max&nbsp;=&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;(sourcePoint(3)&nbsp;+&nbsp;alpha_max&nbsp;*&nbsp;(targetPoint(3)&nbsp;-&nbsp;sourcePoint(3))&nbsp;-&nbsp;zPlane_1)/resolution.z;</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_min&nbsp;=&nbsp;ceil(1/1000*(round(1000*k_min)));</td></tr>
-<tr><td>145</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_max&nbsp;=&nbsp;floor(1/1000*(round(1000*k_max)));</td></tr>
-<tr><td>146</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>147</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_min&nbsp;=&nbsp;zNumPlanes&nbsp;-&nbsp;(zPlane_end&nbsp;-&nbsp;alpha_max&nbsp;*&nbsp;(targetPoint(3)&nbsp;-&nbsp;sourcePoint(3))&nbsp;-&nbsp;sourcePoint(3))/resolution.z;</td></tr>
-<tr><td>148</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_max&nbsp;=&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;(sourcePoint(3)&nbsp;+&nbsp;alpha_min&nbsp;*&nbsp;(targetPoint(3)&nbsp;-&nbsp;sourcePoint(3))&nbsp;-&nbsp;zPlane_1)/resolution.z;</td></tr>
-<tr><td>149</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_min&nbsp;=&nbsp;ceil(1/1000*(round(1000*k_min)));</td></tr>
-<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;k_max&nbsp;=&nbsp;floor(1/1000*(round(1000*k_max)));</td></tr>
-<tr><td>151</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>152</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;7</td></tr>
-<tr><td>154</td><td bgcolor="#FFFFFF">%&nbsp;For&nbsp;the&nbsp;given&nbsp;range&nbsp;of&nbsp;indices,&nbsp;calculate&nbsp;the&nbsp;paremetrics&nbsp;values&nbsp;who</td></tr>
-<tr><td>155</td><td bgcolor="#FFFFFF">%&nbsp;represents&nbsp;intersections&nbsp;of&nbsp;the&nbsp;ray&nbsp;with&nbsp;the&nbsp;plane.</td></tr>
-<tr><td>156</td><td bgcolor="#FF0000">if&nbsp;i_min&nbsp;~=&nbsp;i_max</td></tr>
-<tr><td>157</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;targetPoint(1)&nbsp;&gt;&nbsp;sourcePoint(1)</td></tr>
-<tr><td>158</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alpha_x&nbsp;=&nbsp;(resolution.x*(i_min:1:i_max)-sourcePoint(1)-.5*resolution.x)/(targetPoint(1)-sourcePoint(1));</td></tr>
-<tr><td>159</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>160</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alpha_x&nbsp;=&nbsp;(resolution.x*(i_max:-1:i_min)-sourcePoint(1)-.5*resolution.x)/(targetPoint(1)-sourcePoint(1));</td></tr>
-<tr><td>161</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>162</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>163</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;alpha_x&nbsp;=&nbsp;[];</td></tr>
-<tr><td>164</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>165</td><td bgcolor="#FF0000">if&nbsp;j_min&nbsp;~=&nbsp;j_max</td></tr>
-<tr><td>166</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;targetPoint(2)&nbsp;&gt;&nbsp;sourcePoint(2)</td></tr>
-<tr><td>167</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alpha_y&nbsp;=&nbsp;(resolution.y*(j_min:1:j_max)-sourcePoint(2)-.5*resolution.y)/(targetPoint(2)-sourcePoint(2));</td></tr>
-<tr><td>168</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>169</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alpha_y&nbsp;=&nbsp;(resolution.y*(j_max:-1:j_min)-sourcePoint(2)-.5*resolution.y)/(targetPoint(2)-sourcePoint(2));</td></tr>
-<tr><td>170</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>171</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>172</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;alpha_y&nbsp;=&nbsp;[];</td></tr>
-<tr><td>173</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>174</td><td bgcolor="#FF0000">if&nbsp;k_min&nbsp;~=&nbsp;k_max</td></tr>
-<tr><td>175</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;targetPoint(3)&nbsp;&gt;&nbsp;sourcePoint(3)</td></tr>
-<tr><td>176</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alpha_z&nbsp;=&nbsp;(resolution.z*(k_min:1:k_max)-sourcePoint(3)-.5*resolution.z)/(targetPoint(3)-sourcePoint(3));</td></tr>
-<tr><td>177</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>178</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alpha_z&nbsp;=&nbsp;(resolution.z*(k_max:-1:k_min)-sourcePoint(3)-.5*resolution.z)/(targetPoint(3)-sourcePoint(3));</td></tr>
-<tr><td>179</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>180</td><td bgcolor="#FFFFFF">else</td></tr>
-<tr><td>181</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;alpha_z&nbsp;=&nbsp;[];</td></tr>
-<tr><td>182</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>183</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>184</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;8</td></tr>
-<tr><td>185</td><td bgcolor="#FFFFFF">%&nbsp;Merge&nbsp;parametrics&nbsp;sets.</td></tr>
-<tr><td>186</td><td bgcolor="#FF0000">alphas&nbsp;=&nbsp;unique([alpha_min&nbsp;alpha_x&nbsp;alpha_y&nbsp;alpha_z&nbsp;alpha_max]);</td></tr>
-<tr><td>187</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>188</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;10</td></tr>
-<tr><td>189</td><td bgcolor="#FFFFFF">%&nbsp;Calculate&nbsp;the&nbsp;voxel&nbsp;intersection&nbsp;length.</td></tr>
-<tr><td>190</td><td bgcolor="#FF0000">l&nbsp;=&nbsp;d12*diff(alphas);</td></tr>
-<tr><td>191</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>192</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;13</td></tr>
-<tr><td>193</td><td bgcolor="#FFFFFF">%&nbsp;Calculate&nbsp;\alpha_{middle}</td></tr>
-<tr><td>194</td><td bgcolor="#FF0000">alphas_mid&nbsp;=&nbsp;.5*(alphas(1:end-1)+alphas(2:end));</td></tr>
-<tr><td>195</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>196</td><td bgcolor="#FFFFFF">%&nbsp;eq&nbsp;12</td></tr>
-<tr><td>197</td><td bgcolor="#FFFFFF">%&nbsp;Calculate&nbsp;the&nbsp;voxel&nbsp;indices:&nbsp;first&nbsp;convert&nbsp;to&nbsp;physical&nbsp;coords</td></tr>
-<tr><td>198</td><td bgcolor="#FF0000">i_mm&nbsp;=&nbsp;sourcePoint(1)&nbsp;+&nbsp;alphas_mid*(targetPoint(1)&nbsp;-&nbsp;sourcePoint(1));</td></tr>
-<tr><td>199</td><td bgcolor="#FF0000">j_mm&nbsp;=&nbsp;sourcePoint(2)&nbsp;+&nbsp;alphas_mid*(targetPoint(2)&nbsp;-&nbsp;sourcePoint(2));</td></tr>
-<tr><td>200</td><td bgcolor="#FF0000">k_mm&nbsp;=&nbsp;sourcePoint(3)&nbsp;+&nbsp;alphas_mid*(targetPoint(3)&nbsp;-&nbsp;sourcePoint(3));</td></tr>
-<tr><td>201</td><td bgcolor="#FFFFFF">%&nbsp;then&nbsp;convert&nbsp;to&nbsp;voxel&nbsp;index</td></tr>
-<tr><td>202</td><td bgcolor="#FF0000">i&nbsp;=&nbsp;round(i_mm/resolution.x);</td></tr>
-<tr><td>203</td><td bgcolor="#FF0000">j&nbsp;=&nbsp;round(j_mm/resolution.y);</td></tr>
-<tr><td>204</td><td bgcolor="#FF0000">k&nbsp;=&nbsp;round(k_mm/resolution.z);</td></tr>
-<tr><td>205</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>206</td><td bgcolor="#FFFFFF">%&nbsp;Handle&nbsp;numerical&nbsp;instabilities&nbsp;at&nbsp;the&nbsp;borders.</td></tr>
-<tr><td>207</td><td bgcolor="#FF0000">i(i&lt;=0)&nbsp;=&nbsp;1;&nbsp;j(j&lt;=0)&nbsp;=&nbsp;1;&nbsp;k(k&lt;=0)&nbsp;=&nbsp;1;</td></tr>
-<tr><td>208</td><td bgcolor="#FF0000">i(i&gt;xNumPlanes-1)&nbsp;=&nbsp;xNumPlanes-1;</td></tr>
-<tr><td>209</td><td bgcolor="#FF0000">j(j&gt;yNumPlanes-1)&nbsp;=&nbsp;yNumPlanes-1;</td></tr>
-<tr><td>210</td><td bgcolor="#FF0000">k(k&gt;zNumPlanes-1)&nbsp;=&nbsp;zNumPlanes-1;</td></tr>
-<tr><td>211</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>212</td><td bgcolor="#FFFFFF">%&nbsp;Convert&nbsp;to&nbsp;linear&nbsp;indices</td></tr>
-<tr><td>213</td><td bgcolor="#FF0000">ix&nbsp;=&nbsp;j&nbsp;+&nbsp;(i-1)*size(cubes{1},1)&nbsp;+&nbsp;(k-1)*size(cubes{1},1)*size(cubes{1},2);&nbsp;</td></tr>
-<tr><td>214</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>215</td><td bgcolor="#FFFFFF">%&nbsp;obtains&nbsp;the&nbsp;values&nbsp;from&nbsp;cubes</td></tr>
-<tr><td>216</td><td bgcolor="#FF0000">rho&nbsp;=&nbsp;cell(numel(cubes),1);</td></tr>
-<tr><td>217</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:numel(cubes)</td></tr>
-<tr><td>218</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;rho{i}&nbsp;=&nbsp;cubes{i}(ix);</td></tr>
-<tr><td>219</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>220</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

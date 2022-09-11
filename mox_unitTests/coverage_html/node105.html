@@ -1,38 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\moDoc_Tests\doc_test2.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\moDoc_Tests\doc_test2.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;doc_test2()</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;This&nbsp;function&nbsp;illustrates&nbsp;a&nbsp;documentation&nbsp;test&nbsp;defined&nbsp;for&nbsp;MOdox.</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Other&nbsp;than&nbsp;that&nbsp;it&nbsp;does&nbsp;absolutely&nbsp;nothing</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Examples:</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;a=2;</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;disp(a)</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;Expected&nbsp;output&nbsp;is&nbsp;prefixed&nbsp;by&nbsp;'%||'&nbsp;as&nbsp;in&nbsp;the&nbsp;following&nbsp;line:</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%||&nbsp;2</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;The&nbsp;test&nbsp;continues&nbsp;because&nbsp;no&nbsp;interruption&nbsp;through&nbsp;whitespace,</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;as&nbsp;the&nbsp;previous&nbsp;line&nbsp;used&nbsp;a&nbsp;'%'&nbsp;comment&nbsp;character;</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;thus&nbsp;the&nbsp;'a'&nbsp;variable&nbsp;is&nbsp;still&nbsp;in&nbsp;the&nbsp;namespace&nbsp;and&nbsp;can&nbsp;be&nbsp;</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%&nbsp;accessed.</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;b=3+a;</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;disp(a+[3;&nbsp;4;&nbsp;5;&nbsp;6])</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%||&nbsp;[5;&nbsp;6;&nbsp;7;&nbsp;8]</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;b=[5;&nbsp;6;&nbsp;7;&nbsp;8]</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;disp(b)</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%||&nbsp;[5;&nbsp;6;&nbsp;7;&nbsp;8]</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;xi&nbsp;=&nbsp;[100,&nbsp;150,&nbsp;200,&nbsp;250,&nbsp;300,&nbsp;400,&nbsp;500];</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;yi&nbsp;=&nbsp;[2506.7,&nbsp;2582.8,&nbsp;2658.1,&nbsp;2733.7,&nbsp;2810.4,&nbsp;2967.9,&nbsp;3131.6];</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;x&nbsp;=&nbsp;2680.78;</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;matRad_interp1_solution&nbsp;=&nbsp;matRad_interp1(xi,&nbsp;yi,&nbsp;x);</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;interp1_solution&nbsp;=&nbsp;interp1(xi,&nbsp;yi,&nbsp;x);</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;disp(matRad_interp1_solution)</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;%||&nbsp;interp1_solution</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;%&nbsp;tests&nbsp;end&nbsp;here&nbsp;because&nbsp;test&nbsp;indentation&nbsp;has&nbsp;ended</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

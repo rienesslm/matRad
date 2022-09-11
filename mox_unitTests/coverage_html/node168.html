@@ -1,168 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\plotting\matRad_plotIsoDoseLines3D.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\plotting\matRad_plotIsoDoseLines3D.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;isoLineHandles&nbsp;=&nbsp;matRad_plotIsoDoseLines3D(axesHandle,ct,doseCube,isoContours,isoLevels,plane,slice,cMap,window,varargin)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;function&nbsp;that&nbsp;plots&nbsp;isolines&nbsp;in&nbsp;3D,&nbsp;by&nbsp;precomputed&nbsp;contourc&nbsp;data&nbsp;</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;computed&nbsp;by&nbsp;matRad_computeIsoDoseContours&nbsp;or&nbsp;manually&nbsp;by&nbsp;calling&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;contourslice&nbsp;itself</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLineHandles&nbsp;=&nbsp;matRad_plotIsoDoseLines3D(axesHandle,ct,doseCube,isoContours,isoLevels,plane,slice)</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLineHandles&nbsp;=&nbsp;matRad_plotIsoDoseLines3D(axesHandle,ct,doseCube,isoContours,isoLevels,plane,slice,cMap)</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLineHandles&nbsp;=&nbsp;matRad_plotIsoDoseLines3D(axesHandle,ct,doseCube,isoContours,isoLevels,plane,slice,window)</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLineHandles&nbsp;=&nbsp;matRad_plotIsoDoseLines3D(axesHandle,ct,doseCube,isoContours,isoLevels,plane,slice,cMap,window)</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLineHandles&nbsp;=&nbsp;matRad_plotIsoDoseLines3D(axesHandle,ct,doseCube,isoContours,isoLevels,plane,slice,cMap,window,&nbsp;...)</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;axesHandle&nbsp;&nbsp;handle&nbsp;to&nbsp;axes&nbsp;the&nbsp;slice&nbsp;should&nbsp;be&nbsp;displayed&nbsp;in</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matRad&nbsp;ct&nbsp;struct&nbsp;which&nbsp;contains&nbsp;resolution</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;doseCube&nbsp;&nbsp;&nbsp;&nbsp;3D&nbsp;array&nbsp;of&nbsp;the&nbsp;corresponding&nbsp;dose&nbsp;cube</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoContours&nbsp;precomputed&nbsp;isodose&nbsp;contours&nbsp;in&nbsp;a&nbsp;cell&nbsp;array&nbsp;{maxDim,3}</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;the&nbsp;parameter&nbsp;is&nbsp;empty,&nbsp;contours&nbsp;will&nbsp;be&nbsp;plotted&nbsp;the</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;slow&nbsp;way&nbsp;with&nbsp;MATLABs&nbsp;contour&nbsp;function</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLevels&nbsp;&nbsp;&nbsp;the&nbsp;levels&nbsp;of&nbsp;the&nbsp;isodose&nbsp;(same&nbsp;units&nbsp;as&nbsp;doseCube)</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;plane&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plane&nbsp;view&nbsp;(coronal=1,sagittal=2,axial=3)</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;slice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;slice&nbsp;in&nbsp;the&nbsp;selected&nbsp;plane&nbsp;of&nbsp;the&nbsp;3D&nbsp;cube</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cMap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional&nbsp;argument&nbsp;defining&nbsp;the&nbsp;colormap,&nbsp;default&nbsp;is&nbsp;jet</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;use&nbsp;the&nbsp;default&nbsp;map&nbsp;with&nbsp;the&nbsp;window&nbsp;argument</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;you&nbsp;can&nbsp;use&nbsp;an&nbsp;empty&nbsp;array&nbsp;[]</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;window&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional&nbsp;argument&nbsp;defining&nbsp;the&nbsp;displayed&nbsp;range.&nbsp;default&nbsp;is</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[min(doseCube(:))&nbsp;max(doseCube(:))]</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;varargin&nbsp;&nbsp;&nbsp;&nbsp;Additional&nbsp;Matlab&nbsp;Line-Property/value&nbsp;pairs</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;isoLineHandles:&nbsp;handle&nbsp;to&nbsp;the&nbsp;plotted&nbsp;isolines</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF">%&nbsp;References</td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;-</td></tr>
-<tr><td>35</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>37</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>38</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>40</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>42</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>43</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>44</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>45</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>48</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">matRad_cfg&nbsp;=&nbsp;MatRad_Config.instance();</td></tr>
-<tr><td>50</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>51</td><td bgcolor="#FFFFFF">%%&nbsp;manage&nbsp;optional&nbsp;arguments</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">%Use&nbsp;default&nbsp;colormap?</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;7&nbsp;||&nbsp;isempty(cMap)</td></tr>
-<tr><td>54</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cMap&nbsp;=&nbsp;jet(64);</td></tr>
-<tr><td>55</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;&lt;&nbsp;8&nbsp;||&nbsp;isempty(window)</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;window&nbsp;=&nbsp;[min(doseCube(:))&nbsp;max(doseCube(:))];</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>60</td><td bgcolor="#FF0000">cMapScale&nbsp;=&nbsp;size(cMap,1)&nbsp;-&nbsp;1;</td></tr>
-<tr><td>61</td><td bgcolor="#FF0000">isoColorLevel&nbsp;=&nbsp;uint8(cMapScale*(isoLevels&nbsp;-&nbsp;window(1))./(window(2)-window(1)));</td></tr>
-<tr><td>62</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>63</td><td bgcolor="#FFFFFF">%This&nbsp;circumenvents&nbsp;a&nbsp;bug&nbsp;in&nbsp;Octave&nbsp;when&nbsp;the&nbsp;index&nbsp;in&nbsp;the&nbsp;image&nbsp;hase&nbsp;the&nbsp;maximum&nbsp;value&nbsp;of&nbsp;uint8</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">if&nbsp;matRad_cfg.isOctave</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">	isoColorLevel(isoColorLevel&nbsp;==&nbsp;255)&nbsp;=&nbsp;254;</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isoLineHandles&nbsp;=&nbsp;[];</td></tr>
-<tr><td>67</td><td bgcolor="#FFFFFF">elseif&nbsp;matRad_cfg.isMatlab</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isoLineHandles&nbsp;=&nbsp;gobjects(0);</td></tr>
-<tr><td>69</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>70</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">colors&nbsp;=&nbsp;squeeze(ind2rgb(isoColorLevel,cMap));</td></tr>
-<tr><td>72</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">slices&nbsp;=&nbsp;{[],[],[]};</td></tr>
-<tr><td>74</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>75</td><td bgcolor="#FF0000">coords{1}&nbsp;=&nbsp;ct.resolution.x&nbsp;*&nbsp;double(1:ct.cubeDim(2));</td></tr>
-<tr><td>76</td><td bgcolor="#FF0000">coords{2}&nbsp;=&nbsp;ct.resolution.y&nbsp;*&nbsp;double(1:ct.cubeDim(1));</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">coords{3}&nbsp;=&nbsp;ct.resolution.z&nbsp;*&nbsp;double(1:ct.cubeDim(3));</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>79</td><td bgcolor="#FFFFFF">%slice&nbsp;spacing</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">spacing&nbsp;=&nbsp;5;</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">sliceIndices&nbsp;=&nbsp;[1:spacing:ct.cubeDim(plane)];</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">if&nbsp;isempty(sliceIndices(sliceIndices==slice))</td></tr>
-<tr><td>83</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sliceIndices(end+1)&nbsp;=&nbsp;slice;</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;sort(sliceIndices);</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>86</td><td bgcolor="#FF0000">slices{plane}&nbsp;=&nbsp;coords{plane}(sliceIndices);</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>88</td><td bgcolor="#FFFFFF">%%&nbsp;Plotting</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF">%Check&nbsp;if&nbsp;precomputed&nbsp;contours&nbsp;where&nbsp;passed,&nbsp;if&nbsp;not,&nbsp;calculate&nbsp;it&nbsp;on&nbsp;the</td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF">%fly</td></tr>
-<tr><td>91</td><td bgcolor="#FF0000">if&nbsp;isempty(isoContours)</td></tr>
-<tr><td>92</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>93</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;[xMesh,yMesh,zMesh]&nbsp;=&nbsp;meshgrid(coords{1},coords{2},coords{3});</td></tr>
-<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;isoLineHandles&nbsp;=&nbsp;contourslice(axesHandle,xMesh,yMesh,zMesh,doseCube,slices{[1&nbsp;2&nbsp;3]},isoLevels);</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF">else&nbsp;&nbsp;</td></tr>
-<tr><td>96</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;axes(axesHandle);</td></tr>
-<tr><td>97</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;on;</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>99</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;s&nbsp;=&nbsp;1:numel(sliceIndices)</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currSlice&nbsp;=&nbsp;sliceIndices(s);</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currSlicePlaneCoords&nbsp;=&nbsp;slices{plane}(s);</td></tr>
-<tr><td>102</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>103</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%opacity&nbsp;of&nbsp;the&nbsp;isolines.&nbsp;Will&nbsp;be&nbsp;fully&nbsp;opaque&nbsp;if&nbsp;we&nbsp;are&nbsp;on&nbsp;the</td></tr>
-<tr><td>104</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%requested&nbsp;(and&nbsp;shown)&nbsp;slice</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;currSlice&nbsp;==&nbsp;slice</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opacity&nbsp;=&nbsp;1;</td></tr>
-<tr><td>107</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opacity&nbsp;=&nbsp;0.4;</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%Check&nbsp;if&nbsp;there&nbsp;is&nbsp;a&nbsp;contour&nbsp;in&nbsp;the&nbsp;plane</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;any(isoContours{currSlice,plane}(:))</td></tr>
-<tr><td>113</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;plot&nbsp;precalculated&nbsp;contourc&nbsp;data&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>114</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lower&nbsp;=&nbsp;1;&nbsp;%&nbsp;lower&nbsp;marks&nbsp;the&nbsp;beginning&nbsp;of&nbsp;a&nbsp;section</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;lower-1&nbsp;~=&nbsp;size(isoContours{currSlice,plane},2)</td></tr>
-<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps&nbsp;=&nbsp;isoContours{currSlice,plane}(2,lower);&nbsp;%&nbsp;number&nbsp;of&nbsp;elements&nbsp;of&nbsp;current&nbsp;line&nbsp;section</td></tr>
-<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;numel(unique(isoLevels))&nbsp;&gt;&nbsp;1</td></tr>
-<tr><td>118</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color&nbsp;=&nbsp;colors(isoLevels(:)&nbsp;==&nbsp;isoContours{currSlice,plane}(1,lower),:);</td></tr>
-<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color&nbsp;=&nbsp;unique(colors,'rows');</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>122</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>123</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;Align&nbsp;2D&nbsp;Contours&nbsp;in3D</td></tr>
-<tr><td>124</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine2Dx&nbsp;=&nbsp;isoContours{currSlice,plane}(1,lower+1:lower+steps);</td></tr>
-<tr><td>125</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine2Dy&nbsp;=&nbsp;isoContours{currSlice,plane}(2,lower+1:lower+steps);</td></tr>
-<tr><td>126</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;plane&nbsp;==&nbsp;2</td></tr>
-<tr><td>127</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dx&nbsp;=&nbsp;currSlicePlaneCoords*ones(1,numel(isoLine2Dx));</td></tr>
-<tr><td>128</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dz&nbsp;=&nbsp;interp1(double(1:ct.cubeDim(3)),coords{3},isoLine2Dx);</td></tr>
-<tr><td>129</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dy&nbsp;=&nbsp;interp1(double(1:ct.cubeDim(1)),coords{1},isoLine2Dy);</td></tr>
-<tr><td>130</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;plane&nbsp;==&nbsp;1</td></tr>
-<tr><td>131</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dy&nbsp;=&nbsp;currSlicePlaneCoords*ones(1,numel(isoLine2Dx));</td></tr>
-<tr><td>132</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dx&nbsp;=&nbsp;interp1(double(1:ct.cubeDim(2)),coords{2},isoLine2Dy);</td></tr>
-<tr><td>133</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dz&nbsp;=&nbsp;interp1(double(1:ct.cubeDim(3)),coords{3},isoLine2Dx);</td></tr>
-<tr><td>134</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;plane&nbsp;==&nbsp;3</td></tr>
-<tr><td>135</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dz&nbsp;=&nbsp;currSlicePlaneCoords*ones(1,numel(isoLine2Dx));</td></tr>
-<tr><td>136</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dx&nbsp;=&nbsp;interp1(double(1:ct.cubeDim(2)),coords{2},isoLine2Dx);</td></tr>
-<tr><td>137</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLine3Dy&nbsp;=&nbsp;interp1(double(1:ct.cubeDim(1)),coords{1},isoLine2Dy);</td></tr>
-<tr><td>138</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;</td></tr>
-<tr><td>139</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td></tr>
-<tr><td>140</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>141</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>142</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;render&nbsp;the&nbsp;isodose&nbsp;lines&nbsp;transparent&nbsp;by&nbsp;adding&nbsp;a&nbsp;fourth&nbsp;color&nbsp;value&nbsp;(undocumented)</td></tr>
-<tr><td>143</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;verLessThan('matlab','8.5')</td></tr>
-<tr><td>144</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLineHandles(end+1)&nbsp;=&nbsp;line(isoLine3Dx,isoLine3Dy,isoLine3Dz,'Color',[color&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],'Parent',axesHandle,varargin{:});</td></tr>
-<tr><td>145</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>146</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isoLineHandles(end+1)&nbsp;=&nbsp;line(isoLine3Dx,isoLine3Dy,isoLine3Dz,'Color',[color&nbsp;opacity],'Parent',axesHandle,varargin{:});</td></tr>
-<tr><td>147</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>148</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%We&nbsp;do&nbsp;not&nbsp;plot&nbsp;labels</td></tr>
-<tr><td>149</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%{</td></tr>
-<tr><td>150</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;plotLabels</td></tr>
-<tr><td>151</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text(isoLine3Dx,isoLine3Dy,isoLine3Dz,num2str(isoContours{currSlice,plane}(1,lower)),'Parent',axesHandle);</td></tr>
-<tr><td>152</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>153</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%}</td></tr>
-<tr><td>154</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lower&nbsp;=&nbsp;lower+steps+1;</td></tr>
-<tr><td>155</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>156</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>157</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>158</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>159</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>160</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;hold&nbsp;off;</td></tr>
-<tr><td>161</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>162</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>163</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>164</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>

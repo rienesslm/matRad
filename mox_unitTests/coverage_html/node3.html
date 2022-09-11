@@ -1,128 +1,0 @@
-<!DOCTYPE html>
-<html><head><title>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_importPatient.m</title><STYLE TYPE="text/css"><!--TD{font-family: "Courier New", Courier, monospace; font-size: 10pt;}---></STYLE></head><body><p>(Back to <a href="index.html">index</a>)</p><h1>C:\Users\micha\OneDrive\Dokumente\GitHub\matRad\IO\matRad_importPatient.m</h1><p style="font-family:'Courier New'"><table>
-<tr><th>Line</th><th>Code</th></tr>
-<tr><td>1</td><td bgcolor="#FFFFFF">function&nbsp;[ct,cst]&nbsp;=&nbsp;matRad_importPatient(ctFile,maskFiles,hlutFilename)</td></tr>
-<tr><td>2</td><td bgcolor="#FFFFFF">%&nbsp;matRad&nbsp;patient&nbsp;import&nbsp;from&nbsp;binary&nbsp;files&nbsp;(CT&nbsp;and&nbsp;masks)</td></tr>
-<tr><td>3</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>4</td><td bgcolor="#FFFFFF">%&nbsp;call</td></tr>
-<tr><td>5</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[ct,cst]&nbsp;=&nbsp;matRad_importPatient(cubeFile,maskFiles)</td></tr>
-<tr><td>6</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;[ct,cst]&nbsp;=&nbsp;matRad_importPatient(cubeFile,maskFiles,&nbsp;hlutFilename)</td></tr>
-<tr><td>7</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>8</td><td bgcolor="#FFFFFF">%&nbsp;input</td></tr>
-<tr><td>9</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ctFile:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path&nbsp;to&nbsp;CT&nbsp;file.&nbsp;If&nbsp;HLUT&nbsp;is&nbsp;not&nbsp;set,&nbsp;values&nbsp;are&nbsp;interpreted</td></tr>
-<tr><td>10</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;HU&nbsp;and&nbsp;interpolated&nbsp;to&nbsp;ED.&nbsp;</td></tr>
-<tr><td>11</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;maskFiles:&nbsp;&nbsp;cell&nbsp;array&nbsp;with&nbsp;filenames&nbsp;to&nbsp;the&nbsp;masks</td></tr>
-<tr><td>12</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;maskFiels&nbsp;contains&nbsp;a&nbsp;folder,&nbsp;all&nbsp;contained&nbsp;and</td></tr>
-<tr><td>13</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recognized&nbsp;data&nbsp;files&nbsp;are&nbsp;treated&nbsp;as&nbsp;masks</td></tr>
-<tr><td>14</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;hlutFilname:(optional)&nbsp;HLUT,&nbsp;(n,2)&nbsp;array.&nbsp;if&nbsp;set&nbsp;to&nbsp;'default',&nbsp;we&nbsp;will</td></tr>
-<tr><td>15</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;a&nbsp;default&nbsp;HLUT</td></tr>
-<tr><td>16</td><td bgcolor="#FFFFFF">%&nbsp;output</td></tr>
-<tr><td>17</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;ct&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ct&nbsp;struct&nbsp;for&nbsp;use&nbsp;with&nbsp;matlab</td></tr>
-<tr><td>18</td><td bgcolor="#FFFFFF">%&nbsp;&nbsp;&nbsp;cst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cst&nbsp;struct&nbsp;for&nbsp;use&nbsp;with&nbsp;matlab</td></tr>
-<tr><td>19</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>20</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>21</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>22</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>23</td><td bgcolor="#FFFFFF">%&nbsp;Copyright&nbsp;2015&nbsp;the&nbsp;matRad&nbsp;development&nbsp;team.&nbsp;</td></tr>
-<tr><td>24</td><td bgcolor="#FFFFFF">%&nbsp;</td></tr>
-<tr><td>25</td><td bgcolor="#FFFFFF">%&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project.&nbsp;It&nbsp;is&nbsp;subject&nbsp;to&nbsp;the&nbsp;license&nbsp;</td></tr>
-<tr><td>26</td><td bgcolor="#FFFFFF">%&nbsp;terms&nbsp;in&nbsp;the&nbsp;LICENSE&nbsp;file&nbsp;found&nbsp;in&nbsp;the&nbsp;top-level&nbsp;directory&nbsp;of&nbsp;this&nbsp;</td></tr>
-<tr><td>27</td><td bgcolor="#FFFFFF">%&nbsp;distribution&nbsp;and&nbsp;at&nbsp;https://github.com/e0404/matRad/LICENSES.txt.&nbsp;No&nbsp;part&nbsp;</td></tr>
-<tr><td>28</td><td bgcolor="#FFFFFF">%&nbsp;of&nbsp;the&nbsp;matRad&nbsp;project,&nbsp;including&nbsp;this&nbsp;file,&nbsp;may&nbsp;be&nbsp;copied,&nbsp;modified,&nbsp;</td></tr>
-<tr><td>29</td><td bgcolor="#FFFFFF">%&nbsp;propagated,&nbsp;or&nbsp;distributed&nbsp;except&nbsp;according&nbsp;to&nbsp;the&nbsp;terms&nbsp;contained&nbsp;in&nbsp;the&nbsp;</td></tr>
-<tr><td>30</td><td bgcolor="#FFFFFF">%&nbsp;LICENSE&nbsp;file.</td></tr>
-<tr><td>31</td><td bgcolor="#FFFFFF">%</td></tr>
-<tr><td>32</td><td bgcolor="#FFFFFF">%&nbsp;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</td></tr>
-<tr><td>33</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>34</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>35</td><td bgcolor="#FF0000">[cube,&nbsp;metadata]&nbsp;=&nbsp;matRad_readCube(ctFile);</td></tr>
-<tr><td>36</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>37</td><td bgcolor="#FF0000">ct&nbsp;=&nbsp;struct();</td></tr>
-<tr><td>38</td><td bgcolor="#FF0000">cst&nbsp;=&nbsp;cell(0,6);</td></tr>
-<tr><td>39</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>40</td><td bgcolor="#FF0000">ct.cubeHU{1}&nbsp;=&nbsp;cube;</td></tr>
-<tr><td>41</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>42</td><td bgcolor="#FF0000">if&nbsp;nargin&nbsp;==&nbsp;3</td></tr>
-<tr><td>43</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;HLUT&nbsp;=&nbsp;matRad_readHLUT(hlutFilename);</td></tr>
-<tr><td>44</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.cube{1}&nbsp;=&nbsp;interp1(HLUT(:,1),HLUT(:,2),double(cube));</td></tr>
-<tr><td>45</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;ct.hlut&nbsp;=&nbsp;HLUT;</td></tr>
-<tr><td>46</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>47</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>48</td><td bgcolor="#FF0000">ct.cubeDim&nbsp;=&nbsp;metadata.cubeDim;</td></tr>
-<tr><td>49</td><td bgcolor="#FF0000">ct.resolution.x&nbsp;=&nbsp;metadata.resolution(1);</td></tr>
-<tr><td>50</td><td bgcolor="#FF0000">ct.resolution.y&nbsp;=&nbsp;metadata.resolution(2);</td></tr>
-<tr><td>51</td><td bgcolor="#FF0000">ct.resolution.z&nbsp;=&nbsp;metadata.resolution(3);</td></tr>
-<tr><td>52</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>53</td><td bgcolor="#FF0000">ct.numOfCtScen&nbsp;=&nbsp;1;</td></tr>
-<tr><td>54</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>55</td><td bgcolor="#FF0000">maskId&nbsp;=&nbsp;1;</td></tr>
-<tr><td>56</td><td bgcolor="#FF0000">hGlobalWaitbar&nbsp;=&nbsp;waitbar(0,'Importing&nbsp;Segmentations');</td></tr>
-<tr><td>57</td><td bgcolor="#FF0000">set(findall(hGlobalWaitbar,'type','text'),'Interpreter','none');</td></tr>
-<tr><td>58</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>59</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>60</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>61</td><td bgcolor="#FF0000">for&nbsp;f=1:numel(maskFiles)</td></tr>
-<tr><td>62</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;maskFile&nbsp;=&nbsp;maskFiles{f};</td></tr>
-<tr><td>63</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;waitbar(f/numel(maskFiles),hGlobalWaitbar,['Importing&nbsp;Segmentations:&nbsp;'&nbsp;maskFiles{f}]);</td></tr>
-<tr><td>64</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;exist(maskFile,'dir')</td></tr>
-<tr><td>65</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents&nbsp;=&nbsp;dir(maskFile);</td></tr>
-<tr><td>66</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hFolderWaitbar&nbsp;=&nbsp;waitbar(0,'Importing&nbsp;Folder');</td></tr>
-<tr><td>67</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(findall(hFolderWaitbar,'type','text'),'Interpreter','none');</td></tr>
-<tr><td>68</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;s=1:numel(contents)</td></tr>
-<tr><td>69</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;waitbar(s/numel(contents),hFolderWaitbar,['Importing&nbsp;Folder:&nbsp;'&nbsp;contents(s).name]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>70</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(~contents(s).isdir)</td></tr>
-<tr><td>71</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[mask,&nbsp;maskMeta]&nbsp;=&nbsp;matRad_readCube(fullfile(maskFile,contents(s).name));</td></tr>
-<tr><td>72</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cstLine&nbsp;=&nbsp;importMaskToCstLine(maskId,mask,maskMeta);</td></tr>
-<tr><td>73</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cst&nbsp;=&nbsp;[cst;&nbsp;cstLine];&nbsp;</td></tr>
-<tr><td>74</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maskId&nbsp;=&nbsp;maskId&nbsp;+&nbsp;1;</td></tr>
-<tr><td>75</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>76</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>77</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete(hFolderWaitbar);</td></tr>
-<tr><td>78</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;elseif&nbsp;exist(maskFile,'file')</td></tr>
-<tr><td>79</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[mask,maskMeta]&nbsp;=&nbsp;matRad_readCube(maskFile);&nbsp;&nbsp;</td></tr>
-<tr><td>80</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cstLine&nbsp;=&nbsp;importMaskToCstLine(maskId,mask,maskMeta);</td></tr>
-<tr><td>81</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cst&nbsp;=&nbsp;[cst;&nbsp;cstLine];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
-<tr><td>82</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maskId&nbsp;=&nbsp;maskId&nbsp;+&nbsp;1;</td></tr>
-<tr><td>83</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;else</td></tr>
-<tr><td>84</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disp(['Ignored&nbsp;file/dir&nbsp;'&nbsp;maskFile&nbsp;'!']);</td></tr>
-<tr><td>85</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>86</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>87</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>88</td><td bgcolor="#FF0000">delete(hGlobalWaitbar);</td></tr>
-<tr><td>89</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>90</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>91</td><td bgcolor="#FFFFFF">%Assign&nbsp;default&nbsp;colors</td></tr>
-<tr><td>92</td><td bgcolor="#FF0000">colors&nbsp;=&nbsp;colorcube(size(cst,1));</td></tr>
-<tr><td>93</td><td bgcolor="#FF0000">for&nbsp;i&nbsp;=&nbsp;1:size(cst,1)</td></tr>
-<tr><td>94</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cst{i,5}.visibleColor&nbsp;=&nbsp;colors(i,:);</td></tr>
-<tr><td>95</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>96</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>97</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>98</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>99</td><td bgcolor="#FFFFFF">function&nbsp;cstLine&nbsp;=&nbsp;importMaskToCstLine(maskId,mask,maskMeta)&nbsp;&nbsp;</td></tr>
-<tr><td>100</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine&nbsp;=&nbsp;cell(1,6);</td></tr>
-<tr><td>101</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine{1}&nbsp;=&nbsp;maskId&nbsp;-&nbsp;1;</td></tr>
-<tr><td>102</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine{2}&nbsp;=&nbsp;maskMeta.name;</td></tr>
-<tr><td>103</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine{3}&nbsp;=&nbsp;tryToGetVoiTypeByName(maskMeta.name);</td></tr>
-<tr><td>104</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine{4}{1}&nbsp;=&nbsp;find(mask&nbsp;&gt;&nbsp;0);</td></tr>
-<tr><td>105</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine{5}.Priority&nbsp;=&nbsp;maskId;</td></tr>
-<tr><td>106</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine{5}.alphaX&nbsp;=&nbsp;0.1;</td></tr>
-<tr><td>107</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine{5}.betaX&nbsp;=&nbsp;0.05;</td></tr>
-<tr><td>108</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;cstLine{5}.Visible&nbsp;=&nbsp;1;</td></tr>
-<tr><td>109</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>110</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>111</td><td bgcolor="#FFFFFF">function&nbsp;type&nbsp;=&nbsp;tryToGetVoiTypeByName(voiName)</td></tr>
-<tr><td>112</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;targetNames&nbsp;=&nbsp;{'target';&nbsp;'ptv';&nbsp;'ctv'};</td></tr>
-<tr><td>113</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;n=1:numel(targetNames)</td></tr>
-<tr><td>114</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;found&nbsp;=&nbsp;strfind(lower(voiName),lower(targetNames{n}));</td></tr>
-<tr><td>115</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;~isempty(found)</td></tr>
-<tr><td>116</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;=&nbsp;'TARGET';</td></tr>
-<tr><td>117</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td></tr>
-<tr><td>118</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>119</td><td bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;&nbsp;end</td></tr>
-<tr><td>120</td><td bgcolor="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;=&nbsp;'OAR';</td></tr>
-<tr><td>121</td><td bgcolor="#FFFFFF">end</td></tr>
-<tr><td>122</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>123</td><td bgcolor="#FFFFFF"></td></tr>
-<tr><td>124</td><td bgcolor="#FFFFFF"></td></tr>
-</table></p></body></html>
