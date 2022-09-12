@@ -15,6 +15,28 @@ jobs:
         uses: matlab-actions/run-command@v1
         with:
           command: cd unitTest; matRad_runTests
+
+  unit-tests: #MOxUnit Tests
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Add MOxUnit to search path
+    - name: Add MOxUnit to search path
+      uses: riensslm/moxunit-action@v1.1
+      with:
+        src: MOxUnit
+
+    # Run MOxUnit-Tests
+    - name: Run MOxUnit-Tests
+        uses: matlab-actions/run-command@v1
+        with:
+          command: cd mox_unitTests; moxunit_runtests
+
   test-octave: #Octave test Job
     runs-on: ubuntu-20.04 # We use Ubuntu-20.04 because it has Octave 5.2
     steps:
