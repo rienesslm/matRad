@@ -1,6 +1,6 @@
 function test_suite=test_DoseConstraints
     test_functions = {};
-    MyFolderInfo = dir('..\optimization\+DoseConstraints'); %relative path
+    MyFolderInfo = dir('../optimization/+DoseConstraints'); %relative path
     for i=1:length(MyFolderInfo)
       if (MyFolderInfo(i).name(1)~='.')
        if not(isequal(MyFolderInfo(i).name, 'matRad_DoseConstraint.m'))

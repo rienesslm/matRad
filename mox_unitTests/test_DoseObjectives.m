@@ -1,11 +1,11 @@
 function test_suite=test_DoseObjectives
     test_functions = {};
-    MyFolderInfo = dir('..\optimization\+DoseObjectives'); %relative path
+    MyFolderInfo = dir('../optimization/+DoseObjectives'); %relative path
     for i=1:length(MyFolderInfo)
       if (MyFolderInfo(i).name(1)~='.')
        if not(isequal(MyFolderInfo(i).name, 'matRad_DoseObjective.m'))
-        test_functions{end+1} = @() testDoseGrad(MyFolderInfo(i).name);
-        test_functions{end+1} = @() testDoseObjectiveFunction(MyFolderInfo(i).name);
+        test_functions{end+1} = eval(['@() testDoseGrad(''' MyFolderInfo(i).name ''')']); %Too show which object failed. Too have object name expliceed in function name.
+        test_functions{end+1} = eval(['@() testDoseObjectiveFunction(''' MyFolderInfo(i).name ''')']);
        end
       end
     end

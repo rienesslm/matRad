@@ -23,19 +23,25 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          path: 'matRad'
 
-    # Add MOxUnit to search path
-    - name: Add MOxUnit to search path
-      uses: riensslm/moxunit-action@v1.1
-      with:
-        src: MOxUnit
+      # Install MATLAB
+      - name: Install MATLAB
+        uses: matlab-actions/setup-matlab@v1 
 
-    # Run MOxUnit-Tests
-    - name: Run MOxUnit-Tests
+      - uses: actions/checkout@v2 # Checks-out repository under $GITHUB_WORKSPACE
+        with: 
+          repository: rienesslm/MOxUnit
+          ref: 'anonymousFunctionFeature'
+          path: 'MOxUnit'
+          
+      # Run MOxUnit-Tests
+      - name: Run MOxUnit-Tests
         uses: matlab-actions/run-command@v1
         with:
-          command: cd mox_unitTests; moxunit_runtests
+          command: cd matRad; matRad_runMOxUnitTests
 
   test-octave: #Octave test Job
     runs-on: ubuntu-20.04 # We use Ubuntu-20.04 because it has Octave 5.2

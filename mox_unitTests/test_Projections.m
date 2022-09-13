@@ -14,7 +14,7 @@ function test_suite=test_Projections
     dij.RBE = 1.1;
     w = ones(nB,1);
     test_functions = {};
-    MyFolderInfo = dir('..\optimization\projections'); %relative path
+    MyFolderInfo = dir('../optimization/projections'); %relative path
     for i=1:length(MyFolderInfo)
       if (MyFolderInfo(i).name(1)~='.')
        if not(isequal(MyFolderInfo(i).name, 'matRad_BackProjection.m'))
