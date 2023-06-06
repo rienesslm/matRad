@@ -36,9 +36,10 @@ classdef matRad_GeneticOptimizer
             Max_fitness_value=max(K(:,2))
             P2 = P(1,:); % Best chromosome
             % convert binary to real number
-            A=bi2de(P2(1,1:y1/2));
+            
+            A=obj.matRad_bit2de(P2(1, 1:y1/2));
             x=-3+A*(3-(-3))/(2^(y1/2)-1);
-            B=bi2de(P2(1,y1/2+1:y1));
+            B=obj.matRad_bit2de(P2(1, y1/2+1:y1));
             y=-3+B*(3-(-3))/(2^(y1/2)-1);
             Optimal_solution=[x,y]
         end
@@ -112,15 +113,14 @@ classdef matRad_GeneticOptimizer
             [x1, y1]=size(P);
             H=zeros(1,x1);
             for i = 1:x1
-                A=bi2de(P(i,1:y1/2));
+                A=obj.matRad_bit2de(P(i,1:y1/2));
                 x=-3+A*(3-(-3))/(2^(y1/2)-1);
-                B=bi2de(P(i,y1/2+1:y1));
+                B=obj.matRad_bit2de(P(i,y1/2+1:y1));
                 y=-3+B*(3-(-3))/(2^(y1/2)-1);
                 % Maximization problem
                 H(1,i)=3*(1-x)^2*exp(-x^2 - (y+1)^2)...
                     - 10*(x/5 - x^3 - y^5)*exp(-x^2 - y^2)...
                     -1/3*exp(-(x+1)^2 - y^2);
-
             end
             Y=H;
         end
@@ -157,6 +157,11 @@ classdef matRad_GeneticOptimizer
             end
             YY1=Y1;
             YY2=Fn-10; % substract 10 to return the original fitness
+        end
+        
+        function decimalNumber = matRad_bit2de(obj, binaryString)
+            % Convert binary strings to decimal numbers
+            decimalNumber = polyval(binaryString, 2);
         end
     end
 end
