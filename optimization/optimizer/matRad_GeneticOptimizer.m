@@ -1,7 +1,4 @@
 classdef matRad_GeneticOptimizer
-    %MATRAD_GENETICOPTIMIZER Summary of this class goes here
-    %   Detailed explanation goes here
-    
     properties     
         population=100; % population size
         chromosomePairs=30; % number of pairs of chromosomes to be crossovered

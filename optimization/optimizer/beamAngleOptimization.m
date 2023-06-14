@@ -1,4 +1,4 @@
-function optimizedAngles = beamAngleOptimization(beamAngles)
+function optimizedAngles = beamAngleOptimization()
 % (vi) how to compare the two results
 
 %% Patient Data Import
@@ -43,7 +43,7 @@ pln.propDoseCalc.calcLET = 1;
 %%
 % Now we have to set the remaining plan parameters.
 pln.numOfFractions        = 30;
-pln.propStf.gantryAngles  = [90 270];
+pln.propStf.gantryAngles  = [136 31];
 pln.propStf.couchAngles   = [0 0];
 pln.propStf.bixelWidth    = 3;
 pln.propStf.numOfBeams    = numel(pln.propStf.gantryAngles);
@@ -70,6 +70,7 @@ dij = matRad_calcParticleDose(ct,stf,pln,cst);
 % weights which yield the best possible dose distribution according to the 
 % clinical objectives and constraints underlying the radiation treatment
 resultGUI = matRad_fluenceOptimization(dij,cst,pln);
+resultGUI.info.objective
 
 %% Plot the Resulting Dose Slice
 % Let's plot the transversal iso-center dose slice
