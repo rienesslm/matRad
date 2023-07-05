@@ -28,7 +28,7 @@
 
 matRad_rc; %If this throws an error, run it from the parent directory first to set the paths
 
-load('PROSTATE.mat');
+load('LIVER_PLAN_HEART_&SPINAL.mat');
 
 %% Treatment Plan
 % The next step is to define your treatment plan labeled as 'pln'. This 
@@ -64,8 +64,8 @@ pln.propDoseCalc.calcLET = 1;
 %%
 % Now we have to set the remaining plan parameters.
 pln.numOfFractions        = 30;
-pln.propStf.gantryAngles  = [90 270];
-pln.propStf.couchAngles   = [0 0];
+pln.propStf.gantryAngles  = [43 78 270 164 9];
+pln.propStf.couchAngles   = [0 0 0 0 0];
 pln.propStf.bixelWidth    = 3;
 pln.propStf.numOfBeams    = numel(pln.propStf.gantryAngles);
 pln.propStf.isoCenter     = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
@@ -91,6 +91,7 @@ dij = matRad_calcParticleDose(ct,stf,pln,cst);
 % weights which yield the best possible dose distribution according to the 
 % clinical objectives and constraints underlying the radiation treatment
 resultGUI = matRad_fluenceOptimization(dij,cst,pln);
+resultGUI.info.objective
 
 %% Plot the Resulting Dose Slice
 % Let's plot the transversal iso-center dose slice

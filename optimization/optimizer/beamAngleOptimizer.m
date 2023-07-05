@@ -3,12 +3,20 @@ classdef beamAngleOptimizer
         population=10; % population size
         chromosomePairs=2; % number of pairs of chromosomes to be crossovered
         mutationNumber=2; % number chromosomes to be mutated
-        numberGenerations=10; % Total number of generations
+        numberGenerations=5; % Total number of generations
+        Optimal_Angels = [];
+        beamNumber;
+        phantom;
+        Min_fitness_value;
     end
     
     methods
-        function obj = beamAngleOptimizer()
-            P=obj.initPopulation(obj.population)
+        function obj = beamAngleOptimizer(phantom, populationSize, generationSize, beamNumber)
+            obj.beamNumber = beamNumber;
+            obj.phantom = phantom;
+            obj.population = populationSize;
+            obj.numberGenerations = generationSize;
+            P=obj.initPopulation(obj.population, obj.beamNumber)
             K=0;
             [x1,y1]=size(P);
             P1=0;
@@ -22,33 +30,29 @@ classdef beamAngleOptimizer
                 K(i,1)=sum(S)/obj.population;
                 K(i,2)=S(1); %best
             end
-            Min_fitness_value=min(K(:,2))
+            obj.Min_fitness_value=min(K(:,2))
             P2 = P(1,:); % Best chromosome
             % convert binary to real number
-            
-            A=mod(obj.matRad_bit2de(P2(1, 1:y1/2)), 360);
-            B=mod(obj.matRad_bit2de(P2(1, y1/2+1:y1)), 360);
-            Optimal_Angels=[A,B]
+
+            for i=1:obj.beamNumber
+                angle=mod(obj.matRad_bit2de(P2(1, 1+(9*(i-1)):y1*i/obj.beamNumber)), 360);
+                obj.Optimal_Angels(i)=angle;
+            end
+            %A=mod(obj.matRad_bit2de(P2(1, 1:y1/2)), 360);
+            %B=mod(obj.matRad_bit2de(P2(1, y1/2+1:y1)), 360);
+            %A=mod(obj.matRad_bit2de(P2(1, 1:y1)), 360);
+            %Optimal_Angels = [A B]
+            obj.Optimal_Angels
         end
         
 
-        function Y = initPopulation(obj, n)
-            % n = population size
-
-            % It is noted that the number of bits to represent the variables
-            % in binary numbers depends on the required accuracy (the number
-            % of digits after comma)
-
-            % In this example, I want the solution precision with 5 places after the
-            % decimal point, and with the upper and lower bounds of the variables are 3
-            % and -3, so, for each variable, we need 20 bits.
-            % General formula: 2^(m-1) < (upper bound - lower bound)*10^p < 2^m -1
-            % In this case: p = 5 and m = 20.
-
-            % We have 2 variables (x and y), so we need 40 bits in
-            % total for binary encoding
-            %Y=round(rand(n,40));
-            Y=round(rand(n,18));
+        function Y = initPopulation(obj, pS, nB)
+            % pS = population size
+            % Number of bits needed per angle is 9 ( 2^8 < 360 options > 2^9 )
+            % nB = number beams
+            %Y=round(rand(pS,18)); %Two beam angles
+            %Y=round(rand(pS,9)); %One beam angele
+            Y=round(rand(pS,9*nB));
 
         end
 
@@ -66,8 +70,10 @@ classdef beamAngleOptimizer
                 A2=P(r1(2),:); % parent 2
                 r2=1+randi(y1-1); % random cutting point
                 B1=A1(1,r2:y1);
-                A1(1,r2:y1)=A2(1,r2:18);
-                A2(1,r2:18)=B1;
+                A1(1,r2:y1)=A2(1,r2:9*obj.beamNumber);
+                %A1(1,r2:y1)=A2(1,r2:9);
+                A2(1,r2:9*obj.beamNumber)=B1;
+                %A2(1,r2:9)=B1;
                 Z(2*i-1,:)=A1; % offspring 1
                 Z(2*i,:)=A2; % offspring 2
             end
@@ -104,8 +110,9 @@ classdef beamAngleOptimizer
                 % patient into your workspace
 
                 matRad_rc; %If this throws an error, run it from the parent directory first to set the paths
-
-                load('TG119.mat');
+                
+                load(obj.phantom);
+                %load('LIVER.mat');
 
                 %% Treatment Plan
                 % The next step is to define your treatment plan labeled as 'pln'. This
@@ -141,8 +148,10 @@ classdef beamAngleOptimizer
                 %%
                 % Now we have to set the remaining plan parameters.
                 pln.numOfFractions        = 30;
-                pln.propStf.gantryAngles  = [90 270];
-                pln.propStf.couchAngles   = [0 0];
+                pln.propStf.gantryAngles  = zeros(1,obj.beamNumber);
+                %pln.propStf.gantryAngles  = [90];
+                pln.propStf.couchAngles   = zeros(1,obj.beamNumber);
+                %pln.propStf.couchAngles   = [0];
                 pln.propStf.bixelWidth    = 3;
                 pln.propStf.numOfBeams    = numel(pln.propStf.gantryAngles);
                 pln.propStf.isoCenter     = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
@@ -154,19 +163,25 @@ classdef beamAngleOptimizer
                 pln.propDoseCalc.doseGrid.resolution.y = 10; % [mm]
                 pln.propDoseCalc.doseGrid.resolution.z = 10; % [mm]
                 P
-                IndividumA = P(i,1:y1/2)
-                IndividumB = P(i,y1/2+1:y1)
+                %IndividumA = P(i,1:y1/2)
+                %(1, 1+(9*(i-1)):y1*i/obj.beamNumber)
+                for j=1:obj.beamNumber
+                    angle=mod(obj.matRad_bit2de(P(i, 1+(9*(j-1)):y1*j/obj.beamNumber)), 360);
+                    pln.propStf.gantryAngles(j)=angle;
+                end
+                %IndividumA = P(i,1:y1)
+                %IndividumB = P(i,y1/2+1:y1)
                 %IndividumA = P(i:x1/2,:)
                 %IndividumB = P(x1/2+1:x1,:)
                 %valueIndividumA = obj.matRad_bit2de(P(i,1:y1/2))
-                valueIndividumA = obj.matRad_bit2de(IndividumA)
+                %valueIndividumA = obj.matRad_bit2de(IndividumA)
                 %valueIndividumB = obj.matRad_bit2de(P(i,y1/2+1:y1))
-                valueIndividumB = obj.matRad_bit2de(IndividumB)
+                %valueIndividumB = obj.matRad_bit2de(IndividumB)
                 %alpha=mod(obj.matRad_bit2de(P(i,1:y1/2)), 360)
-                alpha=mod(valueIndividumA, 360)
+                %alpha=mod(valueIndividumA, 360)
                 %beta=mod(obj.matRad_bit2de(P(i,y1/2+1:y1)), 360)
-                beta=mod(valueIndividumB, 360)
-                pln.propStf.gantryAngles = [alpha beta];
+                %beta=mod(valueIndividumB, 360)
+                pln.propStf.gantryAngles
                 %% Generate Beam Geometry STF
                 stf = matRad_generateStf(ct,cst,pln);
 
@@ -181,6 +196,7 @@ classdef beamAngleOptimizer
                 % weights which yield the best possible dose distribution according to the
                 % clinical objectives and constraints underlying the radiation treatment
                 H = matRad_fluenceOptimization(dij,cst,pln);
+           
                 listOfFunctionValues(1,i) = H.info.objective;
             end
             listOfFunctionValues
@@ -194,6 +210,7 @@ classdef beamAngleOptimizer
             % elite selection
             e=3;
             for i = 1:3
+                obj.Min_fitness_value = min(F);
                 find(F==min(F))
                 [r1,c1]=find(F==min(F))
                 P(min(c1),:)
