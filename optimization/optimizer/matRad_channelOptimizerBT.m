@@ -1,123 +1,58 @@
 classdef matRad_channelOptimizerBT
     properties     
-        population=10; % population size
+        populationSize=10; % populationSize size
         chromosomePairs=2; % number of pairs of chromosomes to be crossovered
         mutationNumber=2; % number chromosomes to be mutated
         numberGenerations=5; % Total number of generations
         Optimal_ChannelCombination = [];
         phantom;
         Min_fitness_value;
+        populationMatrix;
+        pln;
+        dij;
+        cst;
     end
     
     methods
-        function obj = matRad_channelOptimizerBT(phantom, populationSize, generationSize)
+        function obj = matRad_channelOptimizerBT(phantom, populationSizeSize, generationSize)
             obj.phantom = phantom;
-            obj.population = populationSize;
+            obj.populationSize = populationSizeSize;
             obj.numberGenerations = generationSize;
-            P=obj.initPopulation(obj.population)
+            obj.populationMatrix = obj.initpopulationSize(obj.populationSize);
+            obj.pln = obj.initPln();
+            %P=obj.initpopulationSize(obj.populationSize);
             K=0;
-            [x1,y1]=size(P);
+            [x1,y1]=size(obj.populationMatrix);
             P1=0;
             for i=1:obj.numberGenerations
-                Cr=obj.crossover(P, obj.chromosomePairs);
-                Mu=obj.mutation(P, obj.mutationNumber);
-                P(obj.population + 1 : obj.population + 2 * obj.chromosomePairs, :)=Cr;
-                P(obj.population + 2 * obj.chromosomePairs + 1 : obj.population + 2 * obj.chromosomePairs + obj.mutationNumber, :)=Mu;
-                E=evaluation(obj, P)
-                [P,S]=selection(obj, P, E, obj.population); %No clue why the function call needs 'obj' here...
-                K(i,1)=sum(S)/obj.population;
+                Cr=obj.crossover(obj.populationMatrix, obj.chromosomePairs);
+                Mu=obj.mutation(obj.populationMatrix, obj.mutationNumber);
+                obj.populationMatrix(obj.populationSize + 1 : obj.populationSize + 2 * obj.chromosomePairs, :)=Cr;
+                obj.populationMatrix(obj.populationSize + 2 * obj.chromosomePairs + 1 : obj.populationSize + 2 * obj.chromosomePairs + obj.mutationNumber, :)=Mu;
+                E=evaluation(obj, obj.populationMatrix)
+                [obj.populationMatrix,S]=selection(obj, obj.populationMatrix, E, obj.populationSize); %No clue why the function call needs 'obj' here...
+                K(i,1)=sum(S)/obj.populationSize;
                 K(i,2)=S(1); %best
             end
             obj.Min_fitness_value=min(K(:,2))
-            P2 = P(1,:); % Best chromosome
-            % convert binary to real number
-
-            for i=1:obj.beamNumber
-                angle=mod(obj.matRad_bit2de(P2(1, 1+(9*(i-1)):y1*i/obj.beamNumber)), 360);
-                obj.Optimal_Angels(i)=angle;
-            end
-            %A=mod(obj.matRad_bit2de(P2(1, 1:y1/2)), 360);
-            %B=mod(obj.matRad_bit2de(P2(1, y1/2+1:y1)), 360);
-            %A=mod(obj.matRad_bit2de(P2(1, 1:y1)), 360);
-            %Optimal_Angels = [A B]
-            obj.Optimal_Angels
+            obj.Optimal_ChannelCombination = obj.populationMatrix(1,:); % Best chromosome
         end
         
 
-        function Y = initPopulation(obj, pS)
-            % pS = population size
-            Y = cell(pS, 1) ;
-            for k = 1 : Ps
-                Y{k} = round(rand(13,13)) ;
+        function populationMatrix = initpopulationSize(obj, pS)
+            % pS = populationSize size
+            % Y = cell(pS, 1) ;
+            populationMatrix = zeros(pS,13*13);
+            for k = 1 : pS
+                channelMatrix=round(rand(13,13));
+                channelVector=reshape(channelMatrix.',1,[]);
+                populationMatrix(k,:) = channelVector;
             end
-
-            %Y=round(rand(13,13));
-
+            size(populationMatrix)
         end
 
-        function Y=crossover(obj, P, n)
-            % P = population
-            % n = number of pairs of chromosomes to be crossovered
-            [x1,y1]=size(P);
-            Z=zeros(2*n,y1);
-            for i = 1:n
-                r1=randi(x1,1,2);
-                while r1(1)==r1(2)
-                    r1=randi(x1,1,2);
-                end
-                A1=P(r1(1),:); % parent 1
-                A2=P(r1(2),:); % parent 2
-                r2=1+randi(y1-1); % random cutting point
-                B1=A1(1,r2:y1);
-                A1(1,r2:y1)=A2(1,r2:13);
-                %A1(1,r2:y1)=A2(1,r2:9);
-                A2(1,r2:13)=B1;
-                %A2(1,r2:9)=B1;
-                Z(2*i-1,:)=A1; % offspring 1
-                Z(2*i,:)=A2; % offspring 2
-            end
-            Y=Z;
-        end
-
-        function Y=mutation(obj, P, n)
-            % P = population
-            % n = chromosomes to be mutated
-            [x1,y1]=size(P);
-            Z=zeros(n,y1);
-            for i = 1:n
-                r1=randi(x1);
-                A1=P(r1,:); % random parent
-                r2=randi(y1);
-                if A1(1,r2)== 1
-                    A1(1,r2) = 0; % flip the bit
-                else
-                    A1(1,r2) = 1;
-                end
-                Z(i,:)=A1;
-            end
-            Y=Z;
-        end
-
-        function [listOfFunctionValues]=evaluation(obj, P)
-            x1 = size(P)
-            listOfFunctionValues=zeros(1,x1);
-            for i = 1:x1
-                %% List of contents
-                % In this example we will show
-                % (i) how to load patient data into matRad
-                % (ii) how to setup an HDR brachy dose calculation and
-                % (iii) how to inversely optimize holding position intensties
-                % (iv) how to visually and quantitatively evaluate the result
-                % (v) how to verify that functions do the right thing
-
-                %% I Patient Data Import
-                % Let's begin with a clear Matlab environment. Then, import the TG119
-                % phantom into your workspace. The phantom is comprised of a 'ct' and 'cst'
-                % structure defining the CT images and the structure set. Make sure the
-                % matRad root directory with all its subdirectories is added to the Matlab
-                % search path.
-
-                matRad_rc;
+        function pln = initPln(obj)
+            matRad_rc;
                 load(obj.phantom);
 
                 %% I - update/set dose objectives for brachytherapy
@@ -204,27 +139,24 @@ classdef matRad_channelOptimizerBT
                 % A checkerboard pattern is frequantly used. The whole geometry will become
                 % clearer when it is displayed in 3D view in the next section.
 
-%                 pln.propStf.template.activeNeedles =   [0 0 0 1 0 1 0 1 0 1 0 0 0;... % 7.0
-%                                                         0 0 1 0 1 0 0 0 1 0 1 0 0;... % 6.5
-%                                                         0 1 0 1 0 1 0 1 0 1 0 1 0;... % 6.0
-%                                                         1 0 1 0 1 0 0 0 1 0 1 0 1;... % 5.5
-%                                                         0 1 0 1 0 1 0 1 0 1 0 1 0;... % 5.0
-%                                                         1 0 1 0 1 0 0 0 1 0 1 0 1;... % 4.5
-%                                                         0 1 0 1 0 1 0 1 0 1 0 1 0;... % 4.0
-%                                                         1 0 1 0 1 0 0 0 1 0 1 0 1;... % 4.5
-%                                                         0 1 0 1 0 1 0 1 0 1 0 1 0;... % 3.0
-%                                                         1 0 1 0 1 0 1 0 1 0 1 0 1;... % 2.5
-%                                                         0 1 0 1 0 1 0 1 0 1 0 1 0;... % 2.0
-%                                                         1 0 1 0 1 0 0 0 0 0 1 0 1;... % 1.5
-%                                                         0 0 0 0 0 0 0 0 0 0 0 0 0];   % 1.0
-%                                                        %A a B b C c D d E e F f G
+                % Initial channel distribution for precalculation of dij.
+                pln.propStf.template.activeNeedles =   [1 1 1 1 1 1 1 1 1 1 1 1 1;... % 7.0
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 6.5
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 6.0
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 5.5
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 5.0
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 4.5
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 4.0
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 4.5
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 3.0
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 2.5
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 2.0
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1;... % 1.5
+                                                        1 1 1 1 1 1 1 1 1 1 1 1 1];   % 1.0
+                                                       %A a B b C c D d E e F f G
                 
-                pln.propStf.template.activeNeedles = P(i);
-
                 pln.propStf.isoCenter    = matRad_getIsoCenter(cst,ct,0); %  target center
-
-
-
+                
                 %% II.1 - dose calculation options
                 % for dose calculation we use eather the 2D or the 1D formalism proposed by
                 % TG 43. Also, set resolution of dose calculation and optimization.
@@ -233,8 +165,6 @@ classdef matRad_channelOptimizerBT
                 % needles.
                 % Calculation time will be reduced by one tenth when we define a dose
                 % cutoff distance.
-
-
                 pln.propDoseCalc.TG43approximation = '2D'; %'1D' or '2D'
 
                 pln.propDoseCalc.doseGrid.resolution.x = 5; % [mm]
@@ -258,9 +188,9 @@ classdef matRad_channelOptimizerBT
                 pln.propStf.numOfBeams      = 0;
                 pln.numOfFractions          = 1;
 
-                %% II.1 - view plan
+                 %% II.1 - view plan
                 % Et voila! Our treatment plan structure is ready. Lets have a look:
-                disp(pln);
+                %disp(pln);
 
 
                 %% II.2 Steering Seed Positions From STF
@@ -274,7 +204,7 @@ classdef matRad_channelOptimizerBT
                 % The 3D view is interesting, but we also want to know how the stf struct
                 % looks like.
 
-                disp(stf)
+                %disp(stf)
 
                 %% II.3 - Dose Calculation
                 % Let's generate dosimetric information by pre-computing a dose influence
@@ -282,119 +212,76 @@ classdef matRad_channelOptimizerBT
                 % available allows subsequent inverse optimization.
                 % Don't get inpatient, this can take a few seconds...
 
-                dij = matRad_calcBrachyDose(ct,stf,pln,cst);
+                obj.dij = matRad_calcBrachyDose(ct,stf,pln,cst);
+                obj.cst = cst;
+                
+        end
 
+        function Y=crossover(obj, populationMatrix, n)
+            % populationMatrix = populationMatrix
+            % n = number of pairs of chromosomes to be crossovered
+            [x1,y1]=size(populationMatrix);
+            Z=zeros(2*n,y1);
+            for i = 1:n
+                r1=randi(x1,1,2);
+                while r1(1)==r1(2)
+                    r1=randi(x1,1,2);
+                end
+                A1=populationMatrix(r1(1),:); % parent 1
+                A2=populationMatrix(r1(2),:); % parent 2
+                r2=1+randi(y1-1); % random cutting point
+                B1=A1(1,r2:y1);
+                A1(1,r2:y1)=A2(1,r2:y1);
+                %A1(1,r2:y1)=A2(1,r2:9);
+                A2(1,r2:y1)=B1;
+                %A2(1,r2:9)=B1;
+                Z(2*i-1,:)=A1; % offspring 1
+                Z(2*i,:)=A2; % offspring 2
+            end
+            Y=Z;
+        end
+
+        function Y=mutation(obj, populationMatrix, n)
+            % populationMatrix = populationMatrix
+            % n = chromosomes to be mutated
+            [x1,y1]=size(populationMatrix);
+            Z=zeros(n,y1);
+            for i = 1:n
+                r1=randi(x1);
+                A1=populationMatrix(r1,:); % random parent
+                r2=randi(y1);
+                if A1(1,r2)== 1
+                    A1(1,r2) = 0; % flip the bit
+                else
+                    A1(1,r2) = 1;
+                end
+                Z(i,:)=A1;
+            end
+            Y=Z;
+        end
+
+        function [listOfFunctionValues]=evaluation(obj, populationMatrix)
+            [x1, y1]=size(populationMatrix)
+            listOfFunctionValues=zeros(1,x1);
+            for i = 1:x1                
+                populationVector = populationMatrix(i,:);
+                obj.pln.propStf.template.activeNeedles = reshape(populationVector, 13, 13);
                 %% III Inverse Optimization for brachy therapy
                 % The goal of the fluence optimization is to find a set of holding point
                 % times which yield the best possible dose distribution according to
                 % the clinical objectives and constraints underlying the radiation
                 % treatment. Once the optimization has finished, trigger to
-                % visualize the optimized dose cubes.
-
-                resultGUI = matRad_fluenceOptimization(dij,cst,pln);
-                % (vi) how to compare the two results
-
-                %% Patient Data Import
-                % Let's begin with a clear Matlab environment and import the prostate
-                % patient into your workspace
-
-                matRad_rc; %If this throws an error, run it from the parent directory first to set the paths
-                
-                load(obj.phantom);
-                %load('LIVER.mat');
-
-                %% Treatment Plan
-                % The next step is to define your treatment plan labeled as 'pln'. This
-                % structure requires input from the treatment planner and defines the most
-                % important cornerstones of your treatment plan.
-
-                %%
-                % First of all, we need to define what kind of radiation modality we would
-                % like to use. Possible values are photons, protons or carbon. In this
-                % example we would like to use protons for treatment planning. Next, we
-                % need to define a treatment machine to correctly load the corresponding
-                % base data. matRad features generic base data in the file
-                % 'proton_Generic.mat'; consequently the machine has to be set accordingly
-                pln.radiationMode = 'protons';
-                pln.machine       = 'Generic';
-
-                %%
-                % Define the flavor of biological optimization for treatment planning along
-                % with the quantity that should be used for optimization. Possible values
-                % are (none: physical optimization; const_RBExD: constant RBE of 1.1;
-                % LEMIV_effect: effect-based optimization; LEMIV_RBExD: optimization of
-                % RBE-weighted dose. As we use protons, we follow here the clinical
-                % standard and use a constant relative biological effectiveness of 1.1.
-                % Therefore we set bioOptimization to const_RBExD
-                pln.propOpt.bioOptimization = 'const_RBExD';
-
-                %%
-                % for particles it is possible to also calculate the LET disutribution
-                % alongside the physical dose. Therefore you need to activate the
-                % corresponding option during dose calculcation
-                pln.propDoseCalc.calcLET = 1;
-
-                %%
-                % Now we have to set the remaining plan parameters.
-                pln.numOfFractions        = 30;
-                pln.propStf.gantryAngles  = zeros(1,obj.beamNumber);
-                %pln.propStf.gantryAngles  = [90];
-                pln.propStf.couchAngles   = zeros(1,obj.beamNumber);
-                %pln.propStf.couchAngles   = [0];
-                pln.propStf.bixelWidth    = 3;
-                pln.propStf.numOfBeams    = numel(pln.propStf.gantryAngles);
-                pln.propStf.isoCenter     = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
-                pln.propOpt.runDAO        = 0;
-                pln.propOpt.runSequencing = 0;
-
-                % dose calculation settings
-                pln.propDoseCalc.doseGrid.resolution.x = 10; % [mm]
-                pln.propDoseCalc.doseGrid.resolution.y = 10; % [mm]
-                pln.propDoseCalc.doseGrid.resolution.z = 10; % [mm]
-                P
-                %IndividumA = P(i,1:y1/2)
-                %(1, 1+(9*(i-1)):y1*i/obj.beamNumber)
-                for j=1:obj.beamNumber
-                    angle=mod(obj.matRad_bit2de(P(i, 1+(9*(j-1)):y1*j/obj.beamNumber)), 360);
-                    pln.propStf.gantryAngles(j)=angle;
-                end
-                %IndividumA = P(i,1:y1)
-                %IndividumB = P(i,y1/2+1:y1)
-                %IndividumA = P(i:x1/2,:)
-                %IndividumB = P(x1/2+1:x1,:)
-                %valueIndividumA = obj.matRad_bit2de(P(i,1:y1/2))
-                %valueIndividumA = obj.matRad_bit2de(IndividumA)
-                %valueIndividumB = obj.matRad_bit2de(P(i,y1/2+1:y1))
-                %valueIndividumB = obj.matRad_bit2de(IndividumB)
-                %alpha=mod(obj.matRad_bit2de(P(i,1:y1/2)), 360)
-                %alpha=mod(valueIndividumA, 360)
-                %beta=mod(obj.matRad_bit2de(P(i,y1/2+1:y1)), 360)
-                %beta=mod(valueIndividumB, 360)
-                pln.propStf.gantryAngles
-                %% Generate Beam Geometry STF
-                stf = matRad_generateStf(ct,cst,pln);
-
-                %% Dose Calculation
-                % Lets generate dosimetric information by pre-computing dose influence
-                % matrices for unit beamlet intensities. Having dose influences available
-                % allows for subsequent inverse optimization.
-                dij = matRad_calcParticleDose(ct,stf,pln,cst);
-
-                %% Inverse Optimization for IMPT
-                % The goal of the fluence optimization is to find a set of bixel/spot
-                % weights which yield the best possible dose distribution according to the
-                % clinical objectives and constraints underlying the radiation treatment
-                H = matRad_fluenceOptimization(dij,cst,pln);
-           
+                % visualize the optimized dose cubes.                
+                H = matRad_fluenceOptimization(obj.dij, obj.cst, obj.pln);
                 listOfFunctionValues(1,i) = H.info.objective;
             end
             listOfFunctionValues
         end
 
-        function [YY1, YY2] = selection(obj, P, F, p)
-            % P - population, F -fitness value, p - population size
-            x = size(P);
-            Y1=zeros(p,1);
+        function [YY1, YY2] = selection(obj, populationMatrix, F, pS)
+            % populationMatrix - populationMatrix, F -fitness value, pS - population size
+            [x,y]=size(populationMatrix);
+            Y1=zeros(pS,y);
             %F = F +10; % adding 10 to ensure no chromosome has negative fitness
             % elite selection
             e=3;
@@ -402,9 +289,9 @@ classdef matRad_channelOptimizerBT
                 obj.Min_fitness_value = min(F);
                 find(F==min(F))
                 [r1,c1]=find(F==min(F))
-                P(min(c1),:)
-                Y1(i,:)=P(min(c1),:);
-                P(min(c1),:)=[];
+                populationMatrix(min(c1),:)
+                Y1(i,:)=populationMatrix(min(c1),:);
+                populationMatrix(min(c1),:)=[];
                 Fn(i)=F(min(c1));
                 F(:,min(c1))=[];
             end
@@ -413,9 +300,9 @@ classdef matRad_channelOptimizerBT
             N=rand(1); % Generate a vector constaining normalised random numbers
             d1=1;
             d2=e;
-            while d2 <= p-e
+            while d2 <= pS-e
                 if N <= E(d1)
-                    Y1(d2+1,:)=P(d1,:);
+                    Y1(d2+1,:)=populationMatrix(d1,:);
                     Fn(d2+1)=F(d1);
                     N=rand(1);
                     d2=d2+1;
