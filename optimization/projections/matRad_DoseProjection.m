@@ -23,7 +23,11 @@ classdef matRad_DoseProjection < matRad_BackProjection
     methods 
         function d = computeSingleScenario(~,dij,scen,w)
             if ~isempty(dij.physicalDose{scen})
-                d = dij.physicalDose{scen}*w;
+                if isfield(dij,'state')
+                    d = dij.physicalDose{scen}*(w.*dij.dwellPositions);
+                else
+                    d = dij.physicalDose{scen}*w;
+                end
             else
                 d = [];
                 matRad_cfg = MatRad_Config.instance();
@@ -33,7 +37,11 @@ classdef matRad_DoseProjection < matRad_BackProjection
         
         function wGrad = projectSingleScenarioGradient(~,dij,doseGrad,scen,~)
             if ~isempty(dij.physicalDose{scen})
-                wGrad = (doseGrad{scen}' * dij.physicalDose{scen})';
+                if isfield(dij,'state')
+                    wGrad = (doseGrad{scen}' * dij.physicalDose{scen})'.*dij.dwellPositions;
+                else
+                    wGrad = (doseGrad{scen}' * dij.physicalDose{scen})';
+                end
             else
                 wGrad = [];
                 matRad_cfg = MatRad_Config.instance();

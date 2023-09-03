@@ -7,7 +7,7 @@ function optimizedAngles = beamAngleOptimization()
 
 matRad_rc; %If this throws an error, run it from the parent directory first to set the paths
 
-load('TG119.mat');
+load('LIVER_PLAN_HEART_&SPINAL.mat');
 
 %% Treatment Plan
 % The next step is to define your treatment plan labeled as 'pln'. This 
@@ -43,8 +43,8 @@ pln.propDoseCalc.calcLET = 1;
 %%
 % Now we have to set the remaining plan parameters.
 pln.numOfFractions        = 30;
-pln.propStf.gantryAngles  = [136 31];
-pln.propStf.couchAngles   = [0 0];
+pln.propStf.gantryAngles  = [180 223 106];
+pln.propStf.couchAngles   = [0 0 0];
 pln.propStf.bixelWidth    = 3;
 pln.propStf.numOfBeams    = numel(pln.propStf.gantryAngles);
 pln.propStf.isoCenter     = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);

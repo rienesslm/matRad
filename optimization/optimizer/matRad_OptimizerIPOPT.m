@@ -246,7 +246,7 @@ classdef matRad_OptimizerIPOPT < matRad_Optimizer
             %errors
             if ~obj.plotFailed
                 try            
-                    obj.plotFunction();
+                    %obj.plotFunction();
                 catch ME
                     matRad_cfg = MatRad_Config.instance();
                     %Put a warning at iteration 1 that plotting failed

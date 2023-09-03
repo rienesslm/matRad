@@ -119,6 +119,3 @@ delete(figureWait);
 
 
 end
-
-
-

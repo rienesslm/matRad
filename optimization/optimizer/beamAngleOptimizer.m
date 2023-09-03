@@ -8,6 +8,10 @@ classdef beamAngleOptimizer
         beamNumber;
         phantom;
         Min_fitness_value;
+
+        % To plot the distribution of the fitness values in each
+        % generation. (Show how values get closer to each other)
+        fitnessValueMatrix;
     end
     
     methods
@@ -20,13 +24,15 @@ classdef beamAngleOptimizer
             K=0;
             [x1,y1]=size(P);
             P1=0;
+            obj.fitnessValueMatrix = zeros(obj.numberGenerations, x1+2*obj.chromosomePairs+obj.mutationNumber);
             for i=1:obj.numberGenerations
                 Cr=obj.crossover(P, obj.chromosomePairs);
                 Mu=obj.mutation(P, obj.mutationNumber);
                 P(obj.population + 1 : obj.population + 2 * obj.chromosomePairs, :)=Cr;
                 P(obj.population + 2 * obj.chromosomePairs + 1 : obj.population + 2 * obj.chromosomePairs + obj.mutationNumber, :)=Mu;
-                E=evaluation(obj, P)
-                [P,S]=selection(obj, P, E, obj.population); %No clue why the function call needs 'obj' here...
+                objectiveValues=evaluation(obj, P)
+                obj.fitnessValueMatrix(i, :) = objectiveValues;
+                [P,S]=selection(obj, P, objectiveValues, obj.population); %No clue why the function call needs 'obj' here...
                 K(i,1)=sum(S)/obj.population;
                 K(i,2)=S(1); %best
             end
@@ -43,6 +49,7 @@ classdef beamAngleOptimizer
             %A=mod(obj.matRad_bit2de(P2(1, 1:y1)), 360);
             %Optimal_Angels = [A B]
             obj.Optimal_Angels
+            createBoxplotDiagram(obj.fitnessValueMatrix');
         end
         
 
@@ -162,7 +169,6 @@ classdef beamAngleOptimizer
                 pln.propDoseCalc.doseGrid.resolution.x = 10; % [mm]
                 pln.propDoseCalc.doseGrid.resolution.y = 10; % [mm]
                 pln.propDoseCalc.doseGrid.resolution.z = 10; % [mm]
-                P
                 %IndividumA = P(i,1:y1/2)
                 %(1, 1+(9*(i-1)):y1*i/obj.beamNumber)
                 for j=1:obj.beamNumber

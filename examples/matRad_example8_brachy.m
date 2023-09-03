@@ -48,8 +48,8 @@ disp(cst{6,6}{1});
 % prostate bed.
 cst{5,3}    = 'TARGET';
 cst{5,6}{1} = struct(DoseObjectives.matRad_SquaredUnderdosing(100,15));
-cst{5,6}{2} = struct(DoseObjectives.matRad_SquaredOverdosing(100,17.5));
-cst{6,5}.Priority = 1;
+cst{5,6}{2} = struct(DoseObjectives.matRad_SquaredOverdosing(15,20));
+cst{5,5}.Priority = 1;
 
 % In this example, the lymph nodes will not be part of the treatment:
 cst{7,6}    =  [];
@@ -57,14 +57,14 @@ cst{7,3}    =  'OAR';
 
 %A PTV is not needed, but we will use it to control the dose fall off
 cst{6,3}    =  'OAR';
-cst{6,6}{1} =  struct(DoseObjectives.matRad_SquaredOverdosing(100,12));
+cst{6,6}{1} =  struct(DoseObjectives.matRad_SquaredOverdosing(25,12));
 cst{6,5}.Priority = 2;
 
 % Rectum Objective
-cst{1,6}{1} = struct(DoseObjectives.matRad_SquaredOverdosing(10,7.5));
+cst{1,6}{1} = struct(DoseObjectives.matRad_SquaredOverdosing(20,10));
 
 % Bladder Objective
-cst{8,6}{1} = struct(DoseObjectives.matRad_SquaredOverdosing(10,7.5));
+cst{8,6}{1} = struct(DoseObjectives.matRad_SquaredOverdosing(40,14));
 
 % Body NT objective
 cst{9,6}{1} = struct(DoseObjectives.matRad_MeanDose(1));
@@ -96,7 +96,7 @@ pln.machine         = 'HDR';    % 'LDR' or 'HDR' for brachy
 % seeds No denotes how many seeds/holding points there are per needle.
 
 pln.propStf.needle.seedDistance      = 10; % [mm] 
-pln.propStf.needle.seedsNo           = 6; 
+pln.propStf.needle.seedsNo           = 6;   
 
 %% II.1 - template position
 % The implantation is normally done through a 13 x 13 template from the 
@@ -116,21 +116,219 @@ pln.propStf.templateRoot = matRad_getTemplateRoot(ct,cst); % mass center of
 % A checkerboard pattern is frequantly used. The whole geometry will become
 % clearer when it is displayed in 3D view in the next section.
 
-pln.propStf.template.activeNeedles = [0 0 0 1 0 1 0 1 0 1 0 0 0;... % 7.0
-                                      0 0 1 0 1 0 0 0 1 0 1 0 0;... % 6.5
-                                      0 1 0 1 0 1 0 1 0 1 0 1 0;... % 6.0
-                                      1 0 1 0 1 0 0 0 1 0 1 0 1;... % 5.5
-                                      0 1 0 1 0 1 0 1 0 1 0 1 0;... % 5.0
-                                      1 0 1 0 1 0 0 0 1 0 1 0 1;... % 4.5
-                                      0 1 0 1 0 1 0 1 0 1 0 1 0;... % 4.0
-                                      1 0 1 0 1 0 0 0 1 0 1 0 1;... % 4.5
-                                      0 1 0 1 0 1 0 1 0 1 0 1 0;... % 3.0
-                                      1 0 1 0 1 0 1 0 1 0 1 0 1;... % 2.5
-                                      0 1 0 1 0 1 0 1 0 1 0 1 0;... % 2.0
-                                      1 0 1 0 1 0 0 0 0 0 1 0 1;... % 1.5
-                                      0 0 0 0 0 0 0 0 0 0 0 0 0];   % 1.0
-                                     %A a B b C c D d E e F f G
+% Benchmark
+% pln.propStf.template.activeNeedles = [0 0 0 1 0 1 0 1 0 1 0 0 0;... % 7.0
+%                                       0 0 1 0 1 0 0 0 1 0 1 0 0;... % 6.5
+%                                       0 1 0 1 0 1 0 1 0 1 0 1 0;... % 6.0
+%                                       1 0 1 0 1 0 0 0 1 0 1 0 1;... % 5.5
+%                                       0 1 0 1 0 1 0 1 0 1 0 1 0;... % 5.0
+%                                       1 0 1 0 1 0 0 0 1 0 1 0 1;... % 4.5
+%                                       0 1 0 1 0 1 0 1 0 1 0 1 0;... % 4.0
+%                                       1 0 1 0 1 0 0 0 1 0 1 0 1;... % 4.5
+%                                       0 1 0 1 0 1 0 1 0 1 0 1 0;... % 3.0
+%                                       1 0 1 0 1 0 1 0 1 0 1 0 1;... % 2.5
+%                                       0 1 0 1 0 1 0 1 0 1 0 1 0;... % 2.0
+%                                       1 0 1 0 1 0 0 0 0 0 1 0 1;... % 1.5
+%                                       0 0 0 0 0 0 0 0 0 0 0 0 0];   % 1.0
+%                                      %A a B b C c D d E e F f G
 
+% 8 Channels
+% pln.propStf.template.activeNeedles = [0 0	0 0	0 0	0 0	0 0	0 0	0
+%                                       0 0 0 0 0 0 0 0 0 0 1 0 0
+%                                       0 0 0 0	0 0	0 0	0 0	0 0	0
+%                                       1 0	0 0	0 0	0 0	0 0	0 0	0
+%                                       0 0	0 0	0 0	0 0	0 0	0 0	0
+%                                       0 0 0 0 0 0 0 1 0 0	0 0	0
+%                                       0 0	0 0	0 0	0 0	0 0	0 0	1
+%                                       0 0	0 0	0 0	0 0	0 0	0 0	0
+%                                       0 0	0 0	0 0	0 0	0 0	0 0	0
+%                                       0 0	0 0	0 0	1 0	0 0	0 0	0
+%                                       1 0	0 0	0 0	0 0	0 0	0 0	0
+%                                       0 0	0 0	0 0	0 0	1 0	0 0	0
+%                                       0 0	0 0	0 0	1 0	0 0	0 0	0];
+
+% 9 Channels
+% pln.propStf.template.activeNeedles =   [0	0	0	0	0	0	0	0	1	0	0	0	0
+%                                         0	0	0	0	0	0	0	0	0	0	0	0	1
+%                                         1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                         0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                         0	0	0	0	0	0	1	0	0	0	0	0	0
+%                                         1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                         0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                         0	0	0	0	0	0	0	0	0	0	0	1	0
+%                                         0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                         0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                         0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                         0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                         0	0	0	0	0	0	0	0	0	0	0	0	1];
+
+% 10 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	1	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	1	0	0	0	0	0	1	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	1	0	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	1
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	1	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	1	0];
+
+% 11 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	1	0	0	0	0	0	0	0	1	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	1	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	1	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	1	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	1	0	0	0	0	0	0	1	0	0	0
+%                                             0	0	0	0	0	1	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	1	0	0];
+
+% 12 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	0	0	0	0	0	1	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	1	0	0	0
+%                                             0	0	1	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	1	0	0
+%                                             0	1	0	0	0	0	0	0	0	0	0	0	1
+%                                             0	0	0	0	0	0	1	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	1	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	0];
+
+% 13 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	1	0	0	0	0	0	0	1	0	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	1	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	1	0
+%                                             0	0	1	0	0	1	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	1	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	1	0	0	1	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0];
+
+% 14 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	1	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	1	0	0	0	0	1	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	1	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	1	0	0	0	0	1	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	1	0	0	0	0	0	1	0	0	0	0
+%                                             0	0	0	0	0	0	1	0	0	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	1	0];
+
+% 15 Channels
+% pln.propStf.template.activeNeedles =       [0	1	0	0	0	0	0	0	0	0	0	0	1
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	1	0	
+%                                             0	0	1	0	0	1	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	1	0	0	0	0	0	0	1	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	1	0
+%                                             0	0	0	1	0	0	0	0	1	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	1	0	0];
+
+% 16 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	1	0	0	0	0	0	0	0	0	1	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	1	0	0	0	0	0	0	0	0	1	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             1	0	0	0	0	0	1	0	0	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	1	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	1	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	1
+%                                             0	0	0	0	0	1	0	0	0	0	0	1	0];
+
+% 17 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	0	0	1	0	0	0	0	0	0	0
+%                                             0	0	1	0	0	0	0	0	0	0	1	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	1	0	0	0	0	1	0	0	1
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	1	0	0	1	0	0	0	1	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	1	0	0	0	0
+%                                             0	0	0	0	0	1	0	0	0	0	0	0	0
+%                                             0	1	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	1	0	0	0	0	0	0	1	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0];
+
+% 18 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	1
+%                                             0	0	0	0	0	0	0	0	0	0	1	0	0
+%                                             0	0	0	1	0	0	0	0	1	0	0	0	0
+%                                             0	0	0	0	0	0	1	0	0	0	0	0	0
+%                                             0	1	0	0	0	0	0	0	0	0	1	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	1	0	0	0	0	1	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	1	0	0	0	0	1	0	0	1	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	1	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	1	0	0	0	0	0	1	0	0];
+
+% 19 Channels
+% pln.propStf.template.activeNeedles =       [0	1	0	0	1	0	0	0	0	0	0	1	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	0	1	0	1	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	1	0	0
+%                                             1	0	0	0	0	0	0	1	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	1	0	0	0	1	0	0
+%                                             0	0	1	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	1	0	0	1
+%                                             0	0	0	0	1	0	0	0	0	0	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	1	0
+%                                             0	0	0	1	0	0	0	0	0	0	0	0	0];
+
+% 20 Channels
+% pln.propStf.template.activeNeedles =       [0	0	0	0	0	0	1	0	0	0	1	0	0
+%                                             0	0	1	0	0	1	0	0	0	0	0	0	0
+%                                             1	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	0	0	1	0	0	0
+%                                             0	0	0	0	1	0	1	0	0	0	0	0	0
+%                                             0	1	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	0	1	0	0	0	0	1
+%                                             0	0	1	0	0	0	0	0	0	0	1	0	0
+%                                             0	0	0	0	0	0	0	0	0	0	0	0	0
+%                                             0	0	0	0	0	0	1	0	0	0	0	0	0
+%                                             0	0	0	0	1	0	0	0	0	0	1	0	0
+%                                             0	0	0	0	0	0	0	0	0	1	0	0	1
+%                                             0	0	0	1	0	0	0	1	0	0	0	0	0];
+ 
+populationVector = [0	0	0	1	0	1	0	1	0	1	0	1	0	0	0	1	0	1	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	1	1	0	1	1	1	1	1	1	1	1	1	1	1	0	1	1	1	1	1	1	0	1	1	1	0	1	1	1	1	0	1	1	0	0	1	1	1	1	1	1	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	1	0	1	1	1	1	0	1	0	1	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	1	1	0	1	0	1	0	1	0	1	0	0	1	1	1	1	0	1	1	0	0	0	1	1	0	0	1	0	1	0	1	1	0	1	1	0	0	0	0	0	1	1	0	1	1	0	1	1	1	1	1	0];
+pln.propStf.template.activeNeedles = reshape(populationVector, 13, 13);                                     
 pln.propStf.isoCenter    = matRad_getIsoCenter(cst,ct,0); %  target center
 
 

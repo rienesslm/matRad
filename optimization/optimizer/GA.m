@@ -9,9 +9,8 @@ results = [];
 %     results(beamNumber) = struct(BAO);
 % end
 %results
-BAO1 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 1);
+% BAO1 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 1);
 BAO2 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 2);
-BAO3 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 3);
-BAO4 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 4);
-BAO5 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 5);
-BA01
+% BAO3 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 3);
+% BAO4 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 4);
+% BAO5 = beamAngleOptimizer('LIVER_PLAN_HEART_&SPINAL.mat', 10, 5, 5);
